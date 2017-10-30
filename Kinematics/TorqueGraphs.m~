@@ -1,6 +1,4 @@
-%Quadruped Leg Kinematics
-
-%% Forward Kinematics
+% Torque Graphs
 
 %DH Table for leg
 
@@ -26,10 +24,28 @@ x = simplify(T03(1,4))
 y = simplify(T03(2,4))
 z = simplify(T03(3,4))
 
-%% Force Propagation 
 
 J = jacobian([x, y, z], [q1, q2, q3]);
-Jt = transpose(J)
+Jt = transpose(J);
 %Transpose(J)*F = torques on joints
 
+var = [a1, a2, a3, A1, A2, q1];
+val  = [.161, 1.5, 1.5, -deg2rad(90), deg2rad(90), deg2rad(0)];
+
+Jt = subs(Jt,var, val);
+T = [0;0;-.5];
+FTK = Jt*T
+
+% FTK =
+%  
+%                                                                0
+%  - (3*sin(q2))/4 - (3*cos(q2)*sin(q3))/4 - (3*cos(q3)*sin(q2))/4
+%                  - (3*cos(q2)*sin(q3))/4 - (3*cos(q3)*sin(q2))/4
+
+% U = -45: 1: 45; 
+% V =   0: 1: 90;
+% [q2,q3] = meshgrid(U,V);
+% F2 =  - (3*sin(deg2rad(q2)))/4 - (3*cos(deg2rad(q2)).*sin(deg2rad(q3)))/4 - (3*cos(deg2rad(q3)).*sin(deg2rad(q2)))/4;
+% F3 =  - (3*cos(deg2rad(q2)).*sin(deg2rad(q3)))/4 - (3*cos(deg2rad(q3)).*sin(deg2rad(q2)))/4;
+% surf(q2,q3,F2);
 

@@ -6,7 +6,7 @@
 % | Link |  a   | alpha |   d   | theta   |
 % | Base |  0   |  -90  |   0   |   0     |
 % |   1  | .161 |   90  |   0   | q1-pi/2 |
-% |   2  | 1.5  |   0   | -.161 | q2      |
+% |   2  | 1.5  |   0   |   0   | q2      |
 % |   3  | 1.5  |   0   |   0   | q3      |
 % _________________________________________
 
@@ -15,7 +15,7 @@
 syms a1 a2 a3 A1 A2 d1 q1 q2 q3 
 TB0 = simplify(MatrixTransform(0,A1,0,0));
 T00 = simplify(MatrixTransform(a1,A2,0,q1+deg2rad(90)));
-T01 = simplify(MatrixTransform(a2,0,d1,q2));
+T01 = simplify(MatrixTransform(a2,0,0,q2));
 T12 = simplify(MatrixTransform(a3,0,0,q3));
 
 %Forward Position Kinematics
@@ -29,18 +29,18 @@ J = jacobian([x, y, z], [q1, q2, q3]);
 Jt = transpose(J);
 %Transpose(J)*F = torques on joints
 
-var = [a1, a2, a3, A1, A2, d1, q1];
-val  = [.161, 1.5, 1.5, -deg2rad(90), deg2rad(90), -.161, deg2rad(0)];
+var = [a1, a2, a3, A1, A2, q1];
+val  = [.161, 1.5, 1.5, -deg2rad(90), deg2rad(90), deg2rad(0)];
 
 Jt = subs(Jt,var, val);
 T = [0;0;-.5];
 FTK = Jt*T
 
-% q2 = deg2rad(90);
-% q3 = deg2rad(10);
-% F = [-161/1000;...
-%      - (3*sin(q2))/2 - (3*cos(q2)*sin(q3))/2 - (3*cos(q3)*sin(q2))/2;...
-%      - (3*cos(q2)*sin(q3))/2 - (3*cos(q3)*sin(q2))/2]
+% FTK =
+%  
+%                                                                0
+%  - (3*sin(q2))/4 - (3*cos(q2)*sin(q3))/4 - (3*cos(q3)*sin(q2))/4
+%                  - (3*cos(q2)*sin(q3))/4 - (3*cos(q3)*sin(q2))/4
 
 U = -45: 1: 45; 
 V =   0: 1: 90;

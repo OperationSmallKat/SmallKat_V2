@@ -23,16 +23,15 @@ q3 = deg2rad(0);
 
 A1 = -deg2rad(90);
 A2 =  deg2rad(90);
-d1 = -.161;
 a1 = .161;
 a2 = 1.5;
 a3 = 1.5;
 
 %math stuff
-x = a1*sin(q1) - d1*sin(A2)*cos(q1) + a2*cos(q2)*sin(q1) + a3*cos(q3)*(cos(q2)*sin(q1) + cos(A2)*cos(q1)*sin(q2)) - a3*sin(q3)*(sin(q1)*sin(q2) - cos(A2)*cos(q1)*cos(q2)) + a2*cos(A2)*cos(q1)*sin(q2)
-y = - d1*(cos(A2)*sin(A1) + cos(A1)*sin(A2)*sin(q1)) - a1*cos(A1)*cos(q1) - a2*sin(q2)*(sin(A1)*sin(A2) - cos(A1)*cos(A2)*sin(q1)) - a3*cos(q3)*(sin(q2)*(sin(A1)*sin(A2) - cos(A1)*cos(A2)*sin(q1)) + cos(A1)*cos(q1)*cos(q2)) - a3*sin(q3)*(cos(q2)*(sin(A1)*sin(A2) - cos(A1)*cos(A2)*sin(q1)) - cos(A1)*cos(q1)*sin(q2)) - a2*cos(A1)*cos(q1)*cos(q2)
-z = d1*(cos(A1)*cos(A2) - sin(A1)*sin(A2)*sin(q1)) - a1*sin(A1)*cos(q1) + a2*sin(q2)*(cos(A1)*sin(A2) + cos(A2)*sin(A1)*sin(q1)) + a3*cos(q3)*(sin(q2)*(cos(A1)*sin(A2) + cos(A2)*sin(A1)*sin(q1)) - sin(A1)*cos(q1)*cos(q2)) + a3*sin(q3)*(cos(q2)*(cos(A1)*sin(A2) + cos(A2)*sin(A1)*sin(q1)) + sin(A1)*cos(q1)*sin(q2)) - a2*sin(A1)*cos(q1)*cos(q2)
-
+x = a3*sin(q3)*(sin(q1)*sin(q2) - cos(A2)*cos(q1)*cos(q2)) - a2*cos(q2)*sin(q1) - a3*cos(q3)*(cos(q2)*sin(q1) + cos(A2)*cos(q1)*sin(q2)) - a1*sin(q1) - a2*cos(A2)*cos(q1)*sin(q2)
+y = a1*cos(A1)*cos(q1) - a2*sin(q2)*(sin(A1)*sin(A2) + cos(A1)*cos(A2)*sin(q1)) - a3*cos(q3)*(sin(q2)*(sin(A1)*sin(A2) + cos(A1)*cos(A2)*sin(q1)) - cos(A1)*cos(q1)*cos(q2)) - a3*sin(q3)*(cos(q2)*(sin(A1)*sin(A2) + cos(A1)*cos(A2)*sin(q1)) + cos(A1)*cos(q1)*sin(q2)) + a2*cos(A1)*cos(q1)*cos(q2)
+z = a1*sin(A1)*cos(q1) + a2*sin(q2)*(cos(A1)*sin(A2) - cos(A2)*sin(A1)*sin(q1)) + a3*cos(q3)*(sin(q2)*(cos(A1)*sin(A2) - cos(A2)*sin(A1)*sin(q1)) + sin(A1)*cos(q1)*cos(q2)) + a3*sin(q3)*(cos(q2)*(cos(A1)*sin(A2) - cos(A2)*sin(A1)*sin(q1)) - sin(A1)*cos(q1)*sin(q2)) + a2*sin(A1)*cos(q1)*cos(q2)
+ 
 %returns tip
 Tip = [x,y,z]
 
