@@ -1,0 +1,11 @@
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_BUILD.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOAD.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_CLEAN.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_PROGRAM.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_TEST.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOADFS.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_REBUILD_PROJECT_INDEX.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/PLATFORMIO_UPDATE_ALL.dir
+/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/CMakeFiles/ProgramFiles.dir

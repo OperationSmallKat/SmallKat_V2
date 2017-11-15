@@ -1,0 +1,1 @@
+/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-g++   -g   CMakeFiles/ProgramFiles.dir/src/DefinePinmodes.cpp.o CMakeFiles/ProgramFiles.dir/src/RobotCommands.cpp.o CMakeFiles/ProgramFiles.dir/src/SerialTest.cpp.o CMakeFiles/ProgramFiles.dir/src/leg.cpp.o CMakeFiles/ProgramFiles.dir/src/main.cpp.o  -o ProgramFiles -rdynamic 

@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="ProgramFiles"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_BUILD">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_BUILD"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_UPLOAD">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_UPLOAD"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_CLEAN">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_CLEAN"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_PROGRAM">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_PROGRAM"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_TEST">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_TEST"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_UPLOADFS">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_UPLOADFS"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_REBUILD_PROJECT_INDEX">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_REBUILD_PROJECT_INDEX"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PLATFORMIO_UPDATE_ALL">
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 PLATFORMIO_UPDATE_ALL"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ProgramFiles">
+				<Option output="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/ProgramFiles" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DF_CPU=120000000L"/>
+					<Add option="-DLAYOUT_US_ENGLISH"/>
+					<Add option="-DPLATFORMIO=30401"/>
+					<Add option="-D__MK64FX512__"/>
+					<Add option="-DTEENSY35"/>
+					<Add option="-DUSB_SERIAL"/>
+					<Add option="-DARDUINO=10610"/>
+					<Add option="-DTEENSYDUINO=136"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/cores/teensy3"/>
+					<Add directory="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ADC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/AccelStepper"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_CC3000"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_CC3000/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_GFX"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_ILI9340"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_ILI9341"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_NeoPixel"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_RA8875"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_SSD1306"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_ST7735"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_STMPE610"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_VS1053"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_nRF8001"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_nRF8001/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/AltSoftSerial"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Artnet"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Audio"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Audio/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Bounce"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Bounce2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/CapacitiveSensor"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/DS1307RTC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/DmxSimple"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/DogLcd"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/EEPROM"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/EasyTransfer"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/EasyTransferI2C"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Encoder"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Encoder/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Entropy"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Ethernet"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FastCRC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FastLED"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FlexCAN"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FlexiTimer2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FreqCount"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FreqMeasure"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FreqMeasureMulti"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FrequencyTimer2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ILI9341_t3"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/IRremote"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Keypad"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Keypad/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LedControl/src"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LedDisplay"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LiquidCrystal"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LiquidCrystalFast"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LowPower"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/MFRC522"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/MIDI"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Metro"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/MsTimer2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/NXPMotionSense"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/NXPMotionSense/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/NewPing"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/OSC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/OctoWS2811"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/OneWire"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PS2Keyboard"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PS2Keyboard/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PWMServo"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Ping"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PulsePosition"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/RA8875"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/RadioHead"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ResponsiveAnalogRead/src"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SD"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SD/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SPI"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SPIFlash"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ST7565"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ST7735_t3"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SerialFlash"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Servo"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ShiftPWM"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Snooze"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Snooze/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SoftPWM"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SoftwareSerial"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TFT_ILI9163C"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Talkie"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Time"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TimeAlarms"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TimerOne"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TimerThree"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TinyGPS"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Tlc5940"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TouchScreen"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/UTFT"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/VirtualWire"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Wire"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Wire/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/XBee"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/XPT2046_Touchscreen"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/i2c_t3"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ks0108"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/openGLCD"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ssd1351"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/x10"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-atmelavr/avr/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/4.9.2/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/4.9.2/include-fixed"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi/lib/gcc/arm-none-eabi/5.4.1/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi/lib/gcc/arm-none-eabi/5.4.1/include-fixed"/>
+					<Add directory="/home/keionbis/.platformio/packages/tool-unity"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 ProgramFiles"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ProgramFiles/fast">
+				<Option output="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug/ProgramFiles" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DF_CPU=120000000L"/>
+					<Add option="-DLAYOUT_US_ENGLISH"/>
+					<Add option="-DPLATFORMIO=30401"/>
+					<Add option="-D__MK64FX512__"/>
+					<Add option="-DTEENSY35"/>
+					<Add option="-DUSB_SERIAL"/>
+					<Add option="-DARDUINO=10610"/>
+					<Add option="-DTEENSYDUINO=136"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/cores/teensy3"/>
+					<Add directory="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ADC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/AccelStepper"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_CC3000"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_CC3000/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_GFX"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_ILI9340"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_ILI9341"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_NeoPixel"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_RA8875"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_SSD1306"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_ST7735"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_STMPE610"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_VS1053"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_nRF8001"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Adafruit_nRF8001/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/AltSoftSerial"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Artnet"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Audio"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Audio/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Bounce"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Bounce2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/CapacitiveSensor"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/DS1307RTC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/DmxSimple"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/DogLcd"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/EEPROM"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/EasyTransfer"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/EasyTransferI2C"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Encoder"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Encoder/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Entropy"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Ethernet"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FastCRC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FastLED"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FlexCAN"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FlexiTimer2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FreqCount"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FreqMeasure"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FreqMeasureMulti"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/FrequencyTimer2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ILI9341_t3"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/IRremote"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Keypad"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Keypad/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LedControl/src"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LedDisplay"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LiquidCrystal"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LiquidCrystalFast"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/LowPower"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/MFRC522"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/MIDI"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Metro"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/MsTimer2"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/NXPMotionSense"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/NXPMotionSense/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/NewPing"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/OSC"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/OctoWS2811"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/OneWire"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PS2Keyboard"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PS2Keyboard/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PWMServo"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Ping"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/PulsePosition"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/RA8875"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/RadioHead"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ResponsiveAnalogRead/src"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SD"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SD/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SPI"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SPIFlash"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ST7565"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ST7735_t3"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SerialFlash"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Servo"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ShiftPWM"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Snooze"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Snooze/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SoftPWM"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/SoftwareSerial"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TFT_ILI9163C"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Talkie"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Time"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TimeAlarms"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TimerOne"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TimerThree"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TinyGPS"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Tlc5940"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/TouchScreen"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/UTFT"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/VirtualWire"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Wire"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/Wire/utility"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/XBee"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/XPT2046_Touchscreen"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/i2c_t3"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ks0108"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/openGLCD"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/ssd1351"/>
+					<Add directory="/home/keionbis/.platformio/packages/framework-arduinoteensy/libraries/x10"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-atmelavr/avr/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/4.9.2/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/4.9.2/include-fixed"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi/lib/gcc/arm-none-eabi/5.4.1/include"/>
+					<Add directory="/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi/lib/gcc/arm-none-eabi/5.4.1/include-fixed"/>
+					<Add directory="/home/keionbis/.platformio/packages/tool-unity"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 ProgramFiles/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/keionbis/Documents/JaguarQuadrdrped/Program\ Files/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src/DefinePinmodes.cpp">
+			<Option target="ProgramFiles"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src/RobotCommands.cpp">
+			<Option target="ProgramFiles"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src/SerialTest.cpp">
+			<Option target="ProgramFiles"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src/leg.cpp">
+			<Option target="ProgramFiles"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src/leg.h">
+			<Option target="ProgramFiles"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src/main.cpp">
+			<Option target="ProgramFiles"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/src/main.h">
+			<Option target="ProgramFiles"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/keionbis/Documents/JaguarQuadrdrped/Program Files/CMakeListsPrivate.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

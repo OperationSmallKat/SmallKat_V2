@@ -1,0 +1,1 @@
+/home/keionbis/.platformio/packages/toolchain-gccarmnoneeabi@1.50401.0/bin/arm-none-eabi-g++   -g   CMakeFiles/Program_Files.dir/src/SerialTest.cpp.o CMakeFiles/Program_Files.dir/src/main.cpp.o  -o Program_Files -rdynamic 
