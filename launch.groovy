@@ -210,12 +210,10 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 		 }
 		//throw new RuntimeException("No HID device found")
 	}
-	void setValues(int index,float position, float velocity, float force){
-		pollingPacket.downstream[(index*3)+0] = position
-		pollingPacket.downstream[(index*3)+1] = velocity
-		pollingPacket.downstream[(index*3)+2] = force
-		//println "Setting Downstream "+downstream
+	void setValue(int index,int position){
+		pollingPacket.downstream[index] = position
 	}
+	/*
 	void setPIDGains(int index,float kp, float ki, float kd){
 		
 		pidPacket.downstream[(index*3)+0] = kp
@@ -242,19 +240,14 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 	void pushVelocity(){
 		pushPacket(SetVelocity)
 	}
-	float [] getValues(int index){
-		float [] back = new float [3];
-	
-		back[0]=pollingPacket.upstream[(index*3)+0]
-		back[1]=pollingPacket.upstream[(index*3)+1]
-		back[2]=pollingPacket.upstream[(index*3)+2]
-		
-		return back
+	*/
+	int getValue(int index){
+		return pollingPacket.upstream[index]
 	}
 	@Override
 	public  ArrayList<String>  getNamespacesImp(){
 		// no namespaces on dummy
-		return null;
+		return [];
 	}
 	
 	
