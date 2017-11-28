@@ -9,28 +9,33 @@ import Jama.Matrix;
 class PacketProcessor{
 	ByteOrder be =ByteOrder.LITTLE_ENDIAN; 
 	int packetSize = 64
-	int numFloats =(packetSize/4)-1
+	int numFloats =(packetSize)-4
 
 	int getId(byte [] bytes){
 		return ByteBuffer.wrap(message).order(be).getInt(0);
 	}
-	float[] parse(byte [] bytes){
-		float[] returnValues = new float[ numFloats];
+	int[] parse(byte [] bytes){
+		int[] returnValues = new int[ numFloats];
 		
 		//println "Parsing packet"
 		for(int i=0;i<numFloats;i++){
-			int baseIndex = (4*i)+4;
-			returnValues[i] = ByteBuffer.wrap(bytes).order(be).getFloat(baseIndex);
+			int baseIndex = (i)+4;
+			//returnValues[i] = ByteBuffer.wrap(bytes).order(be).getFloat(baseIndex);
+			returnValues[i] = bytes[baseIndex]
+			if(returnValues[i] <0){
+				returnValues[i]+=255
+			}
 		}
 			
 		return returnValues
 	}
-	byte[] command(int idOfCommand, float []values){
+	byte[] command(int idOfCommand, int []values){
 		byte[] message = new byte[packetSize];
 		ByteBuffer.wrap(message).order(be).putInt(0,idOfCommand).array();
 		for(int i=0;i<numFloats && i< values.length;i++){
-			int baseIndex = (4*i)+4;
-			ByteBuffer.wrap(message).order(be).putFloat(baseIndex,values[i]).array();
+			int baseIndex = (i)+4;
+			//ByteBuffer.wrap(message).order(be).putFloat(baseIndex,values[i]).array();
+			message[baseIndex]=(byte)values[i]
 		}
 		return message
 	}
@@ -39,8 +44,8 @@ class PacketProcessor{
 
 public class PacketType{
 	int idOfCommand=0;
-	float [] downstream = new float[15]
-	float [] upstream = new float[15]
+	int [] downstream = new int[60]
+	int [] upstream = new int[60]
 	boolean done=false;
 	boolean started = false;
 	public PacketType(int id){
@@ -316,87 +321,6 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 		return device.getValues(index)[0];
 	}
 
-}
-
-public class PhysicicsDevice extends NonBowlerDevice{
-	HIDSimpleComsDevice hidEventEngine;
-	DHParameterKinematics physicsSource ;
-	int count = 0;
-	Closure event = {
-	
-	
-			count ++
-			if(count >100){
-				count =0
-						//Get the DHChain object
-				DHChain chain = physicsSource.getChain()
-				// Setup of variables done, next perfoem one compute cycle
-				
-				//get the current FK pose to update the data used by the jacobian computation
-				TransformNR pose = physicsSource.getCurrentTaskSpaceTransform()
-				// Convert the tip transform to Matrix form for math
-				Matrix matrixForm= pose.getMatrixTransform()
-				// get the position of all the joints in engineering units
-				double[] jointSpaceVector = physicsSource.getCurrentJointSpaceVector()
-				// compute the Jacobian using Jama matrix library
-				Matrix jacobian =  chain.getJacobian(jointSpaceVector);
-				// convert to the 3x6 marray of doubles for display
-				double [][] data = jacobian.getArray();
-	
-			     ArrayList<TransformNR> intChainLocal = chain.intChain
-				ArrayList<TransformNR> stateChainLocal = chain.chain
-			     double PreviousOmega = 0
-			     double [] corilousTerm =[0,0,0]
-				for (int i=0;i<jointSpaceVector.length;i++){
-					TransformNR previousTransform = i==0?new TransformNR():intChainLocal.get(i-1)
-					
-					TransformNR previousTransformTranspose = new TransformNR(previousTransform.getMatrixTransform().transpose() );
-					
-					RotationNR  perviousRot = previousTransform.getRotation()
-					double [][] rotationMatrix = perviousRot.getRotationMatrix() 
-					
-					TransformNR rotationBetweenZeroAndI = stateChainLocal.get(i)
-					TransformNR rotationBetweenZeroAndITranspose = new TransformNR(0,0,0,new TransformNR(rotationBetweenZeroAndI .getMatrixTransform().transpose()).getRotation() )
-					
-					
-					double [][] zVector = [rotationMatrix[2]]				
-					Matrix zMatrix = new Matrix(zVector)
-					Matrix bRotationToAllignFrames = rotationBetweenZeroAndITranspose.getMatrixTransform().times(zMatrix)
-					
-					double [][] perviousTerm = [[0,0,0]]
-					if(i>0){
-						perviousTerm[i-1]=PreviousOmega
-					}
-					Matrix angularVelocityOfLink = rotationBetweenZeroAndITranspose.times(new Matrix(perviousTerm))
-												.add(bRotationToAllignFrames)
-					
-					corilousTerm[i]=angularVelocityOfLink.get(0,i)
-					PreviousOmega= angularVelocityOfLink.get(0,i)
-				}
-				println corilousTerm
-			}
-		}
-	public PhysicicsDevice(HIDSimpleComsDevice c,DHParameterKinematics  d){
-		hidEventEngine=c;
-		physicsSource=d;
-		hidEventEngine.addEvent(37,event)
-		
-	}
-	@Override
-	public  void disconnectDeviceImp(){		
-		println "Physics Termination signel shutdown"
-		hidEventEngine.removeEvent(37,event)
-	}
-	
-	@Override
-	public  boolean connectDeviceImp(){
-		println "Physics Startup signel "
-	}
-	public  ArrayList<String>  getNamespacesImp(){
-		// no namespaces on dummy
-		return [];
-	}
-	
 }
 
 
