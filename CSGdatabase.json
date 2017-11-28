@@ -1,0 +1,295 @@
+{
+  "Cable Cut Out Length": {
+    "name": "Cable Cut Out Length",
+    "options": [
+      "500",
+      "0.01"
+    ],
+    "value": 395150
+  },
+  "Bolt Size": {
+    "name": "Bolt Size",
+    "options": [
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M20",
+      "M42",
+      "M30",
+      "M8",
+      "M22",
+      "M10",
+      "M24",
+      "M1.6",
+      "M12",
+      "M2.5",
+      "M14",
+      "M36",
+      "8#32",
+      "M16",
+      "M27",
+      "6#32",
+      "M18",
+      "Inch-1_4-20"
+    ],
+    "strValue": "M5"
+  },
+  "printerOffset": {
+    "name": "printerOffset",
+    "options": [
+      "1.2",
+      "0"
+    ],
+    "value": 500
+  },
+  "ballBearing Default": {
+    "name": "ballBearing Default",
+    "options": [
+      "696zz",
+      "695zz",
+      "694zz",
+      "693zz",
+      "699zz",
+      "698zz",
+      "634zz",
+      "697zz",
+      "635zz",
+      "6920_2RS",
+      "R8-60355K505",
+      "R8-2RS",
+      "685zz",
+      "684zz",
+      "683zz",
+      "689zz",
+      "688zz",
+      "687zz",
+      "623zz",
+      "686zz",
+      "624zz",
+      "625zz",
+      "626zz",
+      "627zz",
+      "608zz",
+      "607zz",
+      "606zz",
+      "605zz",
+      "604zz",
+      "603zz"
+    ],
+    "strValue": "R8-60355K505"
+  },
+  "Servo Bolt Length": {
+    "name": "Servo Bolt Length",
+    "options": [
+      "500",
+      "0.01"
+    ],
+    "value": 14240
+  },
+  "Gear B": {
+    "name": "Gear B",
+    "options": [
+      "HS84T",
+      "15T",
+      "36T",
+      "HS60T",
+      "12T",
+      "HS12T",
+      "84T",
+      "60T",
+      "HS36T"
+    ],
+    "strValue": "HS84T"
+  },
+  "vexGear Default": {
+    "name": "vexGear Default",
+    "options": [
+      "HS84T",
+      "15T",
+      "36T",
+      "HS60T",
+      "12T",
+      "HS12T",
+      "84T",
+      "60T",
+      "HS36T"
+    ],
+    "strValue": "HS84T"
+  },
+  "Gear A": {
+    "name": "Gear A",
+    "options": [
+      "HS84T",
+      "15T",
+      "36T",
+      "HS60T",
+      "12T",
+      "HS12T",
+      "84T",
+      "60T",
+      "HS36T"
+    ],
+    "strValue": "HS36T"
+  },
+  "capScrew Default": {
+    "name": "capScrew Default",
+    "options": [
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M20",
+      "M42",
+      "M30",
+      "M8",
+      "M22",
+      "M10",
+      "M24",
+      "M1.6",
+      "M12",
+      "M2.5",
+      "M14",
+      "M36",
+      "8#32",
+      "M16",
+      "M27",
+      "6#32",
+      "M18",
+      "Inch-1_4-20"
+    ],
+    "strValue": "M3"
+  },
+  "lockNut Default": {
+    "name": "lockNut Default",
+    "options": [
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M20",
+      "M8",
+      "M10",
+      "M12",
+      "M14",
+      "M16",
+      "8#32",
+      "M18",
+      "Inch-1_4-20"
+    ],
+    "strValue": "M5"
+  },
+  "Encoder Board Bearing": {
+    "name": "Encoder Board Bearing",
+    "options": [
+      "696zz",
+      "695zz",
+      "694zz",
+      "693zz",
+      "699zz",
+      "698zz",
+      "634zz",
+      "697zz",
+      "635zz",
+      "6920_2RS",
+      "R8-60355K505",
+      "R8-2RS",
+      "685zz",
+      "684zz",
+      "683zz",
+      "689zz",
+      "688zz",
+      "687zz",
+      "623zz",
+      "686zz",
+      "624zz",
+      "625zz",
+      "626zz",
+      "627zz",
+      "608zz",
+      "607zz",
+      "606zz",
+      "605zz",
+      "604zz",
+      "603zz"
+    ],
+    "strValue": "R8-60355K505"
+  },
+  "Material Thickness": {
+    "name": "Material Thickness",
+    "options": [
+      "10",
+      "1"
+    ],
+    "value": 11880
+  },
+  "Bolt Length": {
+    "name": "Bolt Length",
+    "options": [
+      "180",
+      "10"
+    ],
+    "value": 14240
+  },
+  "hobbyServo Default": {
+    "name": "hobbyServo Default",
+    "options": [
+      "standardMicro",
+      "standard",
+      "hv6214mg",
+      "Dynam",
+      "DHV56mg_sub_Micro",
+      "tproSG90",
+      "towerProMG91",
+      "tproTG90",
+      "hv5932mg",
+      "es08maII"
+    ],
+    "strValue": "DHV56mg_sub_Micro"
+  },
+  "Servo Bolt Size": {
+    "name": "Servo Bolt Size",
+    "options": [
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M20",
+      "M42",
+      "M30",
+      "M8",
+      "M22",
+      "M10",
+      "M24",
+      "M1.6",
+      "M12",
+      "M2.5",
+      "M14",
+      "M36",
+      "8#32",
+      "M16",
+      "M27",
+      "6#32",
+      "M18",
+      "Inch-1_4-20"
+    ],
+    "strValue": "M5"
+  },
+  "hobbyServoHorn Default": {
+    "name": "hobbyServoHorn Default",
+    "options": [
+      "tproSG90_1",
+      "standard4",
+      "DHV56mg_sub_Micro_4",
+      "standardMicro1",
+      "DHV56mg_sub_Micro_1",
+      "DHV56mg_sub_Micro_2",
+      "hv6214mg_6",
+      "hv6214mg_1"
+    ],
+    "strValue": "hv6214mg_1"
+  }
+}

@@ -1,5 +1,6 @@
 #ifndef HIDPARSER_H
 #define HIDPARSER_H
+#define MAX_SERVOS 20
 
 #include <Arduino.h>
 #ifdef __cplusplus
@@ -7,12 +8,10 @@
 	#include <PWMServo.h>
 #endif
 
-#ifdef __cplusplus
 
-
-class HidParser{
+class HIDParser{
 public:
-	void Begin(int *Servos);
+	void Begin( int *Servos);
 	void Server(void);
 
 
@@ -20,5 +19,4 @@ private:
 
 };
 
-#endif
 #endif
