@@ -291,7 +291,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	
-	HIDSimpleComsDevice d = new HIDSimpleComsDevice(0x3742,0x7)
+	HIDSimpleComsDevice d = new HIDSimpleComsDevice( 0x16c0 ,0x0486 )
 	d.connect(); // Connect to it.
 	LinkFactory.addLinkProvider("hidfast",{LinkConfiguration conf->
 				println "Loading link "
