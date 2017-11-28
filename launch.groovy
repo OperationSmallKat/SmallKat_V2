@@ -9,7 +9,7 @@ import Jama.Matrix;
 class PacketProcessor{
 	ByteOrder be =ByteOrder.LITTLE_ENDIAN; 
 	int packetSize = 64
-	int numFloats =(packetSize)-4
+	int numFloats =packetSize-4
 
 	int getId(byte [] bytes){
 		return ByteBuffer.wrap(message).order(be).getInt(0);
@@ -19,7 +19,7 @@ class PacketProcessor{
 		
 		//println "Parsing packet"
 		for(int i=0;i<numFloats;i++){
-			int baseIndex = (i)+4;
+			int baseIndex = i+4;
 			//returnValues[i] = ByteBuffer.wrap(bytes).order(be).getFloat(baseIndex);
 			returnValues[i] = bytes[baseIndex]
 			if(returnValues[i] <0){
@@ -33,7 +33,7 @@ class PacketProcessor{
 		byte[] message = new byte[packetSize];
 		ByteBuffer.wrap(message).order(be).putInt(0,idOfCommand).array();
 		for(int i=0;i<numFloats && i< values.length;i++){
-			int baseIndex = (i)+4;
+			int baseIndex = i+4;
 			//ByteBuffer.wrap(message).order(be).putFloat(baseIndex,values[i]).array();
 			message[baseIndex]=(byte)values[i]
 		}
@@ -308,8 +308,8 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
-	public int getCurrentPosition() {
-		return device.getValues(index);
+	public double getCurrentPosition() {
+		return (double)device.getValues(index);
 	}
 
 }
