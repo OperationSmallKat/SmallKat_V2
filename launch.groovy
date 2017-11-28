@@ -257,8 +257,6 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	HIDSimpleComsDevice device;
 	int index =0;
 	int lastPushedVal = 0;
-	double velocityTerm = 0;
-	double gravityCompTerm = 0;
 	/**
 	 * Instantiates a new HID rotory link.
 	 *
