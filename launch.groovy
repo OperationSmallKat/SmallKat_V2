@@ -143,7 +143,7 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 					if(e!=null){
 						try{
 							e.call()
-						}catch (Throwable t){
+						}catch (Exception |Error t){
 							t.printStackTrace(System.out)							
 						}
 					}
