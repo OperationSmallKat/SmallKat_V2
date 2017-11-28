@@ -287,7 +287,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		device.setValues(index,(float)getTargetValue(),(float)velocityTerm ,(float)gravityCompTerm)
+		device.setValues(index,getTargetValue())
 	}
 
 	/* (non-Javadoc)
@@ -310,8 +310,8 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
-	public double getCurrentPosition() {
-		return device.getValues(index)[0];
+	public int getCurrentPosition() {
+		return device.getValues(index);
 	}
 
 }
