@@ -33,16 +33,16 @@ void setup() {
     Serial.begin(115200);
 //Servo Initializations Begin
 
-    //TailUDServo.attach(TailUDServo_PIN);
-    //TailLRServo.attach(TailLRServo_PIN);
-  //  BLFServo.attach(BLFServo_PIN);
- //   BLMServo.attach(BLMServo_PIN);
-  //  BLSServo.attach(BLSServo_PIN);
-  // BRFServo.attach(BRFServo_PIN);
-  //  BRMServo.attach(BRMServo_PIN);
-   // BRSServo.attach(BRSServo_PIN);
-    //  FRFServo.attach(FRFServo_PIN);
-    FRMServo.attach(FRMServo_PIN);
+//    TailUDServo.attach(TailUDServo_PIN);
+//    TailLRServo.attach(TailLRServo_PIN);
+//    BLFServo.attach(BLFServo_PIN);
+//    BLMServo.attach(BLMServo_PIN);
+//    BLSServo.attach(BLSServo_PIN);
+//    BRFServo.attach(BRFServo_PIN);
+//    BRMServo.attach(BRMServo_PIN);
+//    BRSServo.attach(BRSServo_PIN);
+//    FRFServo.attach(FRFServo_PIN);
+//    FRMServo.attach(FRMServo_PIN);
 //    FRSServo.attach(FRSServo_PIN);
 //    FLFServo.attach(FLFServo_PIN);
 //    FLMServo.attach(FLMServo_PIN);

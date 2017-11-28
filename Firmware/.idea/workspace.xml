@@ -5,12 +5,12 @@
       <config projectName="Firmware" targetName="Firmware" />
       <config projectName="Firmware" targetName="DEBUG" />
       <config projectName="Firmware" targetName="PLATFORMIO_BUILD" />
-      <config projectName="Firmware" targetName="PLATFORMIO_UPDATE_ALL" />
+      <config projectName="Firmware" targetName="PLATFORMIO_UPLOAD" />
       <config projectName="Firmware" targetName="PLATFORMIO" />
       <config projectName="Firmware" targetName="PLATFORMIO_REBUILD_PROJECT_INDEX" />
       <config projectName="Firmware" targetName="PLATFORMIO_TEST" />
       <config projectName="Firmware" targetName="PLATFORMIO_CLEAN" />
-      <config projectName="Firmware" targetName="PLATFORMIO_UPLOAD" />
+      <config projectName="Firmware" targetName="PLATFORMIO_UPDATE_ALL" />
       <config projectName="Firmware" targetName="PLATFORMIO_UPLOADFS" />
       <config projectName="Firmware" targetName="PLATFORMIO_PROGRAM" />
     </generated>
@@ -41,21 +41,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1073">
-              <caret line="60" column="21" lean-forward="false" selection-start-line="60" selection-start-column="21" selection-end-line="60" selection-end-column="21" />
+            <state relative-caret-position="1033">
+              <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="26" column="14" lean-forward="false" selection-start-line="26" selection-start-column="10" selection-end-line="26" selection-end-column="14" />
+            <state relative-caret-position="1053">
+              <caret line="63" column="0" lean-forward="false" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
               <folding>
                 <element signature="e#76#96#0" expanded="true" />
                 <element signature="e#180#199#0" expanded="true" />
@@ -67,7 +67,7 @@
       <file leaf-file-name="Servo.h" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoteensy/libraries/Servo/Servo.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1660">
+            <state relative-caret-position="1413">
               <caret line="92" column="33" lean-forward="false" selection-start-line="92" selection-start-column="31" selection-end-line="92" selection-end-column="33" />
               <folding />
             </state>
@@ -102,10 +102,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="47" />
-    <option name="y" value="-4" />
-    <option name="width" value="2513" />
-    <option name="height" value="1604" />
+    <option name="x" value="46" />
+    <option name="y" value="-11" />
+    <option name="width" value="2515" />
+    <option name="height" value="1612" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -437,17 +437,18 @@
       <workItem from="1510893420623" duration="1360000" />
       <workItem from="1510895728496" duration="1196000" />
       <workItem from="1510939723638" duration="207000" />
+      <workItem from="1511196286188" duration="424000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2763000" />
+    <option name="totallyTimeSpent" value="3187000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="47" y="-4" width="2513" height="1604" extended-state="6" />
+    <frame x="46" y="-11" width="2515" height="1612" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14471017" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14592622" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -489,6 +490,41 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1200">
+          <caret line="60" column="21" lean-forward="false" selection-start-line="60" selection-start-column="21" selection-end-line="60" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoteensy/libraries/Servo/Servo.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1840">
+          <caret line="92" column="33" lean-forward="false" selection-start-line="92" selection-start-column="31" selection-end-line="92" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MotorCalibration.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="20" lean-forward="false" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="520">
+          <caret line="26" column="14" lean-forward="false" selection-start-line="26" selection-start-column="10" selection-end-line="26" selection-end-column="14" />
+          <folding>
+            <element signature="e#76#96#0" expanded="true" />
+            <element signature="e#180#199#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -553,28 +589,28 @@
     </entry>
     <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoteensy/libraries/Servo/Servo.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1660">
+        <state relative-caret-position="1413">
           <caret line="92" column="33" lean-forward="false" selection-start-line="92" selection-start-column="31" selection-end-line="92" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1073">
-          <caret line="60" column="21" lean-forward="false" selection-start-line="60" selection-start-column="21" selection-end-line="60" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="26" column="14" lean-forward="false" selection-start-line="26" selection-start-column="10" selection-end-line="26" selection-end-column="14" />
+        <state relative-caret-position="1053">
+          <caret line="63" column="0" lean-forward="false" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
           <folding>
             <element signature="e#76#96#0" expanded="true" />
             <element signature="e#180#199#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1033">
+          <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
