@@ -213,34 +213,6 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 	void setValue(int index,int position){
 		pollingPacket.downstream[index] = position
 	}
-	/*
-	void setPIDGains(int index,float kp, float ki, float kd){
-		
-		pidPacket.downstream[(index*3)+0] = kp
-		pidPacket.downstream[(index*3)+1] = ki
-		pidPacket.downstream[(index*3)+2] = kd
-		//println "Setting Downstream "+downstream
-	}
-	void pushPIDGains(){
-		pushPacket(pidPacket)
-	}
-	void setPDVelGains(int index,float kp, float kd){
-		
-		PDVelPacket.downstream[(index*2)+0] = kp
-		PDVelPacket.downstream[(index*2)+1] = kd
-		//println "Setting Downstream "+downstream
-	}
-	void pushPDVelGains(){
-		pushPacket(PDVelPacket)
-	}
-	void setVelocity(int index,float TPS){
-		SetVelocity.downstream[index] = TPS
-		//println "Setting Downstream "+downstream
-	}
-	void pushVelocity(){
-		pushPacket(SetVelocity)
-	}
-	*/
 	int getValue(int index){
 		return pollingPacket.upstream[index]
 	}
