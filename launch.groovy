@@ -129,7 +129,7 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 					disconnect()
 				}
 			}else{
-				println "Simulation"
+				//println "Simulation"
 				for(int j=0;j<packet.downstream.length&&j<packet.upstream.length;j++){
 					packet.upstream[j]=packet.downstream[j];
 			}
@@ -285,7 +285,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		device.setValues(index,getTargetValue())
+		device.setValue(index,(int)getTargetValue())
 	}
 
 	/* (non-Javadoc)
