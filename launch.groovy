@@ -138,7 +138,8 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 			//println "updaing "+upstream+" downstream "+downstream
 		
 			if(events.get(packet.idOfCommand)!=null){
-				for(Closure e:events.get(packet.idOfCommand)){
+				for(int i=0;i<events.size();i++){
+					Closure e=events.get(packet.idOfCommand).get(i)
 					if(e!=null){
 						try{
 							e.call()
