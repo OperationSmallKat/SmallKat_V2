@@ -306,8 +306,8 @@ def cat =DeviceManager.getSpecificDevice( "jaguar",{
 	//If the device does not exist, prompt for the connection
 	
 	MobileBase m = BowlerStudio.loadMobileBaseFromGit(
-		"https://github.com/keionbis/JaguarQuadruped.git",
-		"Bowler/cat.xml"
+		"https://github.com/keionbis/SmallKat.git",
+		"bowler/cat.xml"
 		)
 	if(m==null)
 		throw new RuntimeException("Arm failed to assemble itself")
