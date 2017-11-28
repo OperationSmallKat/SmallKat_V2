@@ -309,7 +309,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	 */
 	@Override
 	public double getCurrentPosition() {
-		return (double)device.getValues(index);
+		return (double)device.getValue(index);
 	}
 
 }
