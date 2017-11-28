@@ -23,7 +23,7 @@
 	</kinematics>
 <link>
 	<name>basePan</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>3</index>
 	<scale>0.33</scale>
@@ -77,7 +77,7 @@
 </link>
 <link>
 	<name>baseTilt</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>0</index>
 	<scale>0.33</scale>
@@ -131,7 +131,7 @@
 </link>
 <link>
 	<name>elbow</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>1</index>
 	<scale>0.33</scale>
@@ -218,7 +218,7 @@
 	</kinematics>
 <link>
 	<name>basePan</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>4</index>
 	<scale>0.33</scale>
@@ -272,7 +272,7 @@
 </link>
 <link>
 	<name>baseTilt</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>5</index>
 	<scale>0.33</scale>
@@ -326,7 +326,7 @@
 </link>
 <link>
 	<name>elbow</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>6</index>
 	<scale>0.33</scale>
@@ -413,7 +413,7 @@
 	</kinematics>
 <link>
 	<name>basePan</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>7</index>
 	<scale>0.33</scale>
@@ -467,7 +467,7 @@
 </link>
 <link>
 	<name>baseTilt</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>8</index>
 	<scale>0.33</scale>
@@ -521,7 +521,7 @@
 </link>
 <link>
 	<name>elbow</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>12</index>
 	<scale>0.33</scale>
@@ -608,7 +608,7 @@
 	</kinematics>
 <link>
 	<name>basePan</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>13</index>
 	<scale>0.33</scale>
@@ -662,7 +662,7 @@
 </link>
 <link>
 	<name>baseTilt</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>14</index>
 	<scale>0.33</scale>
@@ -716,7 +716,7 @@
 </link>
 <link>
 	<name>elbow</name>
-	<deviceName>dyio</deviceName>
+	<deviceName>hidDevice</deviceName>
 	<type>servo-rotory</type>
 	<index>15</index>
 	<scale>0.33</scale>
