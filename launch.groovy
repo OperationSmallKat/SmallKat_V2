@@ -23,7 +23,7 @@ class PacketProcessor{
 			//returnValues[i] = ByteBuffer.wrap(bytes).order(be).getFloat(baseIndex);
 			returnValues[i] = bytes[baseIndex]
 			if(returnValues[i] <0){
-				returnValues[i]+=255
+				returnValues[i]+=256
 			}
 		}
 			
@@ -108,17 +108,18 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 				//println "Writing packet"
 				try{
 					byte[] message = processor.command(packet.idOfCommand,packet.downstream)
-					//println "Writing: "+ message
+					//println "Writing: "+ packet.downstream
 					int val = hidDevice.write(message, message.length, (byte) 0);
 					if(val>0){
 						int read = hidDevice.read(message, 1000);
 						if(read>0){
 							//println "Parsing packet"
-							//println "read: "+ message
+							
 							def up=processor.parse(message)
 							for(int i=0;i<packet.upstream.length;i++){
 								packet.upstream[i]=up[i];
 							}
+							//println "read: "+ packet.upstream
 						}else{
 							println "Read failed"	
 						}
