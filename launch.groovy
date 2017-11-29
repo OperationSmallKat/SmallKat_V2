@@ -163,7 +163,7 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 		hidDevice=null
 		for (HidDevice h : hidServices.getAttachedHidDevices()) {
 		  if(h.isVidPidSerial(vid, pid, null)){
-		  	if(hidDevice!= null){
+		  	if(hidDevice== null){
 		  	  hidDevice=h
 			 
 			  hidDevice.open();
