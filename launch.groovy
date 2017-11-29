@@ -163,10 +163,14 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 		hidDevice=null
 		for (HidDevice h : hidServices.getAttachedHidDevices()) {
 		  if(h.isVidPidSerial(vid, pid, null)){
+		  	if(hidDevice!= null){
 		  	  hidDevice=h
 			 
 			  hidDevice.open();
 			  System.out.println("Found! "+hidDevice);
+		  	}else{
+		  		System.out.println("Already opened! this matches too.. "+hidDevice);
+		  	}
 			 
 		  }
 		}
