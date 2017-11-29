@@ -142,7 +142,7 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 			//println "updaing "+upstream+" downstream "+downstream
 			ArrayList<Runnable> eventRunnables = events.get(packet.idOfCommand)
 			if(eventRunnables!=null){
-				println "Command "+packet.idOfCommand+" has "+eventRunnables.size()
+				//println "Command "+packet.idOfCommand+" has "+eventRunnables.size()
 				for(int i=0;i<eventRunnables.size();i++){
 					Runnable e=eventRunnables.get(i)
 					if(e!=null){
@@ -255,7 +255,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 		c.addEvent(command,{
 			int val= getCurrentPosition();
 			if(lastPushedVal!=val){
-				println "Fire Link Listner "+index+" value "+getCurrentPosition()
+				//println "Fire Link Listner "+index+" value "+getCurrentPosition()
 				fireLinkListener(val);
 				lastPushedVal=val
 			}else{
