@@ -43,19 +43,19 @@ class PacketProcessor{
 }
 
 public class PacketType{
-	int idOfCommand=0;
+	private final Integer idOfCommand;
 	int [] downstream = new int[60]
 	int [] upstream = new int[60]
 	boolean done=false;
 	boolean started = false;
-	public PacketType(int id){
+	public PacketType(Integer id){
 		idOfCommand=id;
 	}
 	
 }
 
 public class HIDSimpleComsDevice extends NonBowlerDevice{
-	HashMap<Integer,ArrayList<Closure>> events = new HashMap<>()
+	HashMap<Integer,ArrayList<Runnable>> events = new HashMap<>()
 	HidServices hidServices = null;
 	int vid =0 ;
 	int pid =0;
@@ -84,17 +84,20 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 			Thread.sleep(1)
 		}
 	}
-	void removeEvent(Integer id, Closure event){
+	void removeEvent(Integer id, Runnable event){
 		if(events.get(id)==null){
-			events.put(id,[])
+			events.put(id,new ArrayList<Runnable>())
 		}
 		events.get(id).remove(event)
 	}
-	void addEvent(Integer id, Closure event){
+	void addEvent(Integer id, Runnable event){
 		if(events.get(id)==null){
-			events.put(id,[])
+			println "Creating "+id+" list"
+			events.put(id,new ArrayList<Runnable>())
 		}
+		
 		events.get(id).add(event)
+		println "Adding "+id+" event "+event+" size "+events.get(id).size()
 	}
 	@Override
 	public  void disconnectDeviceImp(){		
@@ -137,13 +140,14 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 				
 			}
 			//println "updaing "+upstream+" downstream "+downstream
-		
-			if(events.get(packet.idOfCommand)!=null){
-				for(int i=0;i<events.size();i++){
-					Closure e=events.get(packet.idOfCommand).get(i)
+			ArrayList<Runnable> eventRunnables = events.get(packet.idOfCommand)
+			if(eventRunnables!=null){
+				println "Command "+packet.idOfCommand+" has "+eventRunnables.size()
+				for(int i=0;i<eventRunnables.size();i++){
+					Runnable e=eventRunnables.get(i)
 					if(e!=null){
 						try{
-							e.call()
+							e.run()
 						}catch (Exception |Error t){
 							t.printStackTrace(System.out)							
 						}
@@ -235,6 +239,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	HIDSimpleComsDevice device;
 	int index =0;
 	int lastPushedVal = 0;
+	private static final Integer command =37
 	/**
 	 * Instantiates a new HID rotory link.
 	 *
@@ -247,13 +252,16 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 		device=c
 		if(device ==null)
 			throw new RuntimeException("Device can not be null")
-		c.addEvent(37,{
+		c.addEvent(command,{
 			int val= getCurrentPosition();
 			if(lastPushedVal!=val){
-				//println "Fire Link Listner "+index+" value "+getCurrentPosition()
+				println "Fire Link Listner "+index+" value "+getCurrentPosition()
 				fireLinkListener(val);
+				lastPushedVal=val
+			}else{
+				//println index+" value same "+getCurrentPosition()
 			}
-			lastPushedVal=val
+			
 		})
 		
 	}
