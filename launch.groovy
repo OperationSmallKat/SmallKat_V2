@@ -169,7 +169,7 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 			  hidDevice.open();
 			  System.out.println("Found! "+hidDevice);
 		  	}else{
-		  		System.out.println("Already opened! this matches too.. "+hidDevice);
+		  		System.out.println("Already opened! this matches too.. "+h);
 		  	}
 			 
 		  }
