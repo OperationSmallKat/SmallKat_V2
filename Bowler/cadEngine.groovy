@@ -22,7 +22,13 @@ return new ICadGenerator(){
 
 	@Override 
 	public ArrayList<CSG> generateCad(DHParameterKinematics d, int linkIndex) {
+		String limbName = d.getScriptingName()
 		File legFile = null
+		boolean mirror=true
+		if(limbName.contentEquals("DefaultLeg3")||limbName.contentEquals("DefaultLeg4")){
+			println "Mirror leg parts"
+			mirror=false
+		}
 		if(linkIndex ==0){
 			legFile = ScriptingEngine.fileFromGit(
 			"https://github.com/keionbis/SmallKat.git",
@@ -42,6 +48,8 @@ return new ICadGenerator(){
 			"STLs/Lower Leg.STL");
 
 		}
+		
+
 
 		ArrayList<DHLink> dhLinks = d.getChain().getLinks()
 		DHLink dh = dhLinks.get(linkIndex)
@@ -57,21 +65,26 @@ return new ICadGenerator(){
 		CSG body  = Vitamins.get(legFile)
 		if(linkIndex ==0){
 			body=moveDHValues(body,dh)
-				.movey(15.5)
 				.movex(-4.5)
-				.movez(-8)
+				.movez(-8)				
+				.movey(!mirror?5:15.5)
+				.rotx(!mirror?180:0)
+				
+				
 		}
 		if(linkIndex ==1){
 			body=moveDHValues(body,dh)
 				.movey(-9)
 				.movex(-9)
 				.movez(-15)
+				.rotx(!mirror?180:0)
 		}
 		if(linkIndex ==2){
 			body=moveDHValues(body.rotz(-90),dh)
 				.movey(-8)
 				.movex(-8.5)
 				.movez(-20)
+				.rotx(mirror?180:0)
 		}
 		body.setManipulator(manipulator);
 	
