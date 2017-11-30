@@ -1110,13 +1110,13 @@
 </ZframeToRAS>
 
 <baseToZframe>
-	<x>0.0</x>
+	<x>-69.5</x>
 	<y>0.0</y>
-	<z>0.0</z>
-	<rotw>1.0</rotw>
-	<rotx>0.0</rotx>
-	<roty>0.0</roty>
-	<rotz>0.0</rotz>
+	<z>115.0</z>
+	<rotw>6.170670739598364E-5</rotw>
+	<rotx>6.170670739598362E-5</rotx>
+	<roty>0.7071067784940844</roty>
+	<rotz>0.7071067784940845</rotz>
 </baseToZframe>
 
 </appendage>
