@@ -4,12 +4,22 @@ import org.apache.commons.io.IOUtils;
 import com.neuronrobotics.bowlerstudio.vitamins.*;
 import java.nio.file.Paths;
 import eu.mihosoft.vrl.v3d.FileUtil;
-import javafx.scene.transform.*;
+import eu.mihosoft.vrl.v3d.Transform;
+import javafx.scene.transform.Affine;
+import com.neuronrobotics.bowlerstudio.physics.TransformFactory;
 println "Loading STL file"
 // Load an STL file from a git repo
 // Loading a local file also works here
 
 return new ICadGenerator(){
+	
+	private CSG moveDHValues(CSG incoming,DHLink dh ){
+		TransformNR step = new TransformNR(dh.DhStep(0)).inverse()
+		Transform move = TransformFactory.nrToCSG(step)
+		return incoming.transformed(move)
+		
+	}
+
 	@Override 
 	public ArrayList<CSG> generateCad(DHParameterKinematics d, int linkIndex) {
 		File legFile = null
@@ -44,7 +54,7 @@ return new ICadGenerator(){
 
 		ArrayList<CSG> allCad=new ArrayList<>();
 		// Load the .CSG from the disk and cache it in memory
-		CSG body  = Vitamins.get(legFile)
+		CSG body  = moveDHValues(Vitamins.get(legFile),dh)
 
 		body.setManipulator(manipulator);
 		body.setColor(javafx.scene.paint.Color.WHITE)
@@ -61,7 +71,7 @@ return new ICadGenerator(){
 
 		File mainBodyFile = ScriptingEngine.fileFromGit(
 			"https://github.com/keionbis/SmallKat.git",
-			"STLs/Body.STL");
+			"STLs/BodyV2.STL");
 
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(mainBodyFile)

@@ -5,7 +5,7 @@
       "500",
       "0.01"
     ],
-    "value": 395150
+    "value": 30000
   },
   "Bolt Size": {
     "name": "Bolt Size",
@@ -160,7 +160,7 @@
       "M18",
       "Inch-1_4-20"
     ],
-    "strValue": "M3"
+    "strValue": "M5"
   },
   "lockNut Default": {
     "name": "lockNut Default",
@@ -231,7 +231,7 @@
       "180",
       "10"
     ],
-    "value": 14240
+    "value": 10000
   },
   "hobbyServo Default": {
     "name": "hobbyServo Default",
