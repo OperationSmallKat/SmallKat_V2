@@ -75,6 +75,9 @@ return new ICadGenerator(){
 
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(mainBodyFile)
+					.movex(-76)
+					.movey(-40)
+					.movez(60)
 
 		body.setManipulator(b.getRootListener());
 		body.setColor(javafx.scene.paint.Color.WHITE)
