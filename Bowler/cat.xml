@@ -13,9 +13,9 @@
 <leg>
 
 <name>DefaultLeg</name>
-	<cadEngine>
-		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
-		<file>LinkedCadEngine.groovy</file>
+		<cadEngine>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -208,9 +208,9 @@
 <leg>
 
 <name>DefaultLeg2</name>
-	<cadEngine>
-		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
-		<file>LinkedCadEngine.groovy</file>
+		<cadEngine>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -403,9 +403,9 @@
 <leg>
 
 <name>DefaultLeg3</name>
-	<cadEngine>
-		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
-		<file>LinkedCadEngine.groovy</file>
+		<cadEngine>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -598,9 +598,9 @@
 <leg>
 
 <name>DefaultLeg4</name>
-	<cadEngine>
-		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
-		<file>LinkedCadEngine.groovy</file>
+		<cadEngine>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
