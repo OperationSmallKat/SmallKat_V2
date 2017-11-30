@@ -107,7 +107,7 @@ return new ICadGenerator(){
 		CSG body  = Vitamins.get(mainBodyFile)
 					.movex(-76.38)
 					.movey(-38)
-					.movez(60)
+					.movez(57)
 
 		body.setManipulator(b.getRootListener());
 		body.setColor(javafx.scene.paint.Color.WHITE)
