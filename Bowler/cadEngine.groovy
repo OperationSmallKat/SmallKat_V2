@@ -55,6 +55,7 @@ return new ICadGenerator(){
 		ArrayList<CSG> allCad=new ArrayList<>();
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = moveDHValues(Vitamins.get(legFile),dh)
+		//if(
 
 		body.setManipulator(manipulator);
 		body.setColor(javafx.scene.paint.Color.WHITE)
@@ -75,9 +76,9 @@ return new ICadGenerator(){
 
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(mainBodyFile)
-					.movex(-76)
-					.movey(-40)
-					.movez(60)
+					.movex(-76.38)
+					.movey(-38)
+					.movez(45.5)
 
 		body.setManipulator(b.getRootListener());
 		body.setColor(javafx.scene.paint.Color.WHITE)
