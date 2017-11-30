@@ -54,14 +54,30 @@ return new ICadGenerator(){
 
 		ArrayList<CSG> allCad=new ArrayList<>();
 		// Load the .CSG from the disk and cache it in memory
-		CSG body  = moveDHValues(Vitamins.get(legFile),dh)
-		//if(
-
+		CSG body  = Vitamins.get(legFile)
+		if(linkIndex ==0){
+			body=moveDHValues(body,dh)
+				.movey(13)
+				.movex(7)
+				.movez(-8)
+		}
+		if(linkIndex ==1){
+			body=moveDHValues(body,dh)
+				.movey(-9)
+				.movex(-9)
+				.movez(-15)
+		}
+		if(linkIndex ==2){
+			body=moveDHValues(body.rotz(-90),dh)
+				.movey(-8)
+				.movex(-8.5)
+				.movez(-20)
+		}
 		body.setManipulator(manipulator);
 		body.setColor(javafx.scene.paint.Color.WHITE)
 		def parts = [body ] as ArrayList<CSG>
 		for(int i=0;i<parts.size();i++){
-			parts.get(i).setColor(javafx.scene.paint.Color.GRAY)
+			parts.get(i).setColor(javafx.scene.paint.Color.RED)
 		}
 		return parts;
 		
