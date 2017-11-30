@@ -1,6 +1,3 @@
-
-
-
 import org.hid4java.*
 import org.hid4java.event.*;
 import java.nio.ByteBuffer;
@@ -320,7 +317,7 @@ def cat =DeviceManager.getSpecificDevice( "jaguar",{
 	
 	MobileBase m = BowlerStudio.loadMobileBaseFromGit(
 		"https://github.com/keionbis/SmallKat.git",
-		"bowler/cat.xml"
+		"Bowler/cat.xml"
 		)
 	if(m==null)
 		throw new RuntimeException("Arm failed to assemble itself")
