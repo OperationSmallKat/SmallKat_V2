@@ -57,8 +57,8 @@ return new ICadGenerator(){
 		CSG body  = Vitamins.get(legFile)
 		if(linkIndex ==0){
 			body=moveDHValues(body,dh)
-				.movey(13)
-				.movex(7)
+				.movey(15.5)
+				.movex(-4.5)
 				.movez(-8)
 		}
 		if(linkIndex ==1){
@@ -74,7 +74,7 @@ return new ICadGenerator(){
 				.movez(-20)
 		}
 		body.setManipulator(manipulator);
-		body.setColor(javafx.scene.paint.Color.WHITE)
+	
 		def parts = [body ] as ArrayList<CSG>
 		for(int i=0;i<parts.size();i++){
 			parts.get(i).setColor(javafx.scene.paint.Color.RED)
@@ -94,7 +94,7 @@ return new ICadGenerator(){
 		CSG body  = Vitamins.get(mainBodyFile)
 					.movex(-76.38)
 					.movey(-38)
-					.movez(45.5)
+					.movez(60)
 
 		body.setManipulator(b.getRootListener());
 		body.setColor(javafx.scene.paint.Color.WHITE)
