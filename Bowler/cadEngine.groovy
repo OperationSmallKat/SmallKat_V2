@@ -66,9 +66,9 @@ return new ICadGenerator(){
 		if(linkIndex ==0){
 			body=moveDHValues(body,dh)
 				.movex(-4.5)
-				.movez(-8)				
-				.movey(!mirror?5:15.5)
-				.rotx(!mirror?180:0)
+				.movez(-20)				
+				.movey(mirror?5:15.5)
+				.rotx(mirror?180:0)
 				
 				
 		}
@@ -76,7 +76,7 @@ return new ICadGenerator(){
 			body=moveDHValues(body,dh)
 				.movey(-9)
 				.movex(-9)
-				.movez(-15)
+				.movez(-11)
 				.rotx(!mirror?180:0)
 		}
 		if(linkIndex ==2){
@@ -105,7 +105,7 @@ return new ICadGenerator(){
 
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(mainBodyFile)
-					.movex(-76.38)
+					.movex(-79)
 					.movey(-38)
 					.movez(57)
 
