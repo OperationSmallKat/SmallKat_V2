@@ -220,7 +220,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>4</index>
+	<index>5</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -274,7 +274,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>5</index>
+	<index>6</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -328,7 +328,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>6</index>
+	<index>7</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>15.223880597014928</lowerLimit>
@@ -415,7 +415,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>7</index>
+	<index>8</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -469,7 +469,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>8</index>
+	<index>9</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -523,7 +523,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>12</index>
+	<index>10</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>15.223880597014928</lowerLimit>
@@ -610,7 +610,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>13</index>
+	<index>11</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -664,7 +664,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>14</index>
+	<index>12</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -718,7 +718,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>15</index>
+	<index>13</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>15.223880597014928</lowerLimit>
