@@ -22,6 +22,7 @@ return new ICadGenerator(){
 
 	@Override 
 	public ArrayList<CSG> generateCad(DHParameterKinematics d, int linkIndex) {
+		ArrayList<CSG> allCad=new ArrayList<>();
 		String limbName = d.getScriptingName()
 		File legFile = null
 		boolean mirror=true
@@ -29,24 +30,56 @@ return new ICadGenerator(){
 			println "Mirror leg parts"
 			mirror=false
 		}
-		if(linkIndex ==0){
-			legFile = ScriptingEngine.fileFromGit(
-			"https://github.com/keionbis/SmallKat.git",
-			"STLs/Elbow Joint.STL");
+		if(limbName.contentEquals("Tail")){
+			if(linkIndex ==0){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Elbow Joint.STL");
+	
+			}
+			if(linkIndex ==1){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Tail.STL");
+			}
+	
+			if(linkIndex ==2)
+				return allCad;
+		}else if(limbName.contentEquals("Head")){
+			if(linkIndex ==0){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Elbow Joint.STL");
 
-		}
-		if(linkIndex ==1){
-			legFile = ScriptingEngine.fileFromGit(
-			"https://github.com/keionbis/SmallKat.git",
-			"STLs/Midleg.STL");
-
-		}
-
-		if(linkIndex ==2){
-			legFile = ScriptingEngine.fileFromGit(
-			"https://github.com/keionbis/SmallKat.git",
-			"STLs/Lower Leg.STL");
-
+			}
+			if(linkIndex ==1){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Head.STL");
+			}
+	
+			if(linkIndex ==2)
+				return allCad;
+		}else{
+			if(linkIndex ==0){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Elbow Joint.STL");
+	
+			}
+			if(linkIndex ==1){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Midleg.STL");
+	
+			}
+	
+			if(linkIndex ==2){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Lower Leg.STL");
+	
+			}
 		}
 		
 
@@ -60,7 +93,7 @@ return new ICadGenerator(){
 		// Transform used by the UI to render the location of the object
 		Affine manipulator = dh.getListener();
 
-		ArrayList<CSG> allCad=new ArrayList<>();
+		
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(legFile)
 		if(linkIndex ==0){
