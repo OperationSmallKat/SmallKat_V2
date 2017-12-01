@@ -117,7 +117,7 @@ return new ICadGenerator(){
 			if(limbName.contentEquals("Head")){
 				body=body
 					.movex(35.5)
-					.movez(-36.5)
+					.movez(-38.5)
 			}
 		}
 		if(linkIndex ==2){
