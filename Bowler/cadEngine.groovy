@@ -116,7 +116,7 @@ return new ICadGenerator(){
 				.rotx(!mirror?180:0)
 			if(limbName.contentEquals("Head")){
 				body=body
-					.movex(35.5)
+					.movey(-18)
 					.movez(-38.5)
 			}
 		}
