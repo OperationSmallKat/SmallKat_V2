@@ -794,8 +794,8 @@
 
 <name>Head</name>
 	<cadEngine>
-		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
-		<file>ThreeDPrintCad.groovy</file>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
@@ -818,6 +818,16 @@
 	<homingTPS>10000000</homingTPS>
 
 	<vitamins>
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+		</vitamin>
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+		</vitamin>
 
 	</vitamins>
 	<passive>false</passive>
@@ -862,6 +872,16 @@
 	<homingTPS>10000000</homingTPS>
 
 	<vitamins>
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+		</vitamin>
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+		</vitamin>
 
 	</vitamins>
 	<passive>false</passive>
@@ -906,6 +926,16 @@
 	<homingTPS>10000000</homingTPS>
 
 	<vitamins>
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+		</vitamin>
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+		</vitamin>
 
 	</vitamins>
 	<passive>false</passive>
@@ -948,8 +978,8 @@
 	<x>66.0</x>
 	<y>0.0</y>
 	<z>115.0</z>
-	<rotw>0.7071376338671591</rotw>
-	<rotx>0.7070759271597044</rotx>
+	<rotw>0.7071376338671592</rotw>
+	<rotx>0.7070759271597045</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 </baseToZframe>
@@ -959,8 +989,8 @@
 
 <name>Tail</name>
 	<cadEngine>
-		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
-		<file>ThreeDPrintCad.groovy</file>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
@@ -983,6 +1013,16 @@
 	<homingTPS>10000000</homingTPS>
 
 	<vitamins>
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+		</vitamin>
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+		</vitamin>
 
 	</vitamins>
 	<passive>false</passive>
@@ -1027,6 +1067,16 @@
 	<homingTPS>10000000</homingTPS>
 
 	<vitamins>
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+		</vitamin>
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+		</vitamin>
 
 	</vitamins>
 	<passive>false</passive>
@@ -1071,6 +1121,16 @@
 	<homingTPS>10000000</homingTPS>
 
 	<vitamins>
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+		</vitamin>
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+		</vitamin>
 
 	</vitamins>
 	<passive>false</passive>
