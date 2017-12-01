@@ -274,13 +274,13 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>6</index>
+	<index>11</index>
 	<scale>0.33</scale>
-	<upperLimit>255.0</upperLimit>
-	<lowerLimit>0.0</lowerLimit>
+	<upperLimit>148.43283582089552</upperLimit>
+	<lowerLimit>5.708955223880596</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>211.7313432835821</staticOffset>
+	<staticOffset>70.91044776119405</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
