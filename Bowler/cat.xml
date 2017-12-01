@@ -25,13 +25,13 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>4</index>
-	<scale>-1.04</scale>
-	<upperLimit>184.58955223880594</upperLimit>
-	<lowerLimit>49.47761194029851</lowerLimit>
+	<index>9</index>
+	<scale>-0.4</scale>
+	<upperLimit>13.32089552238807</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>129.90298507462688</staticOffset>
+	<staticOffset>49.47761194029851</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -85,7 +85,7 @@
 	<lowerLimit>9.805970149253731</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>86.85564713744708</staticOffset>
+	<staticOffset>83.8733570951214</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -139,7 +139,7 @@
 	<lowerLimit>5.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>65.0</staticOffset>
+	<staticOffset>63.73134328358209</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>145</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
