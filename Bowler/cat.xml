@@ -718,13 +718,13 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>13</index>
+	<index>15</index>
 	<scale>0.33</scale>
-	<upperLimit>255.0</upperLimit>
-	<lowerLimit>15.223880597014928</lowerLimit>
+	<upperLimit>194.1044776119403</upperLimit>
+	<lowerLimit>15.223880597014933</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>128.0</staticOffset>
+	<staticOffset>136.9013143239029</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>145</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
