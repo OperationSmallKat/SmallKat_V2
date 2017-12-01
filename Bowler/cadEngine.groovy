@@ -102,7 +102,10 @@ return new ICadGenerator(){
 				.movez(-20)				
 				.movey(mirror?5:15.5)
 				.rotx(mirror?180:0)
-				
+			if(limbName.contentEquals("Head")||limbName.contentEquals("Tail")){
+				body=body
+					.movez(-11.5)
+			}	
 				
 		}
 		if(linkIndex ==1){
@@ -111,6 +114,11 @@ return new ICadGenerator(){
 				.movex(-9)
 				.movez(-11)
 				.rotx(!mirror?180:0)
+			if(limbName.contentEquals("Head")){
+				body=body
+					.movex(35.5)
+					.movez(-11.5)
+			}
 		}
 		if(linkIndex ==2){
 			body=moveDHValues(body.rotz(-90),dh)

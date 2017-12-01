@@ -794,8 +794,8 @@
 
 <name>Head</name>
 	<cadEngine>
-		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
-		<file>ThreeDPrintCad.groovy</file>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
@@ -959,8 +959,8 @@
 
 <name>Tail</name>
 	<cadEngine>
-		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
-		<file>ThreeDPrintCad.groovy</file>
+		<git>https://github.com/keionbis/SmallKat.git</git>
+		<file>Bowler/cadEngine.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
