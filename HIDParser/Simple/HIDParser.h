@@ -1,6 +1,6 @@
 #ifndef HIDPARSER_H
 #define HIDPARSER_H
-#define MAX_SERVOS 20
+//#define MAX_SERVOS 20
 
 #include <Arduino.h>
 #ifdef __cplusplus
@@ -11,7 +11,7 @@
 
 class HIDParser{
 public:
-	void Begin( int *Servos);
+	void Begin(void);
 	void Server(void);
 
 
