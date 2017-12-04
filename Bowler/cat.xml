@@ -26,8 +26,8 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>9</index>
-	<scale>-0.4</scale>
-	<upperLimit>67.1268656716418</upperLimit>
+	<scale>0.9</scale>
+	<upperLimit>66.6044776119403</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
@@ -221,12 +221,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>3</index>
-	<scale>0.33</scale>
-	<upperLimit>104.6641791044776</upperLimit>
+	<scale>0.9</scale>
+	<upperLimit>98.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>45.03257963911785</staticOffset>
+	<staticOffset>43.28580975718423</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
