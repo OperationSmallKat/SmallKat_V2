@@ -27,11 +27,11 @@
 	<type>hidfast</type>
 	<index>9</index>
 	<scale>-0.4</scale>
-	<upperLimit>50.0</upperLimit>
+	<upperLimit>67.1268656716418</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>10.93506348852752</staticOffset>
+	<staticOffset>13.80597014925373</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -80,12 +80,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>8</index>
-	<scale>-0.4</scale>
-	<upperLimit>158.0</upperLimit>
-	<lowerLimit>11.708955223880597</lowerLimit>
+	<scale>0.7</scale>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>83.8733570951214</staticOffset>
+	<staticOffset>110.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -134,12 +134,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>7</index>
-	<scale>-0.4</scale>
-	<upperLimit>169.365671641791</upperLimit>
-	<lowerLimit>16.417910447761194</lowerLimit>
+	<scale>-0.7</scale>
+	<upperLimit>178.88059701492537</upperLimit>
+	<lowerLimit>22.835820895522385</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>62.46268656716418</staticOffset>
+	<staticOffset>87.57351303185564</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>145</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -222,11 +222,11 @@
 	<type>hidfast</type>
 	<index>3</index>
 	<scale>0.33</scale>
-	<upperLimit>78.0223880597015</upperLimit>
+	<upperLimit>104.6641791044776</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>29.3116507017153</staticOffset>
+	<staticOffset>45.03257963911785</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -275,12 +275,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>11</index>
-	<scale>0.7</scale>
-	<upperLimit>148.43283582089552</upperLimit>
+	<scale>0.46</scale>
+	<upperLimit>255.0</upperLimit>
 	<lowerLimit>5.708955223880596</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>70.91044776119405</staticOffset>
+	<staticOffset>93.2776230786367</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -329,12 +329,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>12</index>
-	<scale>-1.0</scale>
-	<upperLimit>176.97761194029852</upperLimit>
+	<scale>-0.7</scale>
+	<upperLimit>184.58955223880596</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>39.42303408331475</staticOffset>
+	<staticOffset>61.875417687680965</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>145</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
