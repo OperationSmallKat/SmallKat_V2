@@ -22,26 +22,67 @@ return new ICadGenerator(){
 
 	@Override 
 	public ArrayList<CSG> generateCad(DHParameterKinematics d, int linkIndex) {
+		ArrayList<CSG> allCad=new ArrayList<>();
+		String limbName = d.getScriptingName()
 		File legFile = null
-		if(linkIndex ==0){
-			legFile = ScriptingEngine.fileFromGit(
-			"https://github.com/keionbis/SmallKat.git",
-			"STLs/Elbow Joint.STL");
-
+		boolean mirror=true
+		if(limbName.contentEquals("DefaultLeg3")||limbName.contentEquals("DefaultLeg4")){
+			println "Mirror leg parts"
+			mirror=false
 		}
-		if(linkIndex ==1){
-			legFile = ScriptingEngine.fileFromGit(
-			"https://github.com/keionbis/SmallKat.git",
-			"STLs/Midleg.STL");
+		if(limbName.contentEquals("Tail")){
+			if(linkIndex ==0){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Elbow Joint.STL");
+	
+			}
+			if(linkIndex ==1){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Tail.STL");
+			}
+	
+			if(linkIndex ==2)
+				return allCad;
+		}else if(limbName.contentEquals("Head")){
+			if(linkIndex ==0){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Elbow Joint.STL");
 
+			}
+			if(linkIndex ==1){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Head.STL");
+			}
+	
+			if(linkIndex ==2)
+				return allCad;
+		}else{
+			if(linkIndex ==0){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Elbow Joint.STL");
+	
+			}
+			if(linkIndex ==1){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Midleg.STL");
+	
+			}
+	
+			if(linkIndex ==2){
+				legFile = ScriptingEngine.fileFromGit(
+				"https://github.com/keionbis/SmallKat.git",
+				"STLs/Lower Leg.STL");
+	
+			}
 		}
+		
 
-		if(linkIndex ==2){
-			legFile = ScriptingEngine.fileFromGit(
-			"https://github.com/keionbis/SmallKat.git",
-			"STLs/Lower Leg.STL");
-
-		}
 
 		ArrayList<DHLink> dhLinks = d.getChain().getLinks()
 		DHLink dh = dhLinks.get(linkIndex)
@@ -52,26 +93,39 @@ return new ICadGenerator(){
 		// Transform used by the UI to render the location of the object
 		Affine manipulator = dh.getListener();
 
-		ArrayList<CSG> allCad=new ArrayList<>();
+		
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(legFile)
 		if(linkIndex ==0){
 			body=moveDHValues(body,dh)
-				.movey(15.5)
 				.movex(-4.5)
-				.movez(-8)
+				.movez(-20)				
+				.movey(mirror?5:15.5)
+				.rotx(mirror?180:0)
+			if(limbName.contentEquals("Head")||limbName.contentEquals("Tail")){
+				body=body
+					.movez(-11.5)
+			}	
+				
 		}
 		if(linkIndex ==1){
 			body=moveDHValues(body,dh)
 				.movey(-9)
 				.movex(-9)
-				.movez(-15)
+				.movez(-11)
+				.rotx(!mirror?180:0)
+			if(limbName.contentEquals("Head")){
+				body=body
+					.movey(-18)
+					.movez(-38.5)
+			}
 		}
 		if(linkIndex ==2){
 			body=moveDHValues(body.rotz(-90),dh)
 				.movey(-8)
 				.movex(-8.5)
 				.movez(-20)
+				.rotx(mirror?180:0)
 		}
 		body.setManipulator(manipulator);
 	
@@ -92,9 +146,9 @@ return new ICadGenerator(){
 
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(mainBodyFile)
-					.movex(-76.38)
+					.movex(-79)
 					.movey(-38)
-					.movez(60)
+					.movez(57)
 
 		body.setManipulator(b.getRootListener());
 		body.setColor(javafx.scene.paint.Color.WHITE)
