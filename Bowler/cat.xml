@@ -276,8 +276,8 @@
 	<type>hidfast</type>
 	<index>11</index>
 	<scale>0.7</scale>
-	<upperLimit>171.2686567164179</upperLimit>
-	<lowerLimit>17.12686567164179</lowerLimit>
+	<upperLimit>165.5597014925373</upperLimit>
+	<lowerLimit>36.156716417910445</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
 	<staticOffset>94.0</staticOffset>
@@ -330,7 +330,7 @@
 	<type>hidfast</type>
 	<index>12</index>
 	<scale>-0.7</scale>
-	<upperLimit>176.97761194029852</upperLimit>
+	<upperLimit>121.7910447761194</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
