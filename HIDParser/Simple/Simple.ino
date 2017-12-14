@@ -19,5 +19,12 @@ void setup(){
 }
 
 void loop(){
+   if(analogRead(A2)>750)
+   {
 	  MyHID->Server();
+   }
+   else
+   {
+   }
+	
 }
