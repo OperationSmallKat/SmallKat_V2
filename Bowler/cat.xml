@@ -720,7 +720,7 @@
 	<type>hidfast</type>
 	<index>15</index>
 	<scale>0.64212</scale>
-	<upperLimit>173.1716417910448</upperLimit>
+	<upperLimit>178.88059701492537</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
