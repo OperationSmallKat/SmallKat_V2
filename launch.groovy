@@ -317,7 +317,7 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 def cat =DeviceManager.getSpecificDevice( "jaguar",{
 	//If the device does not exist, prompt for the connection
 	
-	MobileBase m = BowlerStudio.loadMobileBaseFromGit(
+	MobileBase m = MobileBaseLoader.fromGit(
 		"https://github.com/keionbis/SmallKat.git",
 		"Bowler/cat.xml"
 		)
