@@ -1,3 +1,7 @@
+@Grapes(
+    @Grab(group='org.hid4java', module='hid4java', version='0.5.0')
+)
+
 import org.hid4java.*
 import org.hid4java.event.*;
 import java.nio.ByteBuffer;
