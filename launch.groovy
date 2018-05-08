@@ -1,5 +1,6 @@
 @Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
+
 import org.hid4java.*
 import org.hid4java.event.*;
 import java.nio.ByteBuffer;
@@ -327,4 +328,30 @@ def cat =DeviceManager.getSpecificDevice( "jaguar",{
 	return m
 })
 
-return null
+def gameController = ScriptingEngine.gitScriptRun(
+            "https://gist.github.com/e26c0d8ef7d5283ef44fb22441a603b8.git", // git location of the library
+            "LoadGameController.groovy" , // file to load
+            // Parameters passed to the funcetion
+            ["Game*"]
+            )
+if(gameController==null){
+	return 
+}
+
+byte [] data = gameController.getData() 
+double toSeconds=0.03//100 ms for each increment
+          
+while (!Thread.interrupted()){
+	Thread.sleep((toSeconds*1000))
+	double xdata = data[0]
+	double rzdata = data[1]
+	if(xdata<0)
+		xdata+=256
+	if(rzdata<0)
+		rzdata+=256
+		
+	double displacement = 5.0*xdata/255.0
+	double rot = 5.0*rzdata/255.0
+	TransformNR move = new TransformNR(displacement,0,0,new RotationNR(0,rot,0))
+	cat.DriveArc(move, toSeconds);
+}
