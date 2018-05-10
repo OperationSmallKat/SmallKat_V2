@@ -33,19 +33,24 @@ void HIDParser::Server(void)
             RawHID.send(buffer, Timeout);//Returns received array to sender
         }
         else{
-            imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
-            IMUBuffer[0] = euler.x();
-            IMUBuffer[1] = euler.y();
-            IMUBuffer[2] = euler.z();
-//            float x_accel = (read8(BNO055_ACCEL_DATA_X_MSB_ADDR) << 8) | (read8(BNO055_ACCEL_DATA_X_LSB_ADDR));
-//            float y_accel = (read8(BNO055_ACCEL_DATA_Y_MSB_ADDR) << 8) | (read8(BNO055_ACCEL_DATA_Y_LSB_ADDR));
-//            float z_accel = (read8(BNO055_ACCEL_DATA_Z_MSB_ADDR) << 8) | (read8(BNO055_ACCEL_DATA_Z_LSB_ADDR));
-
+            if(!bno.begin())
+            {
+                imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+                IMUBuffer[0] = euler.x();
+                IMUBuffer[1] = euler.y();
+                IMUBuffer[2] = euler.z();
+                //            float x_accel = (read8(BNO055_ACCEL_DATA_X_MSB_ADDR) << 8) | (read8(BNO055_ACCEL_DATA_X_LSB_ADDR));
+                //            float y_accel = (read8(BNO055_ACCEL_DATA_Y_MSB_ADDR) << 8) | (read8(BNO055_ACCEL_DATA_Y_LSB_ADDR));
+                //            float z_accel = (read8(BNO055_ACCEL_DATA_Z_MSB_ADDR) << 8) | (read8(BNO055_ACCEL_DATA_Z_LSB_ADDR));
+            }
+            else
+            {
+                IMUBuffer = 0;
+            }
             RawHID.send(IMUBuffer, Timeout);//Returns array of IMU data to sender
         }
     for(i = 0;i<20;i++){
     	myServo[i].write(buffer[i+3]);
-    	  //Serial.println(buffer[i]);
     }
 	}
 }
