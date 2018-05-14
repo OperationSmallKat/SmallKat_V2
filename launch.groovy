@@ -339,7 +339,7 @@ if(gameController==null){
 }
 
 byte [] data = gameController.getData() 
-double toSeconds=0.05//100 ms for each increment
+double toSeconds=0.03//100 ms for each increment
 
 while (!Thread.interrupted()){
 	Thread.sleep((long)(toSeconds*1000))
@@ -349,7 +349,7 @@ while (!Thread.interrupted()){
 		xdata+=256
 	if(rzdata<0)
 		rzdata+=256
-	double scale = 3.0
+	double scale = 1.0
 	double displacement = scale*xdata/255.0-scale/2
 	double rot =scale*rzdata/255.0-scale/2
 	println "displacement "+displacement+" rot "+rot
