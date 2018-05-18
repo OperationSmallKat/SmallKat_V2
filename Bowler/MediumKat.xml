@@ -12,7 +12,7 @@
 <name>MediumKat</name>
 <leg>
 
-<name>DefaultLeg</name>
+<name>LeftRear</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
@@ -207,7 +207,7 @@
 </leg>
 <leg>
 
-<name>DefaultLeg2</name>
+<name>FrontRight</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
@@ -402,7 +402,7 @@
 </leg>
 <leg>
 
-<name>DefaultLeg3</name>
+<name>FrontLeft</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
@@ -597,7 +597,7 @@
 </leg>
 <leg>
 
-<name>DefaultLeg4</name>
+<name>RearLeft</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
