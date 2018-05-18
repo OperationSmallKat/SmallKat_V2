@@ -320,7 +320,7 @@ def cat =DeviceManager.getSpecificDevice( "jaguar",{
 	
 	MobileBase m = MobileBaseLoader.fromGit(
 		"https://github.com/keionbis/SmallKat.git",
-		"Bowler/cat.xml"
+		"Bowler/MediumKat.xml"
 		)
 	if(m==null)
 		throw new RuntimeException("Arm failed to assemble itself")
