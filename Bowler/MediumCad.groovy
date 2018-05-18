@@ -44,13 +44,13 @@ return new ICadGenerator(){
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
 				"https://github.com/keionbis/SmallKat.git",
-				"STLs/Elbow Joint.STL");
+				"MKTailandHeadMount.stl");
 	
 			}
 			if(linkIndex ==1){
 				legFile = ScriptingEngine.fileFromGit(
 				"https://github.com/keionbis/SmallKat.git",
-				"STLs/Tail.STL");
+				"STLs/MKTail.stl");
 			}
 	
 			if(linkIndex ==2)
@@ -59,13 +59,13 @@ return new ICadGenerator(){
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
 				"https://github.com/keionbis/SmallKat.git",
-				"STLs/Elbow Joint.STL");
+				"STLs/MKTailandHeadMount.stl");
 
 			}
 			if(linkIndex ==1){
 				legFile = ScriptingEngine.fileFromGit(
 				"https://github.com/keionbis/SmallKat.git",
-				"STLs/Head.STL");
+				"STLs/MKHead.stl");
 			}
 	
 			if(linkIndex ==2)
@@ -131,13 +131,13 @@ return new ICadGenerator(){
 		if(linkIndex ==0){
 			//body=moveDHValues(body,dh)
 
-			if(limbName.contentEquals("Head")||limbName.contentEquals("Tail")){
+			if(limbName.contentEquals("MKHead")||limbName.contentEquals("MKTail")){
 				body=body
-					.movez(-11.5)
+					//.movez(-11.5)
 			}	else{
 				body=body.roty(180)
 				//if(rear)
-					body=body.rotx(180)
+					//body=body.rotx(180)
 			}
 				
 		}
@@ -146,8 +146,8 @@ return new ICadGenerator(){
 
 			if(limbName.contentEquals("Head")){
 				body=body
-					.movey(-18)
-					.movez(-38.5)
+					//.movey(-18)
+					//.movez(-38.5)
 			}else{
 				body=body.roty(180)
 			}
