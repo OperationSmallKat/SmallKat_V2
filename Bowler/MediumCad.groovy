@@ -32,8 +32,12 @@ return new ICadGenerator(){
 		}
 		TransformNR  legRoot= d.getRobotToFiducialTransform()
 		def leftSide=false
+		def rear = true
 		if(legRoot.getY()>0){
 			leftSide=true;
+		}
+		if(legRoot.getX()>0){
+			rear=false;
 		}
 		
 		if(limbName.contentEquals("Tail")){
@@ -71,7 +75,7 @@ return new ICadGenerator(){
 				if(linkIndex ==0){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/MKCat Shoulder Mirror.stl");
+					"STLs/MKCat Shoulder.stl");
 		
 				}
 				if(linkIndex ==1){
@@ -92,7 +96,7 @@ return new ICadGenerator(){
 				if(linkIndex ==0){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/MKCat Shoulder.stl");
+					"STLs/MKCat Shoulder Mirror.stl");
 		
 				}
 				if(linkIndex ==1){
@@ -133,6 +137,8 @@ return new ICadGenerator(){
 					.movez(-11.5)
 			}	else{
 				body=body.roty(180)
+				if(rear)
+					body=body.rotx(180)
 			}
 				
 		}
@@ -151,6 +157,7 @@ return new ICadGenerator(){
 			body=body.roty(180)
 
 		}
+		
 		body.setManipulator(manipulator);
 	
 		def parts = [body ] as ArrayList<CSG>
