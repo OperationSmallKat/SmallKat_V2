@@ -30,6 +30,12 @@ return new ICadGenerator(){
 			println "Mirror leg parts"
 			mirror=false
 		}
+		TransformNR  legRoot= d.getRobotToFiducialTransform()
+		def leftSide=false
+		if(legRoot.getY()>0){
+			leftSide=true;
+		}
+		
 		if(limbName.contentEquals("Tail")){
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
@@ -61,24 +67,47 @@ return new ICadGenerator(){
 			if(linkIndex ==2)
 				return allCad;
 		}else{
-			if(linkIndex ==0){
-				legFile = ScriptingEngine.fileFromGit(
-				"https://github.com/keionbis/SmallKat.git",
-				"STLs/Elbow Joint.STL");
-	
+			if(leftSide){
+				if(linkIndex ==0){
+					legFile = ScriptingEngine.fileFromGit(
+					"https://github.com/keionbis/SmallKat.git",
+					"STLs/Elbow Joint.STL");
+		
+				}
+				if(linkIndex ==1){
+					legFile = ScriptingEngine.fileFromGit(
+					"https://github.com/keionbis/SmallKat.git",
+					"STLs/Midleg.STL");
+		
+				}
+		
+				if(linkIndex ==2){
+					legFile = ScriptingEngine.fileFromGit(
+					"https://github.com/keionbis/SmallKat.git",
+					"STLs/MKCat Foot.stl");
+		
+				}
 			}
-			if(linkIndex ==1){
-				legFile = ScriptingEngine.fileFromGit(
-				"https://github.com/keionbis/SmallKat.git",
-				"STLs/Midleg.STL");
-	
-			}
-	
-			if(linkIndex ==2){
-				legFile = ScriptingEngine.fileFromGit(
-				"https://github.com/keionbis/SmallKat.git",
-				"STLs/Lower Leg.STL");
-	
+			else{
+				if(linkIndex ==0){
+					legFile = ScriptingEngine.fileFromGit(
+					"https://github.com/keionbis/SmallKat.git",
+					"STLs/Elbow Joint.STL");
+		
+				}
+				if(linkIndex ==1){
+					legFile = ScriptingEngine.fileFromGit(
+					"https://github.com/keionbis/SmallKat.git",
+					"STLs/Midleg.STL");
+		
+				}
+		
+				if(linkIndex ==2){
+					legFile = ScriptingEngine.fileFromGit(
+					"https://github.com/keionbis/SmallKat.git",
+					"STLs/Lower Leg.STL");
+		
+				}
 			}
 		}
 		
