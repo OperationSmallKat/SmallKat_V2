@@ -2,7 +2,7 @@
 <mobilebase>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
-		<file>Bowler/cadEngine.groovy</file>
+		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<driveEngine>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -15,7 +15,7 @@
 <name>DefaultLeg</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
-		<file>Bowler/cadEngine.groovy</file>
+		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -210,7 +210,7 @@
 <name>DefaultLeg2</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
-		<file>Bowler/cadEngine.groovy</file>
+		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -405,7 +405,7 @@
 <name>DefaultLeg3</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
-		<file>Bowler/cadEngine.groovy</file>
+		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -600,7 +600,7 @@
 <name>DefaultLeg4</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
-		<file>Bowler/cadEngine.groovy</file>
+		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://gist.github.com/17f2da51abe25e043043946d91610ddd.git</git>
@@ -795,7 +795,7 @@
 <name>Head</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
-		<file>Bowler/cadEngine.groovy</file>
+		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
@@ -990,7 +990,7 @@
 <name>Tail</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
-		<file>Bowler/cadEngine.groovy</file>
+		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
 		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
