@@ -471,11 +471,11 @@
 	<type>hidfast</type>
 	<index>5</index>
 	<scale>-0.7</scale>
-	<upperLimit>182.6865671641791</upperLimit>
-	<lowerLimit>34.25373134328358</lowerLimit>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>126.80708398306962</staticOffset>
+	<staticOffset>128.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -975,11 +975,11 @@
 </ZframeToRAS>
 
 <baseToZframe>
-	<x>33.0</x>
-	<y>-2.3809523809523796</y>
-	<z>115.0</z>
-	<rotw>0.7071376338671593</rotw>
-	<rotx>0.7070759271597041</rotx>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>147.85714285714283</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 </baseToZframe>
@@ -1170,9 +1170,9 @@
 </ZframeToRAS>
 
 <baseToZframe>
-	<x>-69.5</x>
-	<y>9.523809523809533</y>
-	<z>115.0</z>
+	<x>-93.08035714285714</x>
+	<y>7.9931972789115715</y>
+	<z>86.19785853794643</z>
 	<rotw>6.170670739598364E-5</rotw>
 	<rotx>6.170670739598362E-5</rotx>
 	<roty>0.7071067784940844</roty>
