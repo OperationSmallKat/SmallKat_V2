@@ -68,9 +68,9 @@
 	<rotz>-0.0</rotz></imuFromCentroid>
 
 	<DHParameters>
-		<Delta>4.19</Delta>
+		<Delta>0.0</Delta>
 		<Theta>0.01</Theta>
-		<Radius>11.45</Radius>
+		<Radius>28.575</Radius>
 		<Alpha>-89.97</Alpha>
 	</DHParameters>
 
@@ -124,7 +124,7 @@
 	<DHParameters>
 		<Delta>0.0</Delta>
 		<Theta>0.01</Theta>
-		<Radius>38.1</Radius>
+		<Radius>50.8</Radius>
 		<Alpha>0.01</Alpha>
 	</DHParameters>
 
@@ -178,7 +178,7 @@
 	<DHParameters>
 		<Delta>0.0</Delta>
 		<Theta>90.01</Theta>
-		<Radius>38.1</Radius>
+		<Radius>47.86</Radius>
 		<Alpha>0.01</Alpha>
 	</DHParameters>
 
@@ -198,9 +198,9 @@
 	<x>-50.8</x>
 	<y>27.94</y>
 	<z>66.04</z>
-	<rotw>0.7071684852014806</rotw>
+	<rotw>0.8660544911396977</rotw>
 	<rotx>-0.0</rotx>
-	<roty>0.7070450717866884</roty>
+	<roty>0.49994961583819564</roty>
 	<rotz>-0.0</rotz>
 </baseToZframe>
 
