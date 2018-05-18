@@ -89,7 +89,6 @@ return new ICadGenerator(){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
 					"STLs/MKCat Foot.stl");
-		
 				}
 			}
 			else{
@@ -102,7 +101,7 @@ return new ICadGenerator(){
 				if(linkIndex ==1){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/MKCat Shoulder.stl");
+					"STLs/MKCat Leg.stl");
 		
 				}
 		
@@ -137,7 +136,7 @@ return new ICadGenerator(){
 					.movez(-11.5)
 			}	else{
 				body=body.roty(180)
-				if(rear)
+				//if(rear)
 					body=body.rotx(180)
 			}
 				
