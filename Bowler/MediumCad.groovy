@@ -71,13 +71,13 @@ return new ICadGenerator(){
 				if(linkIndex ==0){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/Elbow Joint.STL");
+					"STLs/MKCat Shoulder Mirror.stl");
 		
 				}
 				if(linkIndex ==1){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/Midleg.STL");
+					"STLs/MKCat Leg Mirror.stl");
 		
 				}
 		
@@ -92,20 +92,20 @@ return new ICadGenerator(){
 				if(linkIndex ==0){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/Elbow Joint.STL");
+					"STLs/MKCat Shoulder.stl");
 		
 				}
 				if(linkIndex ==1){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/Midleg.STL");
+					"STLs/MKCat Shoulder.stl");
 		
 				}
 		
 				if(linkIndex ==2){
 					legFile = ScriptingEngine.fileFromGit(
 					"https://github.com/keionbis/SmallKat.git",
-					"STLs/Lower Leg.STL");
+					"STLs/MKCat Foot Mirror.stl");
 		
 				}
 			}
@@ -126,35 +126,30 @@ return new ICadGenerator(){
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(legFile)
 		if(linkIndex ==0){
-			body=moveDHValues(body,dh)
-				.movex(-4.5)
-				.movez(-20)				
-				.movey(mirror?5:15.5)
-				.rotx(mirror?180:0)
+			//body=moveDHValues(body,dh)
+
 			if(limbName.contentEquals("Head")||limbName.contentEquals("Tail")){
 				body=body
 					.movez(-11.5)
-			}	
+			}	else{
+				body=body.roty(180)
+			}
 				
 		}
 		if(linkIndex ==1){
-			body=moveDHValues(body,dh)
-				.movey(-9)
-				.movex(-9)
-				.movez(-11)
-				.rotx(!mirror?180:0)
+			
+
 			if(limbName.contentEquals("Head")){
 				body=body
 					.movey(-18)
 					.movez(-38.5)
+			}else{
+				body=body.roty(180)
 			}
 		}
 		if(linkIndex ==2){
-			body=moveDHValues(body.rotz(-90),dh)
-				.movey(-8)
-				.movex(-8.5)
-				.movez(-20)
-				.rotx(mirror?180:0)
+			body=body.roty(180)
+
 		}
 		body.setManipulator(manipulator);
 	
