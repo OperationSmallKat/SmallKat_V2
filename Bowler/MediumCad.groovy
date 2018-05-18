@@ -142,13 +142,10 @@ return new ICadGenerator(){
 
 		File mainBodyFile = ScriptingEngine.fileFromGit(
 			"https://github.com/keionbis/SmallKat.git",
-			"STLs/BodyV2.STL");
+			"STLs/MKBody.stl");
 
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(mainBodyFile)
-					.movex(-79)
-					.movey(-38)
-					.movez(57)
 
 		body.setManipulator(b.getRootListener());
 		body.setColor(javafx.scene.paint.Color.WHITE)
