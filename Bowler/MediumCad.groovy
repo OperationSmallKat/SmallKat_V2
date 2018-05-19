@@ -137,7 +137,11 @@ return new ICadGenerator(){
 
 			if(limbName.contentEquals("Head")||limbName.contentEquals("Tail")){
 				body=body
-				.rotz(180)
+				.rotz(90)
+				.rotx(180)
+				.movex(-8)
+				.movey(-20)
+				.movez(-22)
 					//.movez(-11.5)
 			}	else{
 				body=body.roty(180)
