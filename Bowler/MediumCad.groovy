@@ -44,7 +44,7 @@ return new ICadGenerator(){
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
 				"https://github.com/keionbis/SmallKat.git",
-				"MKTailandHeadMount.stl");
+				"STLs/MKTailandHeadMount.stl");
 	
 			}
 			if(linkIndex ==1){
@@ -127,13 +127,14 @@ return new ICadGenerator(){
 
 		
 		// Load the .CSG from the disk and cache it in memory
+		println "Loading " +legFile
 		CSG body  = Vitamins.get(legFile)
 		if(linkIndex ==0){
 			//body=moveDHValues(body,dh)
 
 			if(limbName.contentEquals("Head")||limbName.contentEquals("Tail")){
 				body=body
-				.roty(180)
+				.rotz(180)
 					//.movez(-11.5)
 			}	else{
 				body=body.roty(180)
