@@ -1099,7 +1099,7 @@
 	<DHParameters>
 		<Delta>0.0</Delta>
 		<Theta>-90.0</Theta>
-		<Radius>93.0</Radius>
+		<Radius>0.0</Radius>
 		<Alpha>0.0</Alpha>
 	</DHParameters>
 
