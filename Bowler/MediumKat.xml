@@ -12,7 +12,7 @@
 <name>MediumKat</name>
 <leg>
 
-<name>LeftRear</name>
+<name>RearLeft</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
@@ -597,7 +597,7 @@
 </leg>
 <leg>
 
-<name>RearLeft</name>
+<name>RearRight</name>
 	<cadEngine>
 		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
