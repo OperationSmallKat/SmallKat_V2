@@ -140,7 +140,7 @@ return new ICadGenerator(){
 				.rotz(90)
 				.rotx(180)
 				.movex(-8)
-				.movey(-20)
+				.movey(-21)
 				.movez(-22)
 					//.movez(-11.5)
 			}	else{
