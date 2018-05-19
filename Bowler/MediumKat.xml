@@ -25,7 +25,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>9</index>
+	<index>0</index>
 	<scale>0.7</scale>
 	<upperLimit>66.6044776119403</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -79,7 +79,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>8</index>
+	<index>1</index>
 	<scale>0.7</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>19.029850746268654</lowerLimit>
@@ -133,7 +133,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>7</index>
+	<index>2</index>
 	<scale>-0.8961</scale>
 	<upperLimit>171.26865671641792</upperLimit>
 	<lowerLimit>19.029850746268654</lowerLimit>
@@ -274,7 +274,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>11</index>
+	<index>4</index>
 	<scale>0.7</scale>
 	<upperLimit>243.5820895522388</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -328,7 +328,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>12</index>
+	<index>5</index>
 	<scale>-0.829</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -415,7 +415,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>1</index>
+	<index>5</index>
 	<scale>0.7</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>102.39552238805969</lowerLimit>
@@ -469,7 +469,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>5</index>
+	<index>6</index>
 	<scale>-0.7</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -523,7 +523,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>6</index>
+	<index>7</index>
 	<scale>0.7</scale>
 	<upperLimit>220.74626865671644</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -610,7 +610,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>18</index>
+	<index>8</index>
 	<scale>0.7</scale>
 	<upperLimit>110.37313432835819</upperLimit>
 	<lowerLimit>15.223880597014926</lowerLimit>
@@ -664,7 +664,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>16</index>
+	<index>9</index>
 	<scale>-0.5</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -718,7 +718,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>15</index>
+	<index>10</index>
 	<scale>0.64212</scale>
 	<upperLimit>184.58955223880596</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -805,7 +805,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>23</index>
+	<index>11</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -859,7 +859,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>22</index>
+	<index>12</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -913,7 +913,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>18</index>
+	<index>12</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -1000,7 +1000,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>21</index>
+	<index>13</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -1054,7 +1054,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>21</index>
+	<index>14</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -1108,7 +1108,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>21</index>
+	<index>14</index>
 	<scale>0.33</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
