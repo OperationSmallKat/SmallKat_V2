@@ -145,6 +145,7 @@ return new ICadGenerator(){
 					//.movez(-11.5)
 			}	else{
 				body=body.roty(180)
+				.rotx(180)
 				//if(rear)
 					//body=body.rotx(180)
 			}
