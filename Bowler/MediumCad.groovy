@@ -41,6 +41,8 @@ return new ICadGenerator(){
 		}
 		
 		if(limbName.contentEquals("Tail")){
+			if(linkIndex >0)
+				return allCad;
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
 				"https://github.com/keionbis/SmallKat.git",
@@ -53,9 +55,10 @@ return new ICadGenerator(){
 				"STLs/MKTail.stl");
 			}
 	
-			if(linkIndex ==2)
-				return allCad;
+			
 		}else if(limbName.contentEquals("Head")){
+			if(linkIndex >0)
+				return allCad;
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
 				"https://github.com/keionbis/SmallKat.git",
