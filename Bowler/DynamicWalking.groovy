@@ -98,6 +98,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				stepCycyleActiveIndex=0;
 			}
 			println "Cycle = "+stepCycyleActiveIndex
+		}else{
+			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()
 		}
 		
 		if(reset+3000 < System.currentTimeMillis()){
@@ -148,12 +150,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		TransformNR incomingTarget=newPose.copy()
 		newPose = newPose.inverse()
 		if(stepResetter==null){
+			timeOfCycleStart= System.currentTimeMillis();
 			stepResetter = new Thread(){
 				public void run(){
 					println "Starting step reset thread"
 					int numlegs = source.getLegs().size();
 					ArrayList<DHParameterKinematics> legs = source.getLegs();
-					while(source.isAvailable() && !threadDone){
+					while(source.isAvailable() && threadDone==false){
 						ThreadUtil.wait(10);
 						resetLoop()
 					}
