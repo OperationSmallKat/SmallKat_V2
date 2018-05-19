@@ -16,20 +16,25 @@ import Jama.Matrix;
 
 if(args==null){
 	double stepOverHeight=5;
-	long stepOverTime=80;
-	Double zLock=-70;
+	long stepOverTime=400;
+	Double zLock=-12;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
-	
+	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
 			TransformNR tr = leg.forwardOffset(new TransformNR())
 			tr.setZ(zLock)
+			//Bambi-on-ice the legs a bit
+			if(legRoot.getY()>0){
+				tr.translateY(5)
+			}else{
+				tr.translateY(-5)
+			}
 			
-			return h;
+			return tr;
 	
 	}
 	boolean usePhysicsToMove = true;
-
-	args= [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove]
+	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
