@@ -131,8 +131,9 @@ return new ICadGenerator(){
 		if(linkIndex ==0){
 			//body=moveDHValues(body,dh)
 
-			if(limbName.contentEquals("MKHead")||limbName.contentEquals("MKTail")){
+			if(limbName.contentEquals("Head")||limbName.contentEquals("Tail")){
 				body=body
+				.roty(180)
 					//.movez(-11.5)
 			}	else{
 				body=body.roty(180)
@@ -146,6 +147,7 @@ return new ICadGenerator(){
 
 			if(limbName.contentEquals("Head")){
 				body=body
+				.roty(180)
 					//.movey(-18)
 					//.movez(-38.5)
 			}else{
