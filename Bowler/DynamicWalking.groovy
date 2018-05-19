@@ -34,7 +34,9 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove]
+	long stepCycleTime =500
+	
+	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -44,7 +46,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	private Double zLock=(Double)args.get(2);
 	Closure calcHome =(Closure)args.get(3);
 	boolean usePhysics=(args.size()>4?((boolean)args.get(4)):false);
-
+	long stepCycleTime=args.get(5)
+	long timeOfCycleStart= System.currentTimeMillis();
+	int stepCycyleActiveIndex =0
+	int numStepCycleGroups = 2
+	
 	TransformNR [] home=null;
 	
 	TransformNR previousGLobalState;
@@ -54,6 +60,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	private long reset = System.currentTimeMillis();
 	
 	Thread stepResetter=null;
+	boolean threadDone=false
 	
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
@@ -82,62 +89,75 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		return true
 	}
+	
+	private void resetLoop(){
+		if((timeOfCycleStart+stepCycleTime)>System.currentTimeMillis()){
+			timeOfCycleStart=System.currentTimeMillis()
+			stepCycyleActiveIndex++
+			if(stepCycyleActiveIndex==numStepCycleGroups){
+				stepCycyleActiveIndex=0;
+			}
+			println "Cycle = "+stepCycyleActiveIndex
+		}
+		
+		if(reset+3000 < System.currentTimeMillis()){
+			//println "FIRING reset from reset thread"
+			resetting=true;
+			long tmp= reset;
+			if(home==null){
+				home = new TransformNR[numlegs];
+				for(int i=0;i<numlegs;i++){
+					//home[i] = legs.get(i).forwardOffset(new TransformNR());
+					home[i] =calcHome(legs.get(i))
+				}
+			}
+			for(int i=0;i<numlegs;i++){
+				TransformNR up = home[i].copy()
+				up.setZ(stepOverHeight + zLock )
+				TransformNR down = home[i].copy()
+				down.setZ( zLock )
+				try {
+					// lift leg above home
+					//println "lift leg "+i
+					legs.get(i).setDesiredTaskSpaceTransform(up, 0);
+				} catch (Exception e) {
+					//println "Failed to reach "+up
+					e.printStackTrace();
+				}
+				ThreadUtil.wait((int)stepOverTime);
+				try {
+					//step to new target
+					//println "step leg "+i
+					
+					legs.get(i).setDesiredTaskSpaceTransform(down, 0);
+					//set new target for the coordinated motion step at the end
+				} catch (Exception e) {
+					//println "Failed to reach "+down
+					e.printStackTrace();
+				}
+				ThreadUtil.wait((int)stepOverTime);
+			}
+			resettingindex=numlegs;
+			resetting=false;
+			threadDone=true;
+			stepResetter=null;
+			
+		}
+	}
 	public void DriveArcLocal(MobileBase source, TransformNR newPose, double seconds, boolean retry) {
 		TransformNR incomingTarget=newPose.copy()
 		newPose = newPose.inverse()
 		if(stepResetter==null){
 			stepResetter = new Thread(){
 				public void run(){
-					//println "Starting step reset thread"
+					println "Starting step reset thread"
 					int numlegs = source.getLegs().size();
 					ArrayList<DHParameterKinematics> legs = source.getLegs();
-					while(source.isAvailable()){
+					while(source.isAvailable() && !threadDone){
 						ThreadUtil.wait(10);
-						if(reset+3000 < System.currentTimeMillis()){
-							//println "FIRING reset from reset thread"
-							resetting=true;
-							long tmp= reset;
-							if(home==null){
-								home = new TransformNR[numlegs];
-								for(int i=0;i<numlegs;i++){
-									//home[i] = legs.get(i).forwardOffset(new TransformNR());
-									home[i] =calcHome(legs.get(i))
-								}
-							}
-							for(int i=0;i<numlegs;i++){
-								TransformNR up = home[i].copy()
-								up.setZ(stepOverHeight + zLock )
-								TransformNR down = home[i].copy()
-								down.setZ( zLock )
-								try {
-									// lift leg above home
-									//println "lift leg "+i
-									legs.get(i).setDesiredTaskSpaceTransform(up, 0);
-								} catch (Exception e) {
-									//println "Failed to reach "+up
-									e.printStackTrace();
-								}
-								ThreadUtil.wait((int)stepOverTime);
-								try {
-									//step to new target
-									//println "step leg "+i
-									
-									legs.get(i).setDesiredTaskSpaceTransform(down, 0);
-									//set new target for the coordinated motion step at the end
-								} catch (Exception e) {
-									//println "Failed to reach "+down
-									e.printStackTrace();
-								}
-								ThreadUtil.wait((int)stepOverTime);
-							}
-							resettingindex=numlegs;
-							resetting=false;
-							//println "Legs all reset legs"
-							while(source.isAvailable() && tmp==reset){
-								ThreadUtil.wait(10);
-							}
-						}
+						resetLoop()
 					}
+					println "Finished step reset thread"
 				}
 				
 				
