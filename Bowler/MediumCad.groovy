@@ -57,7 +57,7 @@ return new ICadGenerator(){
 	
 			
 		}else if(limbName.contentEquals("Head")){
-			if(linkIndex >0)
+			if(linkIndex >1)
 				return allCad;
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
@@ -156,6 +156,7 @@ return new ICadGenerator(){
 			if(limbName.contentEquals("Head")){
 				body=body
 				.roty(180)
+				.movex(50)
 					//.movey(-18)
 					//.movez(-38.5)
 			}else{
