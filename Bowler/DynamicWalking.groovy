@@ -50,9 +50,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	long timeOfCycleStart= System.currentTimeMillis();
 	int stepCycyleActiveIndex =0
 	int numStepCycleGroups = 2
-	
+	int numlegs;
 	TransformNR [] home=null;
-	
+	ArrayList<DHParameterKinematics> legs;
 	TransformNR previousGLobalState;
 	TransformNR target;
 	RotationNR rot;
@@ -103,7 +103,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		
 		if(reset+3000 < System.currentTimeMillis()){
-			//println "FIRING reset from reset thread"
+			println "FIRING reset from reset thread"
 			resetting=true;
 			long tmp= reset;
 			if(home==null){
@@ -120,22 +120,22 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				down.setZ( zLock )
 				try {
 					// lift leg above home
-					//println "lift leg "+i
+					println "lift leg "+i+" "+up
 					legs.get(i).setDesiredTaskSpaceTransform(up, 0);
 				} catch (Exception e) {
 					//println "Failed to reach "+up
-					e.printStackTrace();
+					BowlerStudio.printStackTrace(e);
 				}
 				ThreadUtil.wait((int)stepOverTime);
 				try {
 					//step to new target
-					//println "step leg "+i
+					println "step leg "+i+" down "+down
 					
 					legs.get(i).setDesiredTaskSpaceTransform(down, 0);
 					//set new target for the coordinated motion step at the end
 				} catch (Exception e) {
 					//println "Failed to reach "+down
-					e.printStackTrace();
+					BowlerStudio.printStackTrace(e);
 				}
 				ThreadUtil.wait((int)stepOverTime);
 			}
@@ -151,11 +151,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		newPose = newPose.inverse()
 		if(stepResetter==null){
 			timeOfCycleStart= System.currentTimeMillis();
+			
 			stepResetter = new Thread(){
 				public void run(){
+					threadDone=false;
 					println "Starting step reset thread"
 					int numlegs = source.getLegs().size();
-					ArrayList<DHParameterKinematics> legs = source.getLegs();
+					 legs = source.getLegs();
 					while(source.isAvailable() && threadDone==false){
 						ThreadUtil.wait(10);
 						resetLoop()
@@ -170,7 +172,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		resetStepTimer();
 	
 		try{
-				int numlegs = source.getLegs().size();
+				 numlegs = source.getLegs().size();
 				TransformNR [] feetLocations = new TransformNR[numlegs];
 				TransformNR [] newFeetLocations = new TransformNR[numlegs];
 				ArrayList<DHParameterKinematics> legs = source.getLegs();
@@ -181,7 +183,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					for(int i=0;i<numlegs;i++){
 						//home[i] = legs.get(i).forwardOffset(new TransformNR());
 						home[i] =calcHome(legs.get(i))
-						//println "Home for link "+i+" is "+home[i]
+						println "Home for link "+i+" is "+home[i]
 					}
 				}
 
