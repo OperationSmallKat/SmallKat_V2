@@ -17,7 +17,7 @@ import Jama.Matrix;
 if(args==null){
 	double stepOverHeight=5;
 	long stepOverTime=400;
-	Double zLock=-12;
+	Double zLock=0;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
