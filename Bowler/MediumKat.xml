@@ -27,11 +27,11 @@
 	<type>hidfast</type>
 	<index>0</index>
 	<scale>0.7</scale>
-	<upperLimit>66.6044776119403</upperLimit>
-	<lowerLimit>0.0</lowerLimit>
+	<upperLimit>243.5820895522388</upperLimit>
+	<lowerLimit>3.8059701492537314</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>11.0</staticOffset>
+	<staticOffset>31.876030296279794</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -123,7 +123,7 @@
 
 	<DHParameters>
 		<Delta>0.0</Delta>
-		<Theta>-90</Theta>
+		<Theta>-90.0</Theta>
 		<Radius>50.8</Radius>
 		<Alpha>0.01</Alpha>
 	</DHParameters>
@@ -222,11 +222,11 @@
 	<type>hidfast</type>
 	<index>3</index>
 	<scale>0.7</scale>
-	<upperLimit>98.0</upperLimit>
+	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>43.28580975718423</staticOffset>
+	<staticOffset>127.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -318,7 +318,7 @@
 
 	<DHParameters>
 		<Delta>0.0</Delta>
-		<Theta>-90</Theta>
+		<Theta>-90.0</Theta>
 		<Radius>50.8</Radius>
 		<Alpha>0.01</Alpha>
 	</DHParameters>
@@ -418,10 +418,10 @@
 	<index>15</index>
 	<scale>0.7</scale>
 	<upperLimit>255.0</upperLimit>
-	<lowerLimit>102.39552238805969</lowerLimit>
+	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>175.0</staticOffset>
+	<staticOffset>124.89106705279572</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -513,7 +513,7 @@
 
 	<DHParameters>
 		<Delta>0.0</Delta>
-		<Theta>-90</Theta>
+		<Theta>-90.0</Theta>
 		<Radius>50.8</Radius>
 		<Alpha>0.01</Alpha>
 	</DHParameters>
@@ -612,11 +612,11 @@
 	<type>hidfast</type>
 	<index>8</index>
 	<scale>0.7</scale>
-	<upperLimit>110.37313432835819</upperLimit>
-	<lowerLimit>15.223880597014926</lowerLimit>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>67.0</staticOffset>
+	<staticOffset>127.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -667,10 +667,10 @@
 	<index>9</index>
 	<scale>-0.5</scale>
 	<upperLimit>255.0</upperLimit>
-	<lowerLimit>0.0</lowerLimit>
+	<lowerLimit>1.9029850746268657</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>83.5223880597015</staticOffset>
+	<staticOffset>129.19402985074626</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -708,7 +708,7 @@
 
 	<DHParameters>
 		<Delta>0.0</Delta>
-		<Theta>-90</Theta>
+		<Theta>-90.0</Theta>
 		<Radius>50.8</Radius>
 		<Alpha>0.0</Alpha>
 	</DHParameters>

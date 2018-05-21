@@ -17,7 +17,7 @@ import Jama.Matrix;
 if(args==null){
 	double stepOverHeight=5;
 	long stepOverTime=400;
-	Double zLock=0;
+	Double zLock=-12;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -25,9 +25,9 @@ if(args==null){
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
 			if(legRoot.getY()>0){
-				tr.translateY(5)
+				//tr.translateY(5)
 			}else{
-				tr.translateY(-5)
+				//tr.translateY(-5)
 			}
 			
 			return tr;
