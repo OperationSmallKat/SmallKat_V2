@@ -6,23 +6,23 @@ import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.phy.HIDSimplePacketComs;
 
 public class SimpleServoHID extends HIDSimplePacketComs {
-	private PacketType servos = new BytePacketType(1962, 64);
-	private PacketType imuData = new FloatPacketType(1804, 64);
-	private final float[] status = new byte[12];
+	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
+	private PacketType imuData = new edu.wpi.SimplePacketComs.FloatPacketType(1804, 64);
+	private final double[] status = new double[12];
 	private final byte[] data = new byte[16];
 	
 	public SimpleServoHID(int vidIn, int pidIn) {
 		super(vidIn, pidIn);
 		addPollingPacket(servos);
 		addPollingPacket(imuData);
-		addEvent(servos.idOfCommand, {
-			writeBytes(gamestate.idOfCommand, getStatus());
+		addEvent(1962, {
+			writeBytes(1962, data);
 		});
-		addEvent(imuData.idOfCommand, {
-			readFloats(gamestate.idOfCommand, getData());
+		addEvent(1804, {
+			readFloats(1804,status);
 		});
 	}
-	public float[] getImuData() {
+	public double[] getImuData() {
 		return status;
 	}
 	public byte[] getData() {
@@ -48,13 +48,13 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 	public  boolean connectDeviceImp(){
 		simple.connect()
 	}
-	void setValue(int index,int position){
-		simple.getData[i]=(byte)position;
+	void setValue(int i,int position){
+		simple.getData()[i]=(byte)position;
 	}
-	int getValue(int index){
-		if(simple.getData[i]>0)
-			return simple.getData[i]
-		return ((int)simple.getData[i])+256
+	int getValue(int i){
+		if(simple.getData()[i]>0)
+			return simple.getData()[i]
+		return ((int)simple.getData()[i])+256
 	}
 	public float[] getImuData() {
 		return simple.getImuData();
