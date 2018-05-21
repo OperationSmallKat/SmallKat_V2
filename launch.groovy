@@ -187,7 +187,13 @@ def gameController = ScriptingEngine.gitScriptRun(
 if(gameController==null){
 	while (!Thread.interrupted()){
 		Thread.sleep(1000)
-		println "IMU state "+cat.getImu().getHardwareState()
+		def state = cat.getImu().getHardwareState()
+		print "\r\nIMU state x = "+state.getxAcceleration()
+		print "  y = "+state.getyAcceleration()
+		print " z = "+state.getzAcceleration()
+		print " rx = "+state.getRotxAcceleration()
+		print " ry = "+state.getRotyAcceleration()
+		print " rz = "+state.getRotzAcceleration()+"\r\n"
 	}
 	return 
 }
