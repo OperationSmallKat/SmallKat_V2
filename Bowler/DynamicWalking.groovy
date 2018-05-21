@@ -53,6 +53,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	int numlegs;
 	TransformNR [] home=null;
 	ArrayList<DHParameterKinematics> legs;
+	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
 	TransformNR previousGLobalState;
 	TransformNR target;
 	RotationNR rot;
@@ -97,9 +98,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			if(stepCycyleActiveIndex==numStepCycleGroups){
 				stepCycyleActiveIndex=0;
 			}
-			println "Cycle = "+stepCycyleActiveIndex
+			//println "Cycle = "+cycleGroups.get(stepCycyleActiveIndex)
 		}else{
-			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()
+			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()leg
 		}
 		
 		if(reset+3000 < System.currentTimeMillis()){
@@ -151,7 +152,30 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		newPose = newPose.inverse()
 		if(stepResetter==null){
 			timeOfCycleStart= System.currentTimeMillis();
-			
+			for(int i=0;i<numStepCycleGroups;i++){
+				if(cycleGroups.get(i)==null){
+					def cycleSet = []
+					for(def leg:source.getLegs()){
+						TransformNR  legRoot= leg.getRobotToFiducialTransform()
+						if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
+							cycleSet.add(leg)
+						}else
+						if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
+							cycleSet.add(leg)
+						}else
+						if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
+							cycleSet.add(leg)
+						}else
+						if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
+							cycleSet.add(leg)
+						}else{
+							cycleSet.add(leg)//catch all 
+						}
+						
+					}
+					cycleGroups.put(i, cycleSet)
+				}
+			}
 			stepResetter = new Thread(){
 				public void run(){
 					threadDone=false;
@@ -170,6 +194,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			stepResetter.start();
 		}
 		resetStepTimer();
+		
 	
 		try{
 				 numlegs = source.getLegs().size();
@@ -191,19 +216,20 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				// Load in the locations of the tips of each of the feet.
 				for(int i=0;i<legs.size();i++){
 					//println "Loading Leg "+legs.get(i).getScriptingName()
+					def leg = legs.get(i)
 					TransformNR global= source.getFiducialToGlobalTransform();
 					if(global==null){
 						global=new TransformNR()
 						source.setGlobalToFiducialTransform(global)
 					}
-					TransformNR footStarting = legs.get(i).getCurrentTaskSpaceTransform();
+					TransformNR footStarting = leg.getCurrentTaskSpaceTransform();
 
 					if(global==null)
 						global=new TransformNR()
-					double[] joints = legs.get(i).getCurrentJointSpaceVector()	
-					TransformNR armOffset = legs.get(i).forwardKinematics(joints)	
+					double[] joints = leg.getCurrentJointSpaceVector()	
+					TransformNR armOffset = leg.forwardKinematics(joints)	
 					global=global.times(newPose);// new global pose
-					Matrix btt =  legs.get(i).getRobotToFiducialTransform().getMatrixTransform();
+					Matrix btt =  leg.getRobotToFiducialTransform().getMatrixTransform();
 					Matrix ftb = global.getMatrixTransform();// our new target
 					Matrix current = armOffset.getMatrixTransform();
 					Matrix mForward = ftb.times(btt).times(current);
@@ -215,7 +241,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						zLock=feetLocations[i].getZ();
 						//println "ZLock level set to "+zLock
 					}
-					home[i] =calcHome(legs.get(i))
+					home[i] =calcHome(leg)
 					feetLocations[i].setZ(home[i].getZ());
 
 
@@ -230,7 +256,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						!check(leg,newFeetLocations[i])
 					){
 						//perform the step over
-						home[i] =calcHome(legs.get(i))
+						home[i] =calcHome(leg)
 						//println "Leg "+i+" setep over to x="+feetLocations[i].getX()+" y="+feetLocations[i].getY()
 
 						//println i+" foot reset needed "+feetLocations[i].getX()+" y:"+feetLocations[i].getY()
