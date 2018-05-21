@@ -138,7 +138,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	
-	HIDSimpleComsDevice d = new HIDSimpleComsDevice( 0x16c0 ,0x0486 )
+	HIDSimpleComsDevice d = new HIDSimpleComsDevice( 0x16c0 ,0x480 )
 	d.connect(); // Connect to it.
 	LinkFactory.addLinkProvider("hidfast",{LinkConfiguration conf->
 				println "Loading link "
@@ -169,6 +169,7 @@ def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 					imuDataValues[5],//Double rotzAcceleration 
 			))
 		 
+		 
 	});
 	if(m==null)
 		throw new RuntimeException("Arm failed to assemble itself")
@@ -182,7 +183,12 @@ def gameController = ScriptingEngine.gitScriptRun(
             // Parameters passed to the function
             ["GameController_22"]
             )
+         
 if(gameController==null){
+	while (!Thread.interrupted()){
+		Thread.sleep(1000)
+		println "IMU state "+cat.getImu().getHardwareState()
+	}
 	return 
 }
 
