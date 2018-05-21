@@ -181,19 +181,22 @@ def gameController = ScriptingEngine.gitScriptRun(
             "https://gist.github.com/e26c0d8ef7d5283ef44fb22441a603b8.git", // git location of the library
             "LoadGameController.groovy" , // file to load
             // Parameters passed to the function
-            ["GameController_22"]
+            ["GameController*"]
             )
          
 if(gameController==null){
 	while (!Thread.interrupted()){
 		Thread.sleep(1000)
-		def state = cat.getImu().getHardwareState()
-		print "\r\nIMU state x = "+state.getxAcceleration()
-		print "  y = "+state.getyAcceleration()
-		print " z = "+state.getzAcceleration()
-		print " rx = "+state.getRotxAcceleration()
-		print " ry = "+state.getRotyAcceleration()
-		print " rz = "+state.getRotzAcceleration()+"\r\n"
+		print "\r\nIMU state \n"
+		for(def state :[	cat.getImu().getHardwareState(),
+						cat.getImu().getVirtualState()]){
+			print " x = "+state.getxAcceleration()
+			print "  y = "+state.getyAcceleration()
+			print " z = "+state.getzAcceleration()
+			print " rx = "+state.getRotxAcceleration()
+			print " ry = "+state.getRotyAcceleration()
+			print " rz = "+state.getRotzAcceleration()+"\r\n"
+		}
 	}
 	return 
 }
