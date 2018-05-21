@@ -36,7 +36,6 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 	
 	public HIDSimpleComsDevice(int vidIn, int pidIn){
 		simple = new SimpleServoHID(vidIn,pidIn)
-		pid=pidIn
 		setScriptingName("hidbowler")
 	}
 	@Override
