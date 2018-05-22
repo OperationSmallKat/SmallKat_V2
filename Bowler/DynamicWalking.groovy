@@ -39,7 +39,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =100
+	long stepCycleTime =10000
 	int numStepCycleGroups = 2
 	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups]
 }
@@ -93,7 +93,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	void updateDynamics(IMUUpdate update){
 		
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
-		if(incrementTime>1000){
+		if(incrementTime>100){
 			timeOfLastIMUPrint= System.currentTimeMillis()
 			print "\r\nDynmics IMU state \n"
 			for(def state :[update]){
@@ -103,6 +103,30 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				print " rx = "+state.getRotxAcceleration()
 				print " ry = "+state.getRotyAcceleration()
 				print " rz = "+state.getRotzAcceleration()+"\r\n"
+			}
+		}
+		double standardHeadTailAngle = -25
+		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?10:-10)
+		for(def d:source.getAllDHChains()){
+			String limbName = d.getScriptingName()
+			double computedTilt = standardHeadTailAngle
+			
+			double computedPan = standardHeadTailPan
+			if(limbName.contentEquals("Tail")){
+				d.setDesiredJointAxisValue(0,// link index
+							computedTilt, //target angle
+							0) // 2 seconds
+				d.setDesiredJointAxisValue(1,// link index
+							computedPan, //target angle
+							0) // 2 seconds			
+			} 
+			if(limbName.contentEquals("Head")){
+				d.setDesiredJointAxisValue(0,// link index
+							computedTilt, //target angle
+							0) // 2 seconds
+				d.setDesiredJointAxisValue(1,// link index
+							computedPan, //target angle
+							0) // 2 seconds			
 			}
 		}
 
