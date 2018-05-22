@@ -203,7 +203,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				tf.translateY(-yinc);
 			}
 			tf.setZ(zLock+(stepOverHeight));
-			if(gaitPercentage>0.5) {
+			if(gaitPercentage>0.3) {
 				println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
 				getUpLegs().collect{if(it!=null)
@@ -212,7 +212,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			break;
 		case WalkingState.ToNewTarget:
-			gaitIntermediatePercentage=(gaitPercentage-0.5)*4.0
+			gaitIntermediatePercentage=(gaitPercentage-0.3)*4.0
 			tf = compute(leg,gaitIntermediatePercentage/2,NewTmpPose)
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.75) {
