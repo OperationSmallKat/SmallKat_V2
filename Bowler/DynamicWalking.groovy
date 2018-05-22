@@ -13,6 +13,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 import com.neuronrobotics.sdk.addons.kinematics.IDriveEngine;
 import com.neuronrobotics.sdk.common.Log;
 import Jama.Matrix;
+import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 enum WalkingState {
     Rising,ToHome,ToNewTarget,Falling
@@ -29,18 +30,20 @@ if(args==null){
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
 			if(legRoot.getY()>0){
-				//tr.translateY(5)
-			}else{
 				//tr.translateY(-5)
+			}else{
+				//tr.translateY(5)
 			}
 			
 			return tr;
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =100
-	
-	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime]
+	long stepCycleTime =200
+	int numStepCycleGroups = 2
+	double standardHeadTailAngle = -25
+	double staticPanOffset = 10
+	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups,standardHeadTailAngle,staticPanOffset]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -53,7 +56,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	long stepCycleTime=args.get(5)
 	long timeOfCycleStart= System.currentTimeMillis();
 	int stepCycyleActiveIndex =0
-	int numStepCycleGroups = 2
+	int numStepCycleGroups = args.get(6)
+	double standardHeadTailAngle =args.get(7)
+	double staticPanOffset = args.get(8)
 
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
@@ -73,6 +78,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	boolean timout = true
 	long loopTimingMS =5
 	long timeOfLastLoop = System.currentTimeMillis()
+	long timeOfLastIMUPrint = System.currentTimeMillis()
 	int numlegs
 	double gaitIntermediatePercentage 
 	TransformNR global
@@ -88,7 +94,48 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					return it
 			}
 	}
+	void updateDynamics(IMUUpdate update){
+		
+		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
+		if(incrementTime>100){
+			timeOfLastIMUPrint= System.currentTimeMillis()
+			print "\r\nDynmics IMU state \n"
+			for(def state :[update]){
+				print " x = "+state.getxAcceleration()
+				print "  y = "+state.getyAcceleration()
+				print " z = "+state.getzAcceleration()
+				print " rx = "+state.getRotxAcceleration()
+				print " ry = "+state.getRotyAcceleration()
+				print " rz = "+state.getRotzAcceleration()+"\r\n"
+			}
+		}
+		
+		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?staticPanOffset:-staticPanOffset)
+		for(def d:source.getAllDHChains()){
+			String limbName = d.getScriptingName()
+			double computedTilt = standardHeadTailAngle
+			double computedPan = standardHeadTailPan
+			if(limbName.contentEquals("Tail")){
+				d.setDesiredJointAxisValue(0,// link index
+							computedTilt, //target angle
+							0) // 2 seconds
+				d.setDesiredJointAxisValue(1,// link index
+							computedPan, //target angle
+							0) // 2 seconds			
+			} 
+			if(limbName.contentEquals("Head")){
+				d.setDesiredJointAxisValue(0,// link index
+							computedTilt, //target angle
+							0) // 2 seconds
+				d.setDesiredJointAxisValue(1,// link index
+							computedPan, //target angle
+							0) // 2 seconds			
+			}
+		}
+
+	}
 	public void walkingCycle(){
+		
 		long incrementTime = (System.currentTimeMillis()-reset)
 		if(incrementTime>miliseconds){
 			timout = true
@@ -181,6 +228,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		switch(walkingState){
 		case WalkingState.Rising:
 			gaitIntermediatePercentage=gaitPercentage*4.0
+			tf = compute(leg,gaitIntermediatePercentage,newPose)
 			tf.setZ(zLock+(stepOverHeight*gaitIntermediatePercentage));
 			if(gaitPercentage>0.25) {
 				walkingState= WalkingState.ToHome
@@ -213,7 +261,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			break;
 		case WalkingState.ToNewTarget:
 			gaitIntermediatePercentage=(gaitPercentage-0.5)*4.0
-			tf = compute(leg,gaitIntermediatePercentage/2,NewTmpPose)
+			tf = compute(leg,gaitIntermediatePercentage,NewTmpPose)
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.75) {
 				walkingState= WalkingState.Falling
@@ -225,7 +273,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			break;
 		case WalkingState.Falling:
 			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
-			tf = compute(leg,0.5,NewTmpPose)
+			tf = compute(leg,1-gaitIntermediatePercentage,NewTmpPose)
 			tf.setZ(zLock+stepOverHeight-(stepOverHeight*gaitIntermediatePercentage));
 			break;
 		}
@@ -319,7 +367,17 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
 		try{
 			//println "Walk update "+n
-			source=s;
+			if(s==null){
+				println "Null mobile base"
+				return
+			}
+			if(source!=s){
+				source=s;
+				source.getImu().clearhardwareListeners()
+				source.getImu().addhardwareListeners({update ->
+					updateDynamics(update)
+				})
+			}
 			newPose=n.copy()
 			//newPose=new TransformNR()
 			miliseconds = Math.round(sec*1000)
@@ -335,20 +393,25 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					timeOfCycleStart= System.currentTimeMillis();
 					for(int i=0;i<numStepCycleGroups;i++){
 						if(cycleGroups.get(i)==null){
+							
 							def cycleSet = []
-							for(def leg:source.getLegs()){
-								TransformNR  legRoot= leg.getRobotToFiducialTransform()
-								if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
-									cycleSet.add(leg)
-								}else
-								if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
-									cycleSet.add(leg)
-								}else
-								if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
-									cycleSet.add(leg)
-								}else
-								if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
-									cycleSet.add(leg)
+							if(numStepCycleGroups==source.getLegs().size()){
+								cycleSet.add(source.getLegs().get(i))
+							}else if (numStepCycleGroups == 2) {
+								for(def leg:source.getLegs()){
+									TransformNR  legRoot= leg.getRobotToFiducialTransform()
+									if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
+										cycleSet.add(leg)
+									}else
+									if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
+										cycleSet.add(leg)
+									}else
+									if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
+										cycleSet.add(leg)
+									}else
+									if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
+										cycleSet.add(leg)
+									}
 								}
 							}
 							//println "Adding "+cycleSet.size()+" to index "+i
