@@ -19,7 +19,7 @@ enum WalkingState {
 }
 
 if(args==null){
-	double stepOverHeight=20;
+	double stepOverHeight=15;
 	long stepOverTime=40;
 	Double zLock=-12;
 	Closure calcHome = { DHParameterKinematics leg -> 
@@ -38,7 +38,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =2000
+	long stepCycleTime =100
 	
 	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime]
 }
@@ -70,7 +70,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	TransformNR newPose
 	long miliseconds
 	boolean timout = true
-	long loopTimingMS = 200
+	long loopTimingMS =5
 	long timeOfLastLoop = System.currentTimeMillis()
 	int numlegs
 	double gaitIntermediatePercentage 
@@ -80,7 +80,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	}
 	
 	public void walkingCycle(){
-		if(reset+miliseconds< System.currentTimeMillis()){
+		long incrementTime = (System.currentTimeMillis()-reset)
+		if(incrementTime>miliseconds){
 			timout = true
 		}else
 			timout = false
@@ -127,7 +128,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 		if(!timout){
 			double timeRemaining =(double) (System.currentTimeMillis()-reset)
-			double percentage = timeRemaining/(double)(miliseconds)
+			double percentage =(double)(loopTimingMS)/ (double)(miliseconds)
 			for (def leg :downLegs){
 				if(leg!=null)
 					downMove( leg, percentage)
@@ -138,8 +139,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	}
 	private void downMove(def leg,double percentage){
 		//println "Down Moving to "+percentage
-		
-		//leg.setDesiredTaskSpaceTransform(compute(leg,percentage,newPose), 0);
+		def pose =compute(leg,percentage,newPose)
+		leg.setDesiredTaskSpaceTransform(pose, 0);
 	}
 	private TransformNR compute(def leg,double percentage,def bodyMotion){
 		TransformNR footStarting = leg.getCurrentTaskSpaceTransform();
@@ -155,6 +156,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double xinc=(footStarting.getX()-inc.getX())*percentage;
 		double yinc=(footStarting.getY()-inc.getY())*percentage;
 		//apply the increment to the feet
+		println "Feet increments x = "+xinc+" y = "+yinc
 		footStarting.translateX(xinc);
 		footStarting.translateY(yinc);
 		footStarting.setZ(zLock);
@@ -165,9 +167,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 		def tf
 		if(timout)
-			tf = compute(leg,percentage,new TransformNR())
+			tf = leg.getCurrentTaskSpaceTransform()
 		else
-			tf = compute(leg,percentage,newPose.inverse())
+			tf = leg.getCurrentTaskSpaceTransform()
+			//tf = compute(leg,1,newPose.inverse())
 		switch(walkingState){
 		case WalkingState.Rising:
 			tf.setZ(zLock+(stepOverHeight*percentage));
@@ -218,7 +221,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			walkingCycle()
 			//print " Walk cycle took "+(System.currentTimeMillis()-timeOfLastLoop) 
 		}
-		if(reset+(stepCycleTime*3) < System.currentTimeMillis()){
+		if(reset+3000 < System.currentTimeMillis()){
 			println "FIRING reset from reset thread"
 			resetting=true;
 			long tmp= reset;
@@ -272,8 +275,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		try{
 			//println "Walk update "+n
 			source=s;
-			//newPose=n.copy().inverse()
-			newPose=new TransformNR()
+			newPose=n.copy()
+			//newPose=new TransformNR()
 			miliseconds = Math.round(sec*1000)
 			numlegs = source.getLegs().size();
 			legs = source.getLegs();
