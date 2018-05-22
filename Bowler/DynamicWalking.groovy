@@ -194,12 +194,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			gaitIntermediatePercentage=(gaitPercentage-0.25)*4.0
 			def current = tf
 			tf = dynamicHome( leg)
-			if(gaitIntermediatePercentage>0.9){
+			if(gaitIntermediatePercentage<0.9){
 				double xinc=(tf.getX()-current.getX())*(1-gaitIntermediatePercentage);
 				double yinc=(tf.getY()-current.getY())*(1-gaitIntermediatePercentage);
 				
-				tf.translateX(xinc);
-				tf.translateY(yinc);
+				tf.translateX(-xinc);
+				tf.translateY(-yinc);
 			}
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.5) {
