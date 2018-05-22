@@ -106,11 +106,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 		}
 		double standardHeadTailAngle = -25
-		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?10:-10)
+		double staticPanOffset = 10
+		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?staticPanOffset:-staticPanOffset)
 		for(def d:source.getAllDHChains()){
 			String limbName = d.getScriptingName()
 			double computedTilt = standardHeadTailAngle
-			
 			double computedPan = standardHeadTailPan
 			if(limbName.contentEquals("Tail")){
 				d.setDesiredJointAxisValue(0,// link index
