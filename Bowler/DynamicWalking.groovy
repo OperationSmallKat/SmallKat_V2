@@ -340,11 +340,16 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
 		try{
 			//println "Walk update "+n
+			if(s==null){
+				println "Null mobile base"
+				return
+			}
 			if(source!=s){
+				source=s;
+				source.getImu().clearhardwareListeners()
 				source.getImu().addhardwareListeners({update ->
 					updateDynamics(update)
 				})
-				source=s;
 			}
 			newPose=n.copy()
 			//newPose=new TransformNR()
