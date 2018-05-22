@@ -38,8 +38,8 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =200
-	int numStepCycleGroups = 4
+	long stepCycleTime =100
+	int numStepCycleGroups = 2
 	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups]
 }
 
@@ -340,7 +340,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 							def cycleSet = []
 							if(numStepCycleGroups==source.getLegs().size()){
 								cycleSet.add(source.getLegs().get(i))
-							}else{
+							}else if (numStepCycleGroups == 2) {
 								for(def leg:source.getLegs()){
 									TransformNR  legRoot= leg.getRobotToFiducialTransform()
 									if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
