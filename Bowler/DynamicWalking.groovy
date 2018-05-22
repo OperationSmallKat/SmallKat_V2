@@ -39,8 +39,8 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =200
-	
-	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime]
+	int numStepCycleGroups = 4
+	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -53,7 +53,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	long stepCycleTime=args.get(5)
 	long timeOfCycleStart= System.currentTimeMillis();
 	int stepCycyleActiveIndex =0
-	int numStepCycleGroups = 2
+	int numStepCycleGroups = args.get(6)
 
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
@@ -336,20 +336,25 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					timeOfCycleStart= System.currentTimeMillis();
 					for(int i=0;i<numStepCycleGroups;i++){
 						if(cycleGroups.get(i)==null){
+							
 							def cycleSet = []
-							for(def leg:source.getLegs()){
-								TransformNR  legRoot= leg.getRobotToFiducialTransform()
-								if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
-									cycleSet.add(leg)
-								}else
-								if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
-									cycleSet.add(leg)
-								}else
-								if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
-									cycleSet.add(leg)
-								}else
-								if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
-									cycleSet.add(leg)
+							if(numStepCycleGroups==source.getLegs().size()){
+								cycleSet.add(source.getLegs().get(i))
+							}else{
+								for(def leg:source.getLegs()){
+									TransformNR  legRoot= leg.getRobotToFiducialTransform()
+									if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
+										cycleSet.add(leg)
+									}else
+									if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
+										cycleSet.add(leg)
+									}else
+									if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
+										cycleSet.add(leg)
+									}else
+									if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
+										cycleSet.add(leg)
+									}
 								}
 							}
 							//println "Adding "+cycleSet.size()+" to index "+i
