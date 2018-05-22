@@ -13,6 +13,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 import com.neuronrobotics.sdk.addons.kinematics.IDriveEngine;
 import com.neuronrobotics.sdk.common.Log;
 import Jama.Matrix;
+import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 enum WalkingState {
     Rising,ToHome,ToNewTarget,Falling
@@ -29,9 +30,9 @@ if(args==null){
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
 			if(legRoot.getY()>0){
-				//tr.translateY(5)
+				tr.translateY(-5)
 			}else{
-				//tr.translateY(-5)
+				tr.translateY(5)
 			}
 			
 			return tr;
@@ -73,6 +74,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	boolean timout = true
 	long loopTimingMS =5
 	long timeOfLastLoop = System.currentTimeMillis()
+	long timeOfLastIMUPrint = System.currentTimeMillis()
 	int numlegs
 	double gaitIntermediatePercentage 
 	TransformNR global
@@ -88,7 +90,25 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					return it
 			}
 	}
+	void updateDynamics(IMUUpdate update){
+		
+		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
+		if(incrementTime>1000){
+			timeOfLastIMUPrint= System.currentTimeMillis()
+			print "\r\nIMU state \n"
+			for(def state :[update]){
+				print " x = "+state.getxAcceleration()
+				print "  y = "+state.getyAcceleration()
+				print " z = "+state.getzAcceleration()
+				print " rx = "+state.getRotxAcceleration()
+				print " ry = "+state.getRotyAcceleration()
+				print " rz = "+state.getRotzAcceleration()+"\r\n"
+			}
+		}
+
+	}
 	public void walkingCycle(){
+		
 		long incrementTime = (System.currentTimeMillis()-reset)
 		if(incrementTime>miliseconds){
 			timout = true
