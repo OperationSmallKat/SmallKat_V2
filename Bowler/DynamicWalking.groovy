@@ -38,7 +38,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =2000
+	long stepCycleTime =9000
 	
 	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime]
 }
@@ -174,14 +174,17 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf = getLegCurrentPose(leg)
-		
+		def NewTmpPose = newPose.inverse()
+		if(timout)
+			NewTmpPose=new TransformNR()
 		switch(walkingState){
 		case WalkingState.Rising:
 			gaitIntermediatePercentage=gaitPercentage*4.0
 			tf.setZ(zLock+(stepOverHeight*gaitIntermediatePercentage));
 			if(gaitPercentage>0.25) {
 				walkingState= WalkingState.ToHome
-				getDownLegs().collect{
+				println "to Home " 
+				legs.collect{
 					if(it!=null)
 				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
@@ -191,35 +194,37 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			gaitIntermediatePercentage=(gaitPercentage-0.25)*4.0
 			def current = tf
 			tf = dynamicHome( leg)
-			
-			double xinc=(tf.getX()-current.getX())*(1-gaitIntermediatePercentage);
-			double yinc=(tf.getY()-current.getY())*(1-gaitIntermediatePercentage);
-			println "Feet increments x = "+xinc+" y = "+yinc
-			tf.translateX(xinc);
-			tf.translateY(yinc);
+			if(gaitIntermediatePercentage>0.9){
+				double xinc=(tf.getX()-current.getX())*(1-gaitIntermediatePercentage);
+				double yinc=(tf.getY()-current.getY())*(1-gaitIntermediatePercentage);
+				
+				tf.translateX(xinc);
+				tf.translateY(yinc);
+			}
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.5) {
-				println "Stepping down" 
+				println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
-				getDownLegs().collect{if(it!=null)
+				legs.collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 			}
 			break;
 		case WalkingState.ToNewTarget:
 			gaitIntermediatePercentage=(gaitPercentage-0.5)*4.0
-			tf = compute(leg,gaitIntermediatePercentage,newPose.inverse())
+			tf = compute(leg,gaitIntermediatePercentage,NewTmpPose)
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.75) {
 				walkingState= WalkingState.Falling
-				getDownLegs().collect{if(it!=null)
+				println "Falling " +gaitIntermediatePercentage
+				legs.collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 			}
 			break;
 		case WalkingState.Falling:
 			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
-			tf = compute(leg,1,newPose.inverse())
+			tf = compute(leg,1,NewTmpPose)
 			tf.setZ(zLock+stepOverHeight-(stepOverHeight*gaitIntermediatePercentage));
 			break;
 		}
