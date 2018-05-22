@@ -39,7 +39,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =10000
+	long stepCycleTime =200
 	int numStepCycleGroups = 2
 	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups]
 }
