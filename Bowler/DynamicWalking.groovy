@@ -14,10 +14,14 @@ import com.neuronrobotics.sdk.addons.kinematics.IDriveEngine;
 import com.neuronrobotics.sdk.common.Log;
 import Jama.Matrix;
 
+enum WalkingState {
+    Rising,ToHome,ToNewTarget,Falling
+}
+
 if(args==null){
-	double stepOverHeight=5;
-	long stepOverTime=400;
-	Double zLock=0;
+	double stepOverHeight=15;
+	long stepOverTime=40;
+	Double zLock=-12;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -25,16 +29,16 @@ if(args==null){
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
 			if(legRoot.getY()>0){
-				tr.translateY(5)
+				//tr.translateY(5)
 			}else{
-				tr.translateY(-5)
+				//tr.translateY(-5)
 			}
 			
 			return tr;
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =500
+	long stepCycleTime =100
 	
 	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime]
 }
@@ -50,10 +54,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	long timeOfCycleStart= System.currentTimeMillis();
 	int stepCycyleActiveIndex =0
 	int numStepCycleGroups = 2
-	int numlegs;
-	TransformNR [] home=null;
+
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
+	HashMap<DHParameterKinematics,double[] > cycleStartPoint=new HashMap<>();
 	TransformNR previousGLobalState;
 	TransformNR target;
 	RotationNR rot;
@@ -62,9 +66,172 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	
 	Thread stepResetter=null;
 	boolean threadDone=false
-	
+	WalkingState walkingState= WalkingState.Rising
+	MobileBase source 
+	TransformNR newPose
+	long miliseconds
+	boolean timout = true
+	long loopTimingMS =5
+	long timeOfLastLoop = System.currentTimeMillis()
+	int numlegs
+	double gaitIntermediatePercentage 
+	TransformNR global
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
+	}
+	def getUpLegs(){
+		return cycleGroups.get(stepCycyleActiveIndex)
+	}
+	def getDownLegs(){
+		return legs.collect{
+				if(!upLegs.contains(it))
+					return it
+			}
+	}
+	public void walkingCycle(){
+		long incrementTime = (System.currentTimeMillis()-reset)
+		if(incrementTime>miliseconds){
+			timout = true
+		}else
+			timout = false
+		long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
+		if(timeSince>stepCycleTime){
+			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
+			legs.collect{
+			 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+			}
+			
+			timeOfCycleStart=System.currentTimeMillis()
+			stepCycyleActiveIndex++
+			if(stepCycyleActiveIndex==numStepCycleGroups){
+				stepCycyleActiveIndex=0;
+			}
+			walkingState=WalkingState.Rising
+			
+		}else{
+			
+			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()leg
+		}
+		
+		
+		//println "Cycle = "+stepCycyleActiveIndex+" "+gaitPercentage
+	
+		def upLegs = getUpLegs()
+		def downLegs =getDownLegs()
+		//println upLegs
+		//println downLegs
+		for (def leg :upLegs){
+			if(leg!=null)
+				upStateMachine(leg)
+			
+		}
+		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
+		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
+		if(!timout){
+			double timeRemaining =(double) (System.currentTimeMillis()-reset)
+			double percentage =timeRemaining/ (double)(miliseconds)
+			//println "Walk Percent = "+percentage+" of " +miliseconds
+			for (def leg :downLegs){
+				if(leg!=null)
+					downMove( leg, gaitPercentage)
+			}
+		}
+		
+		
+	}
+	private void downMove(def leg,double percentage){
+		//println "Down Moving to "+percentage
+		def pose =compute(leg,percentage,newPose)
+		leg.setDesiredTaskSpaceTransform(pose, 0);
+	}
+	private def getLegCurrentPose(def leg){
+		double[] joints = cycleStartPoint.get(leg)	
+		TransformNR armOffset = leg.forwardKinematics(joints)	
+		return leg.forwardOffset(armOffset);//leg.getCurrentTaskSpaceTransform();
+	}
+	private TransformNR compute(def leg,double percentage,def bodyMotion){
+		double[] joints = cycleStartPoint.get(leg)	
+		TransformNR armOffset = leg.forwardKinematics(joints)	
+		TransformNR footStarting = leg.forwardOffset(armOffset);//leg.getCurrentTaskSpaceTransform();
+		def myglobal=global.times(bodyMotion);// new global pose
+		Matrix btt =  leg.getRobotToFiducialTransform().getMatrixTransform();
+		Matrix ftb = myglobal.getMatrixTransform();// our new target
+		Matrix current = armOffset.getMatrixTransform();
+		Matrix mForward = ftb.times(btt).times(current);
+		TransformNR inc =new TransformNR( mForward);
+		inc.setZ(zLock);
+		double xinc=(footStarting.getX()-inc.getX())*percentage;
+		double yinc=(footStarting.getY()-inc.getY())*percentage;
+		//apply the increment to the feet
+		//println "Feet increments x = "+xinc+" y = "+yinc
+		footStarting.translateX(xinc);
+		footStarting.translateY(yinc);
+		footStarting.setZ(zLock);
+		
+		return footStarting
+	}
+	private void upStateMachine(def leg){
+		//println "Up Moving to "+percentage
+		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
+		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
+		def tf = getLegCurrentPose(leg)
+		def NewTmpPose = newPose.inverse()
+		if(timout)
+			NewTmpPose=new TransformNR()
+		switch(walkingState){
+		case WalkingState.Rising:
+			gaitIntermediatePercentage=gaitPercentage*4.0
+			tf.setZ(zLock+(stepOverHeight*gaitIntermediatePercentage));
+			if(gaitPercentage>0.25) {
+				walkingState= WalkingState.ToHome
+				//println "to Home " 
+				getUpLegs().collect{
+					if(it!=null)
+				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+				}
+			}
+			break;
+		case WalkingState.ToHome:
+			gaitIntermediatePercentage=(gaitPercentage-0.25)*4.0
+			def current = tf
+			tf = dynamicHome( leg)
+			if(gaitIntermediatePercentage<0.9){
+				double xinc=(tf.getX()-current.getX())*(1-gaitIntermediatePercentage);
+				double yinc=(tf.getY()-current.getY())*(1-gaitIntermediatePercentage);
+				
+				tf.translateX(-xinc);
+				tf.translateY(-yinc);
+			}
+			tf.setZ(zLock+(stepOverHeight));
+			if(gaitPercentage>0.5) {
+				//println "To new target " +gaitIntermediatePercentage
+				walkingState= WalkingState.ToNewTarget
+				getUpLegs().collect{if(it!=null)
+				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+				}
+			}
+			break;
+		case WalkingState.ToNewTarget:
+			gaitIntermediatePercentage=(gaitPercentage-0.5)*4.0
+			tf = compute(leg,gaitIntermediatePercentage/2,NewTmpPose)
+			tf.setZ(zLock+(stepOverHeight));
+			if(gaitPercentage>0.75) {
+				walkingState= WalkingState.Falling
+				//println "Falling " +gaitIntermediatePercentage
+				getUpLegs().collect{if(it!=null)
+				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+				}
+			}
+			break;
+		case WalkingState.Falling:
+			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
+			tf = compute(leg,0.5,NewTmpPose)
+			tf.setZ(zLock+stepOverHeight-(stepOverHeight*gaitIntermediatePercentage));
+			break;
+		}
+		//println "Gait Percent = "+gaitIntermediatePercentage
+		
+		leg.setDesiredTaskSpaceTransform(tf, 0);
 	}
 	@Override
 	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
@@ -91,54 +258,21 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return true
 	}
 	
-	private void resetLoop(){
-		if((timeOfCycleStart+stepCycleTime)>System.currentTimeMillis()){
-			timeOfCycleStart=System.currentTimeMillis()
-			stepCycyleActiveIndex++
-			if(stepCycyleActiveIndex==numStepCycleGroups){
-				stepCycyleActiveIndex=0;
-			}
-			//println "Cycle = "+cycleGroups.get(stepCycyleActiveIndex)
-		}else{
-			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()leg
+	private void walkLoop(){
+		long time = System.currentTimeMillis()-timeOfLastLoop
+		if(time>loopTimingMS){
+			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfLastLoop) +" "
+			timeOfLastLoop=System.currentTimeMillis()
+			walkingCycle()
+			//print " Walk cycle took "+(System.currentTimeMillis()-timeOfLastLoop) 
 		}
-		
-		if(reset+3000 < System.currentTimeMillis()){
+		if(reset+5000 < System.currentTimeMillis()){
 			println "FIRING reset from reset thread"
 			resetting=true;
 			long tmp= reset;
-			if(home==null){
-				home = new TransformNR[numlegs];
-				for(int i=0;i<numlegs;i++){
-					//home[i] = legs.get(i).forwardOffset(new TransformNR());
-					home[i] =calcHome(legs.get(i))
-				}
-			}
+			
 			for(int i=0;i<numlegs;i++){
-				TransformNR up = home[i].copy()
-				up.setZ(stepOverHeight + zLock )
-				TransformNR down = home[i].copy()
-				down.setZ( zLock )
-				try {
-					// lift leg above home
-					println "lift leg "+i+" "+up
-					legs.get(i).setDesiredTaskSpaceTransform(up, 0);
-				} catch (Exception e) {
-					//println "Failed to reach "+up
-					BowlerStudio.printStackTrace(e);
-				}
-				ThreadUtil.wait((int)stepOverTime);
-				try {
-					//step to new target
-					println "step leg "+i+" down "+down
-					
-					legs.get(i).setDesiredTaskSpaceTransform(down, 0);
-					//set new target for the coordinated motion step at the end
-				} catch (Exception e) {
-					//println "Failed to reach "+down
-					BowlerStudio.printStackTrace(e);
-				}
-				ThreadUtil.wait((int)stepOverTime);
+				StepHome(legs.get(i))
 			}
 			resettingindex=numlegs;
 			resetting=false;
@@ -147,246 +281,112 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 		}
 	}
-	public void DriveArcLocal(MobileBase source, TransformNR newPose, double seconds, boolean retry) {
-		TransformNR incomingTarget=newPose.copy()
-		newPose = newPose.inverse()
-		if(stepResetter==null){
-			timeOfCycleStart= System.currentTimeMillis();
-			for(int i=0;i<numStepCycleGroups;i++){
-				if(cycleGroups.get(i)==null){
-					def cycleSet = []
-					for(def leg:source.getLegs()){
-						TransformNR  legRoot= leg.getRobotToFiducialTransform()
-						if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
-							cycleSet.add(leg)
-						}else
-						if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
-							cycleSet.add(leg)
-						}else
-						if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
-							cycleSet.add(leg)
-						}else
-						if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
-							cycleSet.add(leg)
-						}else{
-							cycleSet.add(leg)//catch all 
-						}
-						
-					}
-					cycleGroups.put(i, cycleSet)
-				}
-			}
-			stepResetter = new Thread(){
-				public void run(){
-					threadDone=false;
-					println "Starting step reset thread"
-					int numlegs = source.getLegs().size();
-					 legs = source.getLegs();
-					while(source.isAvailable() && threadDone==false){
-						ThreadUtil.wait(10);
-						resetLoop()
-					}
-					println "Finished step reset thread"
-				}
-				
-				
-			};
-			stepResetter.start();
-		}
-		resetStepTimer();
-		
-	
+	def dynamicHome(def leg){
+		//TODO apply dynamics to home location
+		return calcHome(leg)
+	}
+	private void StepHome(def leg){
 		try{
-				 numlegs = source.getLegs().size();
-				TransformNR [] feetLocations = new TransformNR[numlegs];
-				TransformNR [] newFeetLocations = new TransformNR[numlegs];
-				ArrayList<DHParameterKinematics> legs = source.getLegs();
+			def home = dynamicHome(leg)
+			TransformNR up = home.copy()
+			up.setZ(stepOverHeight + zLock )
+			TransformNR down = home.copy()
+			down.setZ( zLock )
+			try {
+				// lift leg above home
+				//println "lift leg  "+up
+				leg.setDesiredTaskSpaceTransform(up, 0);
+			} catch (Exception e) {
+				//println "Failed to reach "+up
+				BowlerStudio.printStackTrace(e);
+			}
+			ThreadUtil.wait((int)stepOverTime);
+			try {
+				//step to new target
+				//println "step leg down "+down
 				
-				if(home==null){
-					Log.enableSystemPrint(true)
-					home = new TransformNR[numlegs];
-					for(int i=0;i<numlegs;i++){
-						//home[i] = legs.get(i).forwardOffset(new TransformNR());
-						home[i] =calcHome(legs.get(i))
-						println "Home for link "+i+" is "+home[i]
-					}
-				}
-
-				//println "Loading feet target locations for "+legs.size()
-				// Load in the locations of the tips of each of the feet.
-				for(int i=0;i<legs.size();i++){
-					//println "Loading Leg "+legs.get(i).getScriptingName()
-					def leg = legs.get(i)
-					TransformNR global= source.getFiducialToGlobalTransform();
-					if(global==null){
-						global=new TransformNR()
-						source.setGlobalToFiducialTransform(global)
-					}
-					TransformNR footStarting = leg.getCurrentTaskSpaceTransform();
-
-					if(global==null)
-						global=new TransformNR()
-					double[] joints = leg.getCurrentJointSpaceVector()	
-					TransformNR armOffset = leg.forwardKinematics(joints)	
-					global=global.times(newPose);// new global pose
-					Matrix btt =  leg.getRobotToFiducialTransform().getMatrixTransform();
-					Matrix ftb = global.getMatrixTransform();// our new target
-					Matrix current = armOffset.getMatrixTransform();
-					Matrix mForward = ftb.times(btt).times(current);
-					TransformNR inc =new TransformNR( mForward);
-					feetLocations[i]=inc
-					
-					if(zLock==null){
-						//sets a standard plane at the z location of the first leg.
-						zLock=feetLocations[i].getZ();
-						//println "ZLock level set to "+zLock
-					}
-					home[i] =calcHome(leg)
-					feetLocations[i].setZ(home[i].getZ());
-
-
-				}
-				boolean resetDetect=false;
-				for(int i=0;i<numlegs;i++){
-					double footx,footy;
-					newFeetLocations[i]=legs.get(i).getCurrentPoseTarget();
-					// start by storing where the feet are
-					DHParameterKinematics leg=legs.get(i)
-					if( !check(leg,feetLocations[i])||
-						!check(leg,newFeetLocations[i])
-					){
-						//perform the step over
-						home[i] =calcHome(leg)
-						//println "Leg "+i+" setep over to x="+feetLocations[i].getX()+" y="+feetLocations[i].getY()
-
-						//println i+" foot reset needed "+feetLocations[i].getX()+" y:"+feetLocations[i].getY()
-						
-						//Force the search for a new foothold to start at the home point
-						feetLocations[i].setX(home[i].getX());
-						feetLocations[i].setY(home[i].getY());
-						//feetLocations[i]=newFeetLocations[i].copy()
-						feetLocations[i].setZ(zLock);
-						int j=0;
-						//println i+" Step over location"+feetLocations[i].getX()+" y:"+feetLocations[i].getY()
-						
-						double xunit;
-						double yunit ;
-						TransformNR lastGood= feetLocations[i].copy();
-						TransformNR stepup = feetLocations[i].copy();
-						TransformNR stepUnit = feetLocations[i].copy();
-						stepup.setZ(stepOverHeight + zLock );
-						/*
-						 * legs.get(i).checkTaskSpaceTransform(feetLocations[i]) &&
-							 legs.get(i).checkTaskSpaceTransform(stepup) &&
-							 legs.get(i).checkTaskSpaceTransform(stepUnit) &&
-						 */
-						ArrayList<TransformNR> stepOverTrajectory =[]
-					
-						
-						while(j<15){
-							feetLocations[i].setZ(zLock );
-							stepUnit=lastGood;
-							lastGood=feetLocations[i].copy();
-							TransformNR g= source.getFiducialToGlobalTransform();
-							if(g==null)
-								g=new TransformNR()
-							g=g.times(newPose);// new global pose
-							double[] joints = legs.get(i).inverseKinematics(legs.get(i).inverseOffset(feetLocations[i]))	
-							TransformNR armOffset = legs.get(i).forwardKinematics(joints)
-							Matrix btt = legs.get(i).getRobotToFiducialTransform().getMatrixTransform();
-							Matrix ftb = g.getMatrixTransform();// our new target
-							Matrix current = armOffset.getMatrixTransform();
-							Matrix mForward = ftb.times(btt).times(current);
-							TransformNR incr =new TransformNR( mForward);
-							//now calculate a a unit vector increment
-							double xinc=(feetLocations[i].getX()-incr.getX())/1;
-							double yinc=(feetLocations[i].getY()-incr.getY())/1;
-							//apply the increment to the feet
-							feetLocations[i].translateX(xinc);
-							feetLocations[i].translateY(yinc);
-							//feetLocations[i].translateX(-newPose.getX());
-							//feetLocations[i].translateY(-newPose.getX());
-							j++;
-							stepup = feetLocations[i].copy()
-							stepup.setZ(stepOverHeight + zLock );
-							if(!check(leg,feetLocations[i])){
-								lastGood.setZ(zLock );
-								feetLocations[i]=lastGood.copy()
-								stepOverTrajectory.add(feetLocations[i])
-								break
-							}
-							lastGood=feetLocations[i]
-							stepOverTrajectory.add(stepup.copy())
-						}
-						double diffx= newFeetLocations[i].getX() - home[i].getX()
-						double diffy= newFeetLocations[i].getY() - home[i].getY()
-						TransformNR stepupFirst = newFeetLocations[i].copy()
-						stepupFirst.setZ(stepOverHeight +zLock);
-						double numSteps=stepOverTrajectory.size()
-						for(int x=0;x<numSteps;x++){
-							stepupFirst.translateX(-diffx/numSteps);
-							stepupFirst.translateY(-diffy/numSteps);
-							stepOverTrajectory.add(x,stepupFirst.copy())
-						}
-						resetting=true;
-						resettingindex=i;
-						//println "Resetting with "+stepOverTrajectory.size()+" points"
-						for(int x=0;x<stepOverTrajectory.size();x++){	
-							double time = stepOverTime/stepOverTrajectory.size()	
-							ThreadUtil.wait((int)(time));		
-							try {
-								//println stepOverTrajectory.get(x)
-								leg.setDesiredTaskSpaceTransform(stepOverTrajectory.get(x), time/1000.0);
-							} catch (Exception e) {
-								//println "Failed to reach "+stepup
-								e.printStackTrace();
-							}
-							
-						}
-						resetting=false;
-						resettingindex=numlegs;
-						resetDetect=true;
-
-						
-					}
-					
-					resetStepTimer();
-				}
-				if(resetDetect && retry){
-					 DriveArcLocal( source,  incomingTarget,  seconds,false) 
-					 return;
-				}
-					
-				for(int i=0;i<numlegs;i++){
-					if(!legs.get(i).checkTaskSpaceTransform(feetLocations[i])){
-						throw new RuntimeException(i + " leg foot location is not acheivable "+newPose);
-					}
-					
-				}
-				
-				
-				//all legs have a valid target set, perform coordinated motion
-				for(int i=0;i<numlegs;i++){
-					legs.get(i).setDesiredTaskSpaceTransform(feetLocations[i], seconds*1.5);
-		
-				}
-				if(!usePhysics)
-					source.setGlobalToFiducialTransform(global);
-				
-				// while(resetting && source.isAvailable()){
-				// 	//System.out.println("Waiting...")
-				// 	ThreadUtil.wait(100);
-				// }
-				
-		}catch (Exception ex){
-			ex.printStackTrace(System.out);
-			println "This step is not possible, undoing "+newPose
-			
-			//Set it back to where it was to use the interpolator for global move at the end
-			throw ex
-			
+				leg.setDesiredTaskSpaceTransform(down, 0);
+				//set new target for the coordinated motion step at the end
+			} catch (Exception e) {
+				//println "Failed to reach "+down
+				BowlerStudio.printStackTrace(e);
+			}
+			ThreadUtil.wait((int)stepOverTime);
+		}catch(Exception e){
+			BowlerStudio.printStackTrace(e)
 		}
-		
+	}
+	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
+		try{
+			//println "Walk update "+n
+			source=s;
+			newPose=n.copy()
+			//newPose=new TransformNR()
+			miliseconds = Math.round(sec*1000)
+			numlegs = source.getLegs().size();
+			legs = source.getLegs();
+			global= source.getFiducialToGlobalTransform();
+			if(global==null){
+				global=new TransformNR()
+				source.setGlobalToFiducialTransform(global)
+			}
+			if(stepResetter==null){
+				try{
+					timeOfCycleStart= System.currentTimeMillis();
+					for(int i=0;i<numStepCycleGroups;i++){
+						if(cycleGroups.get(i)==null){
+							def cycleSet = []
+							for(def leg:source.getLegs()){
+								TransformNR  legRoot= leg.getRobotToFiducialTransform()
+								if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
+									cycleSet.add(leg)
+								}else
+								if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
+									cycleSet.add(leg)
+								}else
+								if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
+									cycleSet.add(leg)
+								}else
+								if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
+									cycleSet.add(leg)
+								}
+							}
+							//println "Adding "+cycleSet.size()+" to index "+i
+							cycleGroups.put(i, cycleSet)
+						}
+					}
+				}catch(Exception e){
+					BowlerStudio.printStackTrace(e)
+				}
+				stepResetter = new Thread(){
+					public void run(){
+						try{
+							threadDone=false;
+							walkingState= WalkingState.Rising
+							stepCycyleActiveIndex=0;
+							println "Starting step reset thread"
+							while(source.isAvailable() && threadDone==false){
+								Thread.sleep(0,10)// avoid thread lock
+								try{	
+									walkLoop();
+								}catch(Exception e){
+									BowlerStudio.printStackTrace(e)
+								}
+							}
+							println "Finished step reset thread"
+						}catch(Exception e){
+							BowlerStudio.printStackTrace(e)
+						}
+					}
+					
+					
+				};
+				stepResetter.start();
+			}
+			resetStepTimer();
+		}catch(Exception e){
+			BowlerStudio.printStackTrace(e)
+		}
 	}
 
 	@Override
@@ -405,3 +405,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 
 
 }
+
+	
+		
