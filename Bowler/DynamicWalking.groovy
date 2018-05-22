@@ -41,7 +41,9 @@ if(args==null){
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =200
 	int numStepCycleGroups = 2
-	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups]
+	double standardHeadTailAngle = -25
+	double staticPanOffset = 10
+	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups,standardHeadTailAngle,staticPanOffset]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -55,6 +57,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	long timeOfCycleStart= System.currentTimeMillis();
 	int stepCycyleActiveIndex =0
 	int numStepCycleGroups = args.get(6)
+	double standardHeadTailAngle =args.get(7)
+	double staticPanOffset = args.get(8)
 
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
@@ -105,8 +109,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				print " rz = "+state.getRotzAcceleration()+"\r\n"
 			}
 		}
-		double standardHeadTailAngle = -25
-		double staticPanOffset = 10
+		
 		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?staticPanOffset:-staticPanOffset)
 		for(def d:source.getAllDHChains()){
 			String limbName = d.getScriptingName()
