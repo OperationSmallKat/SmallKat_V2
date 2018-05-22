@@ -95,7 +95,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		if(incrementTime>1000){
 			timeOfLastIMUPrint= System.currentTimeMillis()
-			print "\r\nIMU state \n"
+			print "\r\nDynmics IMU state \n"
 			for(def state :[update]){
 				print " x = "+state.getxAcceleration()
 				print "  y = "+state.getyAcceleration()
@@ -340,7 +340,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
 		try{
 			//println "Walk update "+n
-			source=s;
+			if(source!=s){
+				source.getImu().addhardwareListeners({update ->
+					updateDynamics(update)
+				})
+				source=s;
+			}
 			newPose=n.copy()
 			//newPose=new TransformNR()
 			miliseconds = Math.round(sec*1000)
