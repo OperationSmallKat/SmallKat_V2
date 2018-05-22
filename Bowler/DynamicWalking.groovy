@@ -38,7 +38,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =100
+	long stepCycleTime =200
 	
 	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime]
 }
@@ -57,6 +57,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
+	HashMap<DHParameterKinematics,double[] > cycleStartPoint=new HashMap<>();
 	TransformNR previousGLobalState;
 	TransformNR target;
 	RotationNR rot;
@@ -78,7 +79,15 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
 	}
-	
+	def getUpLegs(){
+		return cycleGroups.get(stepCycyleActiveIndex)
+	}
+	def getDownLegs(){
+		return cycleGroups.get(stepCycyleActiveIndex).collect{
+				if(!upLegs.contains(it))
+					return it
+			}
+	}
 	public void walkingCycle(){
 		long incrementTime = (System.currentTimeMillis()-reset)
 		if(incrementTime>miliseconds){
@@ -88,6 +97,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
 		if(timeSince>stepCycleTime){
 			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
+			getUpLegs().collect{
+			 	cycleStartPoint.put(it,leg.getCurrentJointSpaceVector())
+			}
 			timeOfCycleStart=System.currentTimeMillis()
 			stepCycyleActiveIndex++
 			if(stepCycyleActiveIndex==numStepCycleGroups){
@@ -95,8 +107,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			
 		}else{
+			
 			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()leg
 		}
+		
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		//println "Cycle = "+stepCycyleActiveIndex+" "+gaitPercentage
@@ -113,11 +127,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			walkingState= WalkingState.Falling
 			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
 		}
-		def upLegs = cycleGroups.get(stepCycyleActiveIndex)
-		def downLegs =legs.collect{
-				if(!upLegs.contains(it))
-					return it
-			}
+		def upLegs = getUpLegs()
+		def downLegs =getDownLegs()
 		//println upLegs
 		//println downLegs
 		for (def leg :upLegs){
@@ -144,7 +155,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	}
 	private TransformNR compute(def leg,double percentage,def bodyMotion){
 		TransformNR footStarting = leg.getCurrentTaskSpaceTransform();
-		double[] joints = leg.getCurrentJointSpaceVector()	
+		double[] joints = cycleStartPoint.get(leg)	
 		TransformNR armOffset = leg.forwardKinematics(joints)	
 		global=global.times(bodyMotion);// new global pose
 		Matrix btt =  leg.getRobotToFiducialTransform().getMatrixTransform();
