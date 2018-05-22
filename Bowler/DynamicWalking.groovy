@@ -184,7 +184,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			tf.setZ(zLock+(stepOverHeight*gaitIntermediatePercentage));
 			if(gaitPercentage>0.25) {
 				walkingState= WalkingState.ToHome
-				println "to Home " 
+				//println "to Home " 
 				getUpLegs().collect{
 					if(it!=null)
 				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
@@ -204,7 +204,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.5) {
-				println "To new target " +gaitIntermediatePercentage
+				//println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
 				getUpLegs().collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
@@ -217,7 +217,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.75) {
 				walkingState= WalkingState.Falling
-				println "Falling " +gaitIntermediatePercentage
+				//println "Falling " +gaitIntermediatePercentage
 				getUpLegs().collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
