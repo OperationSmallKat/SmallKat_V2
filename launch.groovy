@@ -90,7 +90,9 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 			int val= getCurrentPosition();
 			if(lastPushedVal!=val){
 				//println "Fire Link Listner "+index+" value "+getCurrentPosition()
+				try{
 				fireLinkListener(val);
+				}catch(java.lang.NullPointerException e){}
 				lastPushedVal=val
 			}else{
 				//println index+" value same "+getCurrentPosition()
