@@ -99,6 +99,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		if(incrementTime>100){
 			timeOfLastIMUPrint= System.currentTimeMillis()
+			/*
 			print "\r\nDynmics IMU state \n"
 			for(def state :[update]){
 				print " x = "+state.getxAcceleration()
@@ -108,6 +109,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				print " ry = "+state.getRotyAcceleration()
 				print " rz = "+state.getRotzAcceleration()+"\r\n"
 			}
+			*/
 		}
 		
 		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?staticPanOffset:-staticPanOffset)
