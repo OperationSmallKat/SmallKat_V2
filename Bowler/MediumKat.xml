@@ -79,7 +79,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>1</index>
+	<index>2</index>
 	<scale>0.7</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>19.029850746268654</lowerLimit>
@@ -133,7 +133,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>2</index>
+	<index>0</index>
 	<scale>-0.8961</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
