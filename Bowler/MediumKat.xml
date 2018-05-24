@@ -220,7 +220,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>3</index>
+	<index>5</index>
 	<scale>0.7</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -328,7 +328,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>5</index>
+	<index>3</index>
 	<scale>-0.829</scale>
 	<upperLimit>255.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
