@@ -25,7 +25,7 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>0</index>
+	<index>1</index>
 	<scale>0.7</scale>
 	<upperLimit>243.5820895522388</upperLimit>
 	<lowerLimit>3.8059701492537314</lowerLimit>
