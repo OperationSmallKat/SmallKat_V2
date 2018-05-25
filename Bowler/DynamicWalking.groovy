@@ -463,7 +463,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				})
 			}
 			
-			n=new TransformNR()
+			//n=new TransformNR()
 			miliseconds = Math.round(sec*1000)
 			//stepCycleTime=Math.round(sec*1000)
 			numlegs = source.getLegs().size();
