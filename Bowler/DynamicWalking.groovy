@@ -46,7 +46,7 @@ if(args==null){
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 30
-	double minBodyDisplacementPerStep = 2
+	double minBodyDisplacementPerStep = 1
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
