@@ -39,12 +39,13 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =3000
+	long stepCycleTime =300
 	int numStepCycleGroups = 2
-	double standardHeadTailAngle = -25
+	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
-	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups,standardHeadTailAngle,staticPanOffset,coriolisGain]
+	boolean headStable = false
+	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups,standardHeadTailAngle,staticPanOffset,coriolisGain,headStable]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -61,6 +62,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double standardHeadTailAngle =args.get(7)
 	double staticPanOffset = args.get(8)
 	double coriolisGain=args.get(9)
+	boolean headStable =args.get(10)
 	
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
@@ -163,12 +165,21 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 							0) // 2 seconds			
 			} 
 			if(limbName.contentEquals("Head")){
-				d.setDesiredJointAxisValue(0,// link index
-							computedTilt, //target angle
-							0) // 2 seconds
-				d.setDesiredJointAxisValue(1,// link index
-							computedPan, //target angle
-							0) // 2 seconds			
+				if(!headStable){
+					d.setDesiredJointAxisValue(0,// link index
+								computedTilt, //target angle
+								0) // 2 seconds
+					d.setDesiredJointAxisValue(1,// link index
+								computedPan, //target angle
+								0) // 2 seconds
+				}else{
+					d.setDesiredJointAxisValue(0,// link index
+								standardHeadTailAngle, //target angle
+								0) // 2 seconds
+					d.setDesiredJointAxisValue(1,// link index
+								0, //target angle
+								0) // 2 seconds				
+				}
 			}
 			}catch(Exception e){
 				BowlerStudio.printStackTrace(e)
