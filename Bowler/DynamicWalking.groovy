@@ -22,7 +22,7 @@ enum WalkingState {
 if(args==null){
 	double stepOverHeight=15;
 	long stepOverTime=40;
-	Double zLock=-12;
+	Double zLock=0;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -39,11 +39,12 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =200
+	long stepCycleTime =600
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -25
 	double staticPanOffset = 10
-	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups,standardHeadTailAngle,staticPanOffset]
+	double coriolisGain = 1
+	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups,standardHeadTailAngle,staticPanOffset,coriolisGain]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -59,7 +60,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	int numStepCycleGroups = args.get(6)
 	double standardHeadTailAngle =args.get(7)
 	double staticPanOffset = args.get(8)
-
+	double coriolisGain=args.get(9)
+	
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
 	HashMap<DHParameterKinematics,double[] > cycleStartPoint=new HashMap<>();
@@ -74,14 +76,17 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	WalkingState walkingState= WalkingState.Rising
 	MobileBase source 
 	TransformNR newPose
-	long miliseconds
-	boolean timout = true
+	//long miliseconds
+	//boolean timout = true
 	long loopTimingMS =5
 	long timeOfLastLoop = System.currentTimeMillis()
 	long timeOfLastIMUPrint = System.currentTimeMillis()
 	int numlegs
 	double gaitIntermediatePercentage 
 	TransformNR global
+	int coriolisIndex = 0
+	int coriolisDivisions = 360
+	long coriolisTimeBase = 1000
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
 	}
@@ -95,19 +100,28 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 	}
 	void updateDynamics(IMUUpdate update){
-		
+		if(stepResetter==null)
+			return
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
+		double velocity=0
+		if(	Math.abs(update.getxAcceleration())>0 ||
+			Math.abs(update.getxAcceleration())>0 ||
+			Math.abs(update.getxAcceleration())>0 
+		)
+			velocity=update.getRotyAcceleration()
+		else
+			velocity=5
 		if(incrementTime>100){
 			timeOfLastIMUPrint= System.currentTimeMillis()
 			/*
 			print "\r\nDynmics IMU state \n"
 			for(def state :[update]){
-				print " x = "+state.getxAcceleration()
-				print "  y = "+state.getyAcceleration()
-				print " z = "+state.getzAcceleration()
-				print " rx = "+state.getRotxAcceleration()
-				print " ry = "+state.getRotyAcceleration()
-				print " rz = "+state.getRotzAcceleration()+"\r\n"
+				print " x = "+update.getxAcceleration()
+				print "  y = "+update.getyAcceleration()
+				print " z = "+update.getzAcceleration()
+				print " rx = "+update.getRotxAcceleration()
+				print " ry = "+update.getRotyAcceleration()
+				print " rz = "+update.getRotzAcceleration()+"\r\n"
 			}
 			*/
 		}
@@ -115,8 +129,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?staticPanOffset:-staticPanOffset)
 		for(def d:source.getAllDHChains()){
 			String limbName = d.getScriptingName()
-			double computedTilt = standardHeadTailAngle
-			double computedPan = standardHeadTailPan
+			double sinCop = Math.sin(Math.toRadians(coriolisIndex))
+			double cosCop = Math.cos(Math.toRadians(coriolisIndex))
+			
+			double computedTilt = standardHeadTailAngle+(velocity*sinCop*coriolisGain)
+			double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
+			coriolisIndex++;
+			coriolisIndex=(coriolisIndex==coriolisDivisions?0:coriolisIndex)
+			try{
 			if(limbName.contentEquals("Tail")){
 				d.setDesiredJointAxisValue(0,// link index
 							computedTilt, //target angle
@@ -133,16 +153,16 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 							computedPan, //target angle
 							0) // 2 seconds			
 			}
+			}catch(Exception e){
+				BowlerStudio.printStackTrace(e)
+			}
 		}
 
 	}
 	public void walkingCycle(){
 		
 		long incrementTime = (System.currentTimeMillis()-reset)
-		if(incrementTime>miliseconds){
-			timout = true
-		}else
-			timout = false
+
 		long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
 		if(timeSince>stepCycleTime){
 			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
@@ -176,15 +196,15 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
-		if(!timout){
+		//if(!timout){
 			double timeRemaining =(double) (System.currentTimeMillis()-reset)
-			double percentage =timeRemaining/ (double)(miliseconds)
+			//double percentage =timeRemaining/ (double)(miliseconds)
 			//println "Walk Percent = "+percentage+" of " +miliseconds
 			for (def leg :downLegs){
 				if(leg!=null)
 					downMove( leg, gaitPercentage)
 			}
-		}
+		//}
 		
 		
 	}
@@ -225,8 +245,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf = getLegCurrentPose(leg)
 		def NewTmpPose = newPose.inverse()
-		if(timout)
-			NewTmpPose=new TransformNR()
+//		if(timout)
+//			NewTmpPose=new TransformNR()
 		switch(walkingState){
 		case WalkingState.Rising:
 			gaitIntermediatePercentage=gaitPercentage*4.0
@@ -382,7 +402,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			newPose=n.copy()
 			//newPose=new TransformNR()
-			miliseconds = Math.round(sec*1000)
+			//miliseconds = Math.round(sec*1000)
+			//stepCycleTime=Math.round(sec*1000)
 			numlegs = source.getLegs().size();
 			legs = source.getLegs();
 			global= source.getFiducialToGlobalTransform();
