@@ -501,6 +501,15 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				newPose=scaleTransform(n,timescaleing)
 				//println "Speeding up gait to meet speed "+stepCycleTime
 			}
+			if(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups )
+				while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups ){
+					sec+=0.01
+					miliseconds = Math.round(sec*1000)
+					timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+					newPose=scaleTransform(n,timescaleing)
+					speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
+					println "Slowing down target Velocity "+stepCycleTime+" miliseconds "+speedCalc
+				}
 			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<1000){
 				stepCycleTime+=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
