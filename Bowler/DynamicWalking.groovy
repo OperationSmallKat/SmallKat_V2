@@ -208,7 +208,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 		long incrementTime = (System.currentTimeMillis()-reset)
 
-		if(incrementTime==miliseconds){
+		if(incrementTime>miliseconds){
 			timout = true
 		}else
 			timout = false
@@ -232,7 +232,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		
 		
-		//println "Cycle = "+stepCycyleActiveIndex+" "+gaitPercentage
+		//println "Cycle = "+miliseconds+" "+incrementTime
 	
 		def upLegs = getUpLegs()
 		def downLegs =getDownLegs()
