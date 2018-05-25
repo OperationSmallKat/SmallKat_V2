@@ -40,7 +40,7 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =5000
-	int numStepCycleGroups = 2
+	int numStepCycleGroups = 4
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
@@ -449,13 +449,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 	}
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
-		resetStepTimer();
-		if(timout !=true && stepResetter!=null){
-			println "Device is still running! "+s+" "+timeout
-			throw new RuntimeException("Walking command still processing ")
+		
+		while(timout !=true && stepResetter!=null){
+			Thread.sleep(1)
+			//println "Device is still running! "+s+" "+timeout
+			//throw new RuntimeException("Walking command still processing ")
 		}
 		try{
-			
+			resetStepTimer();
 			//println "Walk update "+n
 			if(s==null){
 				println "Null mobile base"
