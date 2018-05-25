@@ -39,13 +39,27 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =300
+	long stepCycleTime =5000
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
 	boolean headStable = false
-	args =  [stepOverHeight,stepOverTime,zLock,calcHome,usePhysicsToMove,stepCycleTime,numStepCycleGroups,standardHeadTailAngle,staticPanOffset,coriolisGain,headStable]
+	double maxBodyDisplacementPerStep = 30
+	double minBodyDisplacementPerStep = 2
+	args =  [stepOverHeight,
+	stepOverTime,
+	zLock,
+	calcHome,
+	usePhysicsToMove,
+	stepCycleTime,
+	numStepCycleGroups,
+	standardHeadTailAngle,
+	staticPanOffset,
+	coriolisGain,
+	headStable,
+	maxBodyDisplacementPerStep,
+	minBodyDisplacementPerStep]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -63,6 +77,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double staticPanOffset = args.get(8)
 	double coriolisGain=args.get(9)
 	boolean headStable =args.get(10)
+	double maxBodyDisplacementPerStep= args.get(11)
+	double minBodyDisplacementPerStep =args.get(12)
+
 	
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
@@ -88,7 +105,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	TransformNR global
 	int coriolisIndex = 0
 	double coriolisDivisions = 360.0
-	double coriolisTimeBase = 100.0
+	double coriolisTimeBase = 500.0
 	long coriolisTimeLast=0
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
@@ -251,24 +268,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return leg.forwardOffset(armOffset);//leg.getCurrentTaskSpaceTransform();
 	}
 	private TransformNR compute(def leg,double percentage,def bodyMotion){
-		double[] joints = cycleStartPoint.get(leg)	
-		TransformNR armOffset = leg.forwardKinematics(joints)	
-		TransformNR footStarting = leg.forwardOffset(armOffset);//leg.getCurrentTaskSpaceTransform();
-		def myglobal=global.times(bodyMotion);// new global pose
-		Matrix btt =  leg.getRobotToFiducialTransform().getMatrixTransform();
-		Matrix ftb = myglobal.getMatrixTransform();// our new target
-		Matrix current = armOffset.getMatrixTransform();
-		Matrix mForward = ftb.times(btt).times(current);
-		TransformNR inc =new TransformNR( mForward);
-		inc.setZ(zLock);
-		double xinc=(footStarting.getX()-inc.getX())*percentage;
-		double yinc=(footStarting.getY()-inc.getY())*percentage;
+		def vals = getDisplacementIncrement(leg,bodyMotion)
+		TransformNR footStarting=vals[2]
 		//apply the increment to the feet
 		//println "Feet increments x = "+xinc+" y = "+yinc
-		footStarting.translateX(xinc);
-		footStarting.translateY(yinc);
+		footStarting.translateX(vals[0]*percentage);
+		footStarting.translateY(vals[1]*percentage);
 		footStarting.setZ(zLock);
-		
 		return footStarting
 	}
 	private void upStateMachine(def leg){
@@ -455,13 +461,29 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					updateDynamics(update)
 				})
 			}
-			newPose=n.copy()
+			
 			//newPose=new TransformNR()
 			miliseconds = Math.round(sec*1000)
 			//stepCycleTime=Math.round(sec*1000)
 			numlegs = source.getLegs().size();
 			legs = source.getLegs();
 			global= source.getFiducialToGlobalTransform();
+			double timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+			newPose=scaleTransform(n,timescaleing)
+			// Compute the incremental transform size
+			
+			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep && stepCycleTime>100){
+				stepCycleTime-=10
+				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+				newPose=scaleTransform(n,timescaleing)
+				println "Speeding up gait to meet speed "+stepCycleTime
+			}
+			while(getMaximumDisplacement(newPose)>minBodyDisplacementPerStep && stepCycleTime<1000){
+				stepCycleTime+=10
+				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+				newPose=scaleTransform(n,timescaleing)
+				println "Speeding up gait to meet speed "+stepCycleTime
+			}
 			if(global==null){
 				global=new TransformNR()
 				source.setGlobalToFiducialTransform(global)
@@ -529,7 +551,48 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			BowlerStudio.printStackTrace(e)
 		}
 	}
+	TransformNR scaleTransform(TransformNR incoming, double scale){
+		return new TransformNR(incoming.getX()*scale,
+			  incoming.getY()*scale, 
+			  incoming.getZ()*scale,
+			  new RotationNR(incoming.getRotation().getRotationTilt()*scale,
+					  incoming.getRotation().getRotationAzimuth()*scale, 
+					  incoming.getRotation().getRotationElevation()*scale));
+	}
+	double getMaximumDisplacement(TransformNR bodyMotion){
+		double max=0;
+		for(def leg:legs){
+			def disp =getDisplacement( leg, bodyMotion) 
+			if(Math.abs(disp)>max){
+				max=Math.abs(disp)
+			}
+		}
+		return max
+	}
+	
+	double getDisplacement(def leg,TransformNR bodyMotion){
+		def vals = getDisplacementIncrement(leg,bodyMotion)
 
+		return Math.sqrt(Math.pow(vals[0],2)+Math.pow(vals[1],2))
+	}
+	def getDisplacementIncrement(def leg,TransformNR bodyMotion){
+		double[] joints = cycleStartPoint.get(leg)	
+		TransformNR armOffset = leg.forwardKinematics(joints)	
+		TransformNR footStarting = leg.forwardOffset(armOffset);//leg.getCurrentTaskSpaceTransform();
+		def myglobal=global.times(bodyMotion);// new global pose
+		Matrix btt =  leg.getRobotToFiducialTransform().getMatrixTransform();
+		Matrix ftb = myglobal.getMatrixTransform();// our new target
+		Matrix current = armOffset.getMatrixTransform();
+		Matrix mForward = ftb.times(btt).times(current);
+		TransformNR inc =new TransformNR( mForward);
+		inc.setZ(zLock);
+		double xinc=(footStarting.getX()-inc.getX());
+		double yinc=(footStarting.getY()-inc.getY());
+		return [xinc,yinc,footStarting]
+	}
+	double getDeltaRotation(TransformNR incoming){
+		
+	}
 	@Override
 	public void DriveVelocityStraight(MobileBase source, double cmPerSecond) {
 		// TODO Auto-generated method stub
