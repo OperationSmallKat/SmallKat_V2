@@ -76,8 +76,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	WalkingState walkingState= WalkingState.Rising
 	MobileBase source 
 	TransformNR newPose
-	//long miliseconds
-	//boolean timout = true
+	long miliseconds
+	boolean timout = true
 	long loopTimingMS =5
 	long timeOfLastLoop = System.currentTimeMillis()
 	long timeOfLastIMUPrint = System.currentTimeMillis()
@@ -175,6 +175,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 		long incrementTime = (System.currentTimeMillis()-reset)
 
+		if(incrementTime>miliseconds){
+			timout = true
+		}else
+			timout = false
 		long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
 		if(timeSince>stepCycleTime){
 			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
@@ -208,7 +212,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
-		//if(!timout){
+		if(!timout){
 			double timeRemaining =(double) (System.currentTimeMillis()-reset)
 			//double percentage =timeRemaining/ (double)(miliseconds)
 			//println "Walk Percent = "+percentage+" of " +miliseconds
@@ -216,7 +220,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				if(leg!=null)
 					downMove( leg, gaitPercentage)
 			}
-		//}
+		}
 		
 		
 	}
@@ -257,8 +261,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf = getLegCurrentPose(leg)
 		def NewTmpPose = newPose.inverse()
-//		if(timout)
-//			NewTmpPose=new TransformNR()
+		if(timout)
+			NewTmpPose=new TransformNR()
 		switch(walkingState){
 		case WalkingState.Rising:
 			gaitIntermediatePercentage=gaitPercentage*4.0
@@ -379,6 +383,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 									0, //target angle
 									0) // 2 seconds			
 					}
+					coriolisIndex=0;
 				}catch(Exception e){
 					BowlerStudio.printStackTrace(e)
 				}
@@ -436,7 +441,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			newPose=n.copy()
 			//newPose=new TransformNR()
-			//miliseconds = Math.round(sec*1000)
+			miliseconds = Math.round(sec*1000)
 			//stepCycleTime=Math.round(sec*1000)
 			numlegs = source.getLegs().size();
 			legs = source.getLegs();
