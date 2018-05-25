@@ -45,8 +45,8 @@ if(args==null){
 	double staticPanOffset = 10
 	double coriolisGain = 1
 	boolean headStable = false
-	double maxBodyDisplacementPerStep = 30
-	double minBodyDisplacementPerStep = 1
+	double maxBodyDisplacementPerStep = 20
+	double minBodyDisplacementPerStep = 5
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
@@ -478,11 +478,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				newPose=scaleTransform(n,timescaleing)
 				println "Speeding up gait to meet speed "+stepCycleTime
 			}
-			while(getMaximumDisplacement(newPose)>minBodyDisplacementPerStep && stepCycleTime<1000){
+			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep && stepCycleTime<1000){
 				stepCycleTime+=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 				newPose=scaleTransform(n,timescaleing)
-				println "Speeding up gait to meet speed "+stepCycleTime
+				println "Slowing down up gait to meet speed "+stepCycleTime
 			}
 			if(global==null){
 				global=new TransformNR()
