@@ -487,7 +487,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
 		double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
 		//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
-		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>500){
+		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>200){
 			stepCycleTime-=10
 			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 			newPose=scaleTransform(n,timescaleing)
