@@ -292,7 +292,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			tf.setZ(zLock+(stepOverHeight*gaitIntermediatePercentage));
 			if(gaitPercentage>0.25) {
 				walkingState= WalkingState.ToHome
-				println "to Home " 
+				//println "to Home " 
 				getUpLegs().collect{
 					if(it!=null)
 				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
@@ -313,7 +313,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			dyHome.setZ(zLock+(stepOverHeight));
 			tf=dyHome
 			if(gaitPercentage>0.5) {
-				println "To new target " +gaitIntermediatePercentage
+				//println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
 				getUpLegs().collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
@@ -326,7 +326,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.75) {
 				walkingState= WalkingState.Falling
-				println "Falling " +gaitIntermediatePercentage
+				//println "Falling " +gaitIntermediatePercentage
 				getUpLegs().collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
@@ -488,13 +488,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
 			double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
 			//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
-			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep && stepCycleTime>200){
+			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>200){
 				stepCycleTime-=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 				newPose=scaleTransform(n,timescaleing)
 				//println "Speeding up gait to meet speed "+stepCycleTime
 			}
-			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep && stepCycleTime<10000){
+			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<10000){
 				stepCycleTime+=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 				newPose=scaleTransform(n,timescaleing)
