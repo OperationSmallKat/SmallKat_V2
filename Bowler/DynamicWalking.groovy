@@ -282,13 +282,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf 
-		def NewTmpPose = newPose.inverse()
-		if(timout)
-			NewTmpPose=new TransformNR()
+		def NewTmpPose = timout?new TransformNR():newPose.inverse()
+		def myPose=timout?new TransformNR():newPose
+
 		switch(walkingState){
 		case WalkingState.Rising:
 			gaitIntermediatePercentage=gaitPercentage*4.0
-			tf = compute(leg,gaitIntermediatePercentage,newPose)
+			tf = compute(leg,gaitIntermediatePercentage,myPose)
 			tf.setZ(zLock+(stepOverHeight*gaitIntermediatePercentage));
 			if(gaitPercentage>0.25) {
 				walkingState= WalkingState.ToHome
@@ -334,7 +334,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			break;
 		case WalkingState.Falling:
 			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
-			tf = compute(leg,gaitIntermediatePercentage,newPose)
+			tf = compute(leg,gaitIntermediatePercentage,myPose)
 			tf.setZ(zLock+stepOverHeight-(stepOverHeight*gaitIntermediatePercentage));
 			break;
 		}
@@ -463,7 +463,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				})
 			}
 			
-			//newPose=new TransformNR()
+			n=new TransformNR()
 			miliseconds = Math.round(sec*1000)
 			//stepCycleTime=Math.round(sec*1000)
 			numlegs = source.getLegs().size();
@@ -494,7 +494,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				newPose=scaleTransform(n,timescaleing)
 				//println "Speeding up gait to meet speed "+stepCycleTime
 			}
-			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<10000){
+			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<1000){
 				stepCycleTime+=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 				newPose=scaleTransform(n,timescaleing)
