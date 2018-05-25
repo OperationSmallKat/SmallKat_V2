@@ -40,13 +40,13 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =5000
-	int numStepCycleGroups = 2
+	int numStepCycleGroups = 4
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 20
-	double minBodyDisplacementPerStep = 5
+	double minBodyDisplacementPerStep = 10
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
@@ -281,7 +281,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		//println "Up Moving to "+percentage
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
-		def tf = getLegCurrentPose(leg)
+		def tf 
 		def NewTmpPose = newPose.inverse()
 		if(timout)
 			NewTmpPose=new TransformNR()
@@ -292,7 +292,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			tf.setZ(zLock+(stepOverHeight*gaitIntermediatePercentage));
 			if(gaitPercentage>0.25) {
 				walkingState= WalkingState.ToHome
-				//println "to Home " 
+				println "to Home " 
 				getUpLegs().collect{
 					if(it!=null)
 				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
@@ -301,18 +301,19 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			break;
 		case WalkingState.ToHome:
 			gaitIntermediatePercentage=(gaitPercentage-0.25)*4.0
-			def current = tf
-			tf = dynamicHome( leg)
-			if(gaitIntermediatePercentage<0.9){
-				double xinc=(tf.getX()-current.getX())*(1-gaitIntermediatePercentage);
-				double yinc=(tf.getY()-current.getY())*(1-gaitIntermediatePercentage);
+			def current = getLegCurrentPose(leg)
+			def dyHome = dynamicHome( leg)
+			//if(gaitIntermediatePercentage<0.9){
+				double xinc=(dyHome.getX()-current.getX())*(1-gaitIntermediatePercentage);
+				double yinc=(dyHome.getY()-current.getY())*(1-gaitIntermediatePercentage);
 				
-				tf.translateX(-xinc);
-				tf.translateY(-yinc);
-			}
-			tf.setZ(zLock+(stepOverHeight));
+				dyHome.translateX(-xinc);
+				dyHome.translateY(-yinc);
+			//}
+			dyHome.setZ(zLock+(stepOverHeight));
+			tf=dyHome
 			if(gaitPercentage>0.5) {
-				//println "To new target " +gaitIntermediatePercentage
+				println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
 				getUpLegs().collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
@@ -321,11 +322,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			break;
 		case WalkingState.ToNewTarget:
 			gaitIntermediatePercentage=(gaitPercentage-0.5)*4.0
-			tf = compute(leg,gaitIntermediatePercentage,NewTmpPose)
+			tf = compute(leg,gaitIntermediatePercentage*((double)numStepCycleGroups),NewTmpPose)
 			tf.setZ(zLock+(stepOverHeight));
 			if(gaitPercentage>0.75) {
 				walkingState= WalkingState.Falling
-				//println "Falling " +gaitIntermediatePercentage
+				println "Falling " +gaitIntermediatePercentage
 				getUpLegs().collect{if(it!=null)
 				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
@@ -333,7 +334,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			break;
 		case WalkingState.Falling:
 			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
-			tf = compute(leg,1-gaitIntermediatePercentage,NewTmpPose)
+			tf = compute(leg,gaitIntermediatePercentage,newPose)
 			tf.setZ(zLock+stepOverHeight-(stepOverHeight*gaitIntermediatePercentage));
 			break;
 		}
@@ -468,21 +469,36 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			numlegs = source.getLegs().size();
 			legs = source.getLegs();
 			global= source.getFiducialToGlobalTransform();
+			global=new TransformNR(global.getX(),
+			  global.getY(), 
+			  global.getZ(),
+			  new RotationNR(Math.toDegrees(n.getRotation().getRotationTilt()),
+					  Math.toDegrees(global.getRotation().getRotationAzimuth()), 
+					 Math.toDegrees( n.getRotation().getRotationElevation())));
+			n=new TransformNR(n.getX(),
+			  n.getY(), 
+			  n.getZ(),
+			  new RotationNR(0,
+					  Math.toDegrees(n.getRotation().getRotationAzimuth()), 
+					  0));
+					  		  
 			double timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 			newPose=scaleTransform(n,timescaleing)
 			// Compute the incremental transform size
-			
-			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep && stepCycleTime>100){
+			double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
+			double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
+			//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
+			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep && stepCycleTime>200){
 				stepCycleTime-=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 				newPose=scaleTransform(n,timescaleing)
-				println "Speeding up gait to meet speed "+stepCycleTime
+				//println "Speeding up gait to meet speed "+stepCycleTime
 			}
-			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep && stepCycleTime<1000){
+			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep && stepCycleTime<10000){
 				stepCycleTime+=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 				newPose=scaleTransform(n,timescaleing)
-				println "Slowing down up gait to meet speed "+stepCycleTime
+				//println "Slowing down up gait to meet speed "+stepCycleTime
 			}
 			if(global==null){
 				global=new TransformNR()
@@ -555,9 +571,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return new TransformNR(incoming.getX()*scale,
 			  incoming.getY()*scale, 
 			  incoming.getZ()*scale,
-			  new RotationNR(incoming.getRotation().getRotationTilt()*scale,
-					  incoming.getRotation().getRotationAzimuth()*scale, 
-					  incoming.getRotation().getRotationElevation()*scale));
+			  new RotationNR(Math.toDegrees(incoming.getRotation().getRotationTilt())*scale,
+					  Math.toDegrees(incoming.getRotation().getRotationAzimuth())*scale, 
+					  Math.toDegrees(incoming.getRotation().getRotationElevation())*scale));
 	}
 	double getMaximumDisplacement(TransformNR bodyMotion){
 		double max=0;
