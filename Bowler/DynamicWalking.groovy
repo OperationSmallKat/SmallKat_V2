@@ -39,7 +39,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =600
+	long stepCycleTime =2000
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -25
 	double staticPanOffset = 10
@@ -111,7 +111,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		)
 			velocity=update.getRotyAcceleration()
 		else
-			velocity=-10
+			velocity=0
 		if(incrementTime>100){
 			timeOfLastIMUPrint= System.currentTimeMillis()
 			/*
@@ -126,14 +126,19 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			*/
 		}
+		long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
+		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
+		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
+		double sinPanOffset = Math.sin(gaitPercentage*Math.PI)*staticPanOffset
 		
-		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?staticPanOffset:-staticPanOffset)
+		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?sinPanOffset:-sinPanOffset)
+		double bobingPercent = Math.sin(gaitPercentage*Math.PI)*standardHeadTailAngle/2+standardHeadTailAngle/2
 		for(def d:source.getAllDHChains()){
 			String limbName = d.getScriptingName()
 			double sinCop = Math.sin(Math.toRadians(coriolisIndex))
 			double cosCop = Math.cos(Math.toRadians(coriolisIndex))
 			
-			double computedTilt = standardHeadTailAngle+(velocity*sinCop*coriolisGain)
+			double computedTilt = bobingPercent+(velocity*sinCop*coriolisGain)
 			double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
 			long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
 			double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
