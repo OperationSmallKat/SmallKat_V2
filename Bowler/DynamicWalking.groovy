@@ -485,12 +485,17 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			numlegs = source.getLegs().size();
 			legs = source.getLegs();
 			global= source.getFiducialToGlobalTransform();
+			if(global==null){
+				global=new TransformNR()
+				
+			}
 			global=new TransformNR(global.getX(),
 			  global.getY(), 
 			  global.getZ(),
 			  new RotationNR(Math.toDegrees(n.getRotation().getRotationTilt()),
 					  Math.toDegrees(global.getRotation().getRotationAzimuth()), 
 					 Math.toDegrees( n.getRotation().getRotationElevation())));
+			source.setGlobalToFiducialTransform(global)
 			n=new TransformNR(n.getX(),
 			  n.getY(), 
 			  n.getZ(),
@@ -525,10 +530,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				newPose=scaleTransform(n,timescaleing)
 				//println "Slowing down up gait to meet speed "+stepCycleTime
 			}
-			if(global==null){
-				global=new TransformNR()
-				source.setGlobalToFiducialTransform(global)
-			}
+			
 			if(stepResetter==null){
 				try{
 					timeOfCycleStart= System.currentTimeMillis();
