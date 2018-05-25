@@ -40,12 +40,12 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =5000
-	int numStepCycleGroups = 4
+	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
 	boolean headStable = false
-	double maxBodyDisplacementPerStep = 40
+	double maxBodyDisplacementPerStep = 30
 	double minBodyDisplacementPerStep = 20
 	args =  [stepOverHeight,
 	stepOverTime,
