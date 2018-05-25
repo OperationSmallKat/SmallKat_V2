@@ -86,6 +86,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	HashMap<DHParameterKinematics,double[] > cycleStartPoint=new HashMap<>();
 	TransformNR previousGLobalState;
 	TransformNR target;
+	TransformNR cachedNewPose;
+	double cachedSeconds;
 	RotationNR rot;
 	int resettingindex=0;
 	private long reset = System.currentTimeMillis();
@@ -448,6 +450,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			BowlerStudio.printStackTrace(e)
 		}
 	}
+	private void computeUpdatePose(){
+		TransformNR n=cachedNewPose;
+		double sec=cachedSecond
+		
+	}
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
 		
 		while(timout !=true && stepResetter!=null){
@@ -469,6 +476,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					updateDynamics(update)
 				})
 			}
+			cachedNewPose=n;
+			cachedSecond=secs;
 			
 			//n=new TransformNR()
 			miliseconds = Math.round(sec*1000)
@@ -504,7 +513,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			if(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups )
 				while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups ){
 					sec+=0.01
-					miliseconds = Math.round(sec*1000)
+					//miliseconds = Math.round(sec*1000)
 					timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 					newPose=scaleTransform(n,timescaleing)
 					speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
