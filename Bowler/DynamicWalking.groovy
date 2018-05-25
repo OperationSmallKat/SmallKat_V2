@@ -39,7 +39,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =2000
+	long stepCycleTime =200
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -25
 	double staticPanOffset = 10
