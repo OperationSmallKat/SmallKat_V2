@@ -227,7 +227,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				stepCycyleActiveIndex=0;
 			}
 			walkingState=WalkingState.Rising
-			
+			computeUpdatePose()
 		}else{
 			
 			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()leg
@@ -451,8 +451,64 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 	}
 	private void computeUpdatePose(){
+		if (cachedNewPose==null)
+			return
 		TransformNR n=cachedNewPose;
 		double sec=cachedSecond
+		cachedNewPose=null
+		
+		//n=new TransformNR()
+		miliseconds = Math.round(sec*1000)
+		//stepCycleTime=Math.round(sec*1000)
+		numlegs = source.getLegs().size();
+		legs = source.getLegs();
+		global= source.getFiducialToGlobalTransform();
+		if(global==null){
+			global=new TransformNR()
+			
+		}
+		global=new TransformNR(global.getX(),
+		  global.getY(), 
+		  global.getZ(),
+		  new RotationNR(Math.toDegrees(n.getRotation().getRotationTilt()),
+				  Math.toDegrees(global.getRotation().getRotationAzimuth()), 
+				 Math.toDegrees( n.getRotation().getRotationElevation())));
+		source.setGlobalToFiducialTransform(global)
+		n=new TransformNR(n.getX(),
+		  n.getY(), 
+		  n.getZ(),
+		  new RotationNR(0,
+				  Math.toDegrees(n.getRotation().getRotationAzimuth()), 
+				  0));
+				  		  
+		double timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+		newPose=scaleTransform(n,timescaleing)
+		// Compute the incremental transform size
+		double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
+		double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
+		//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
+		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>200){
+			stepCycleTime-=10
+			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+			newPose=scaleTransform(n,timescaleing)
+			//println "Speeding up gait to meet speed "+stepCycleTime
+		}
+		if(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups )
+			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups ){
+				sec+=0.01
+				//miliseconds = Math.round(sec*1000)
+				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+				newPose=scaleTransform(n,timescaleing)
+				speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
+				//println "Slowing down target Velocity "+stepCycleTime+" miliseconds "+speedCalc
+			}
+			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<1000){
+				stepCycleTime+=10
+				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
+				newPose=scaleTransform(n,timescaleing)
+				//println "Slowing down up gait to meet speed "+stepCycleTime
+			}
+			
 		
 	}
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
@@ -477,61 +533,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				})
 			}
 			cachedNewPose=n;
-			cachedSecond=secs;
+			cachedSecond=sec;
 			
-			//n=new TransformNR()
-			miliseconds = Math.round(sec*1000)
-			//stepCycleTime=Math.round(sec*1000)
-			numlegs = source.getLegs().size();
-			legs = source.getLegs();
-			global= source.getFiducialToGlobalTransform();
-			if(global==null){
-				global=new TransformNR()
-				
-			}
-			global=new TransformNR(global.getX(),
-			  global.getY(), 
-			  global.getZ(),
-			  new RotationNR(Math.toDegrees(n.getRotation().getRotationTilt()),
-					  Math.toDegrees(global.getRotation().getRotationAzimuth()), 
-					 Math.toDegrees( n.getRotation().getRotationElevation())));
-			source.setGlobalToFiducialTransform(global)
-			n=new TransformNR(n.getX(),
-			  n.getY(), 
-			  n.getZ(),
-			  new RotationNR(0,
-					  Math.toDegrees(n.getRotation().getRotationAzimuth()), 
-					  0));
-					  		  
-			double timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-			newPose=scaleTransform(n,timescaleing)
-			// Compute the incremental transform size
-			double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
-			double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
-			//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
-			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>200){
-				stepCycleTime-=10
-				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-				newPose=scaleTransform(n,timescaleing)
-				//println "Speeding up gait to meet speed "+stepCycleTime
-			}
-			if(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups )
-				while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups ){
-					sec+=0.01
-					//miliseconds = Math.round(sec*1000)
-					timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-					newPose=scaleTransform(n,timescaleing)
-					speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
-					println "Slowing down target Velocity "+stepCycleTime+" miliseconds "+speedCalc
-				}
-			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<1000){
-				stepCycleTime+=10
-				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-				newPose=scaleTransform(n,timescaleing)
-				//println "Slowing down up gait to meet speed "+stepCycleTime
-			}
-			
+		
 			if(stepResetter==null){
+				computeUpdatePose()
 				try{
 					timeOfCycleStart= System.currentTimeMillis();
 					for(int i=0;i<numStepCycleGroups;i++){
@@ -571,6 +577,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 							walkingState= WalkingState.Rising
 							stepCycyleActiveIndex=0;
 							println "Starting step reset thread"
+							timeOfCycleStart=System.currentTimeMillis()
 							while(source.isAvailable() && threadDone==false){
 								Thread.sleep(1)// avoid thread lock
 								try{	
