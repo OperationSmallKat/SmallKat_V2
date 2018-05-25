@@ -85,8 +85,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double gaitIntermediatePercentage 
 	TransformNR global
 	int coriolisIndex = 0
-	int coriolisDivisions = 360
-	long coriolisTimeBase = 1000
+	double coriolisDivisions = 360.0
+	double coriolisTimeBase = 200.0
+	long coriolisTimeLast=0
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
 	}
@@ -110,7 +111,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		)
 			velocity=update.getRotyAcceleration()
 		else
-			velocity=5
+			velocity=10
 		if(incrementTime>100){
 			timeOfLastIMUPrint= System.currentTimeMillis()
 			/*
@@ -134,8 +135,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 			double computedTilt = standardHeadTailAngle+(velocity*sinCop*coriolisGain)
 			double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
-			coriolisIndex++;
-			coriolisIndex=(coriolisIndex==coriolisDivisions?0:coriolisIndex)
+			long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
+			double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
+			//println coriolisIndex+" Time division = "+coriolisTimeDivisionIncrement+" elapsed = "+coriolisincrementTime
+			if(coriolisTimeDivisionIncrement<coriolisincrementTime){
+				coriolisTimeLast=System.currentTimeMillis()
+				coriolisIndex++;
+				coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
+			}
 			try{
 			if(limbName.contentEquals("Tail")){
 				d.setDesiredJointAxisValue(0,// link index
