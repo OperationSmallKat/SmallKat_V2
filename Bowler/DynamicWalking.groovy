@@ -94,9 +94,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	boolean threadDone=false
 	WalkingState walkingState= WalkingState.Rising
 	MobileBase source 
-	TransformNR newPose
+	TransformNR newPose =new TransformNR()
 	long miliseconds
-	boolean timout = true
+	boolean timout = false
 	long loopTimingMS =5
 	long timeOfLastLoop = System.currentTimeMillis()
 	long timeOfLastIMUPrint = System.currentTimeMillis()
@@ -449,7 +449,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 	}
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
+		if(timout ==true && stepResetter!=null){
+			println "Device is still running! "+s+" "+timeout
+			throw new RuntimeException("Walking command still processing ")
+		}
 		try{
+			
 			//println "Walk update "+n
 			if(s==null){
 				println "Null mobile base"
