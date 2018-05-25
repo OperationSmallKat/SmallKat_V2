@@ -39,7 +39,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =200
+	long stepCycleTime =3000
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -25
 	double staticPanOffset = 10
@@ -132,7 +132,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double sinPanOffset = Math.sin(gaitPercentage*Math.PI)*staticPanOffset
 		
 		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex==0?sinPanOffset:-sinPanOffset)
-		double bobingPercent = Math.sin(gaitPercentage*Math.PI)*standardHeadTailAngle/2+standardHeadTailAngle/2
+		double bobingPercent = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*standardHeadTailAngle/2+standardHeadTailAngle/2
 		for(def d:source.getAllDHChains()){
 			String limbName = d.getScriptingName()
 			double sinCop = Math.sin(Math.toRadians(coriolisIndex))
