@@ -40,7 +40,7 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =5000
-	int numStepCycleGroups = 4
+	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
@@ -487,7 +487,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
 		double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
 		//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
-		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>200){
+		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>500){
 			stepCycleTime-=10
 			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 			newPose=scaleTransform(n,timescaleing)
@@ -502,7 +502,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
 				//println "Slowing down target Velocity "+stepCycleTime+" miliseconds "+speedCalc
 			}
-			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<1000){
+			while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<2000){
 				stepCycleTime+=10
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 				newPose=scaleTransform(n,timescaleing)
