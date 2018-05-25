@@ -105,7 +105,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	TransformNR global
 	int coriolisIndex = 0
 	double coriolisDivisions = 360.0
-	double coriolisTimeBase = 500.0
+	double coriolisTimeBase = 100.0
 	long coriolisTimeLast=0
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
