@@ -208,7 +208,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 		long incrementTime = (System.currentTimeMillis()-reset)
 
-		if(incrementTime>miliseconds){
+		if(incrementTime==miliseconds){
 			timout = true
 		}else
 			timout = false
@@ -368,13 +368,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	}
 	
 	private void walkLoop(){
-		long time = System.currentTimeMillis()-timeOfLastLoop
-		if(time>loopTimingMS){
+		//long time = System.currentTimeMillis()-timeOfLastLoop
+		//if(time>loopTimingMS){
 			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfLastLoop) +" "
-			timeOfLastLoop=System.currentTimeMillis()
+		//	timeOfLastLoop=System.currentTimeMillis()
 			walkingCycle()
 			//print " Walk cycle took "+(System.currentTimeMillis()-timeOfLastLoop) 
-		}
+		//}
 		if(reset+5000 < System.currentTimeMillis()){
 			println "FIRING reset from reset thread"
 			resetting=true;
@@ -449,7 +449,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 	}
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
-		if(timout ==true && stepResetter!=null){
+		resetStepTimer();
+		if(timout !=true && stepResetter!=null){
 			println "Device is still running! "+s+" "+timeout
 			throw new RuntimeException("Walking command still processing ")
 		}
@@ -550,7 +551,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 							stepCycyleActiveIndex=0;
 							println "Starting step reset thread"
 							while(source.isAvailable() && threadDone==false){
-								Thread.sleep(0,10)// avoid thread lock
+								Thread.sleep(1)// avoid thread lock
 								try{	
 									walkLoop();
 								}catch(Exception e){
@@ -567,7 +568,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				};
 				stepResetter.start();
 			}
-			resetStepTimer();
+			
 		}catch(Exception e){
 			BowlerStudio.printStackTrace(e)
 		}
