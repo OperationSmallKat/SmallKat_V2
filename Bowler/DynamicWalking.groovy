@@ -368,13 +368,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	}
 	
 	private void walkLoop(){
-		//long time = System.currentTimeMillis()-timeOfLastLoop
-		//if(time>loopTimingMS){
+		long time = System.currentTimeMillis()-timeOfLastLoop
+		if(time>loopTimingMS){
 			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfLastLoop) +" "
-		//	timeOfLastLoop=System.currentTimeMillis()
+			timeOfLastLoop=System.currentTimeMillis()
 			walkingCycle()
 			//print " Walk cycle took "+(System.currentTimeMillis()-timeOfLastLoop) 
-		//}
+		}
 		if(reset+5000 < System.currentTimeMillis()){
 			println "FIRING reset from reset thread"
 			resetting=true;
