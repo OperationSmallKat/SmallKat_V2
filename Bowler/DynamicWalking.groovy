@@ -86,7 +86,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	TransformNR global
 	int coriolisIndex = 0
 	double coriolisDivisions = 360.0
-	double coriolisTimeBase = 200.0
+	double coriolisTimeBase = 100.0
 	long coriolisTimeLast=0
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
@@ -111,7 +111,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		)
 			velocity=update.getRotyAcceleration()
 		else
-			velocity=10
+			velocity=-10
 		if(incrementTime>100){
 			timeOfLastIMUPrint= System.currentTimeMillis()
 			/*
@@ -140,8 +140,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			//println coriolisIndex+" Time division = "+coriolisTimeDivisionIncrement+" elapsed = "+coriolisincrementTime
 			if(coriolisTimeDivisionIncrement<coriolisincrementTime){
 				coriolisTimeLast=System.currentTimeMillis()
-				coriolisIndex++;
-				coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
+				if(velocity>0){
+					coriolisIndex++;
+					coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
+				}else{
+					coriolisIndex--;
+					coriolisIndex=(coriolisIndex<0?coriolisDivisions-1:coriolisIndex)
+				}
 			}
 			try{
 			if(limbName.contentEquals("Tail")){
@@ -355,7 +360,29 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			resetting=false;
 			threadDone=true;
 			stepResetter=null;
-			
+			for(def d:source.getAllDHChains()){
+				String limbName = d.getScriptingName()
+				try{
+					if(limbName.contentEquals("Tail")){
+						d.setDesiredJointAxisValue(0,// link index
+									standardHeadTailAngle, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									0, //target angle
+									0) // 2 seconds			
+					} 
+					if(limbName.contentEquals("Head")){
+						d.setDesiredJointAxisValue(0,// link index
+									standardHeadTailAngle, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									0, //target angle
+									0) // 2 seconds			
+					}
+				}catch(Exception e){
+					BowlerStudio.printStackTrace(e)
+				}
+			}
 		}
 	}
 	def dynamicHome(def leg){
