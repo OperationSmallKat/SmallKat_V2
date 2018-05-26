@@ -20,7 +20,7 @@ enum WalkingState {
 }
 
 if(args==null){
-	double stepOverHeight=15;
+	double stepOverHeight=10;
 	long stepOverTime=40;
 	Double zLock=0;
 	Closure calcHome = { DHParameterKinematics leg -> 
@@ -116,10 +116,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return cycleGroups.get(stepCycyleActiveIndex)
 	}
 	def getDownLegs(){
-		return legs.collect{
+		def vals= legs.collect{
 				if(!upLegs.contains(it))
 					return it
 			}
+		vals.removeAll([null])
+		return vals
 	}
 	void updateDynamics(IMUUpdate update){
 		if(stepResetter==null)
@@ -260,9 +262,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		footStarting.setZ(zLock);
 		return footStarting
 	}
-	private double updateStateMachine(){
-		
-	}
+	
 	private void upStateMachine(def leg){
 		//println "Up Moving to "+percentage
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
@@ -280,8 +280,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				walkingState= WalkingState.ToHome
 				//println "to Home " 
 				getUpLegs().collect{
-					if(it!=null&&it.checkTaskSpaceTransform(tf))
+					if(it.checkTaskSpaceTransform(tf))
 				 		cycleStartPoint.put(it,calcForward(it,tf))
+				 	else
+				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 			}
 			break;
@@ -302,8 +304,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				//println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
 				getUpLegs().collect{
-					if(it!=null&&it.checkTaskSpaceTransform(tf))
+					if(it.checkTaskSpaceTransform(tf))
 				 		cycleStartPoint.put(it,calcForward(it,tf))
+				 	else
+				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 			}
 			break;
@@ -315,8 +319,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				walkingState= WalkingState.Falling
 				//println "Falling " +gaitIntermediatePercentage
 				getUpLegs().collect{
-					if(it!=null&&it.checkTaskSpaceTransform(tf))
+					if(it.checkTaskSpaceTransform(tf))
 				 		cycleStartPoint.put(it,calcForward(it,tf))
+				 	else
+				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 			}
 			break;
@@ -327,12 +333,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			if(gaitPercentage>1) {
 				walkingState=WalkingState.Rising
 				//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
-				getUpLegs().collect{
-					if(it!=null&&it.checkTaskSpaceTransform(tf))
-						cycleStartPoint.put(it,calcForward(it,tf))
-				}
-				getDownLegs().collect{
-					if(it!=null)
+				legs.collect{
 				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 				timeOfCycleStart=System.currentTimeMillis()
@@ -350,8 +351,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			leg.setDesiredTaskSpaceTransform(tf, 0);
 		else{
 			if(leg.getScriptingName().contains("One")){
-			Log.enableErrorPrint()
-			println leg.getScriptingName()+" failed in state "+ walkingState+" "+tf}
+			//Log.enableErrorPrint()
+			println leg.getScriptingName()+" failed in state "+ walkingState+" "+tf
+			}
 			
 		}
 	}
@@ -379,7 +381,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		return true
 	}
-	
 	private void walkLoop(){
 		long time = System.currentTimeMillis()-timeOfLastLoop
 		if(time>loopTimingMS){
@@ -457,6 +458,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				BowlerStudio.printStackTrace(e);
 			}
 			ThreadUtil.wait((int)stepOverTime);
+
+			cycleStartPoint.put(leg,leg.getCurrentJointSpaceVector())
+				
 		}catch(Exception e){
 			BowlerStudio.printStackTrace(e)
 		}
@@ -522,96 +526,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 		
 	}
-	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
-		
-		while(timout !=true && stepResetter!=null){
-			Thread.sleep(1)
-			//println "Device is still running! "+s+" "+timeout
-			//throw new RuntimeException("Walking command still processing ")
-		}
-		try{
-			resetStepTimer();
-			//println "Walk update "+n
-			if(s==null){
-				println "Null mobile base"
-				return
-			}
-			if(source!=s){
-				source=s;
-				source.getImu().clearhardwareListeners()
-				source.getImu().addhardwareListeners({update ->
-					updateDynamics(update)
-				})
-			}
-			cachedNewPose=n;
-			cachedSecond=sec;
-			
-		
-			if(stepResetter==null){
-				computeUpdatePose()
-				try{
-					timeOfCycleStart= System.currentTimeMillis();
-					for(int i=0;i<numStepCycleGroups;i++){
-						if(cycleGroups.get(i)==null){
-							
-							def cycleSet = []
-							if(numStepCycleGroups==source.getLegs().size()){
-								cycleSet.add(source.getLegs().get(i))
-							}else if (numStepCycleGroups == 2) {
-								for(def leg:source.getLegs()){
-									TransformNR  legRoot= leg.getRobotToFiducialTransform()
-									if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
-										cycleSet.add(leg)
-									}else
-									if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
-										cycleSet.add(leg)
-									}else
-									if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
-										cycleSet.add(leg)
-									}else
-									if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
-										cycleSet.add(leg)
-									}
-								}
-							}
-							//println "Adding "+cycleSet.size()+" to index "+i
-							cycleGroups.put(i, cycleSet)
-						}
-					}
-				}catch(Exception e){
-					BowlerStudio.printStackTrace(e)
-				}
-				stepResetter = new Thread(){
-					public void run(){
-						try{
-							threadDone=false;
-							walkingState= WalkingState.Rising
-							stepCycyleActiveIndex=0;
-							println "Starting step reset thread"
-							timeOfCycleStart=System.currentTimeMillis()
-							while(source.isAvailable() && threadDone==false){
-								Thread.sleep(1)// avoid thread lock
-								try{	
-									walkLoop();
-								}catch(Exception e){
-									BowlerStudio.printStackTrace(e)
-								}
-							}
-							println "Finished step reset thread"
-						}catch(Exception e){
-							BowlerStudio.printStackTrace(e)
-						}
-					}
-					
-					
-				};
-				stepResetter.start();
-			}
-			
-		}catch(Exception e){
-			BowlerStudio.printStackTrace(e)
-		}
-	}
 	TransformNR scaleTransform(TransformNR incoming, double scale){
 		return new TransformNR(incoming.getX()*scale,
 			  incoming.getY()*scale, 
@@ -658,7 +572,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void DriveVelocityArc(MobileBase source, double degreesPerSecond,
 			double cmRadius) {
@@ -666,7 +579,108 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 	}
 
-
+	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
+		
+		while(timout !=true && stepResetter!=null){
+			Thread.sleep(1)
+			//println "Device is still running! "+s+" "+timeout
+			//throw new RuntimeException("Walking command still processing ")
+		}
+		try{
+			resetStepTimer();
+			//println "Walk update "+n
+			if(s==null){
+				println "Null mobile base"
+				return
+			}
+			if(source!=s){
+				source=s;
+				source.getImu().clearhardwareListeners()
+				source.getImu().addhardwareListeners({update ->
+					updateDynamics(update)
+				})
+			}
+			cachedNewPose=n;
+			cachedSecond=sec;
+			
+		
+			if(stepResetter==null){
+				computeUpdatePose()
+				try{
+					timeOfCycleStart= System.currentTimeMillis();
+					for(int i=0;i<numStepCycleGroups;i++){
+						if(cycleGroups.get(i)==null){
+							
+							def cycleSet = []
+							if(numStepCycleGroups==source.getLegs().size()){
+								cycleSet.add(source.getLegs().get(i))
+							}else if (numStepCycleGroups == 2) {
+								//if((source.getLegs().size()/numStepCycleGroups)%2==0){
+									for(def leg:source.getLegs()){
+										TransformNR  legRoot= leg.getRobotToFiducialTransform()
+										if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
+											cycleSet.add(leg)
+										}else
+										if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
+											cycleSet.add(leg)
+										}else
+										if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
+											cycleSet.add(leg)
+										}else
+										if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
+											cycleSet.add(leg)
+										}
+									}
+								//}else{
+								//	for(int j=0;j<source.getLegs().size();j++){
+								///		if((i%2)==0&&(j%2)==0){
+								//			cycleSet.add(source.getLegs().get(i))
+								//		}
+								//		if((i%2)!=0&&(j%2)!=0){
+								//			cycleSet.add(source.getLegs().get(i))
+								//		}
+								//	}
+								//}
+								
+							}
+							//println "Adding "+cycleSet.size()+" to index "+i
+							cycleGroups.put(i, cycleSet)
+						}
+					}
+				}catch(Exception e){
+					BowlerStudio.printStackTrace(e)
+				}
+				stepResetter = new Thread(){
+					public void run(){
+						try{
+							threadDone=false;
+							walkingState= WalkingState.Rising
+							stepCycyleActiveIndex=0;
+							println "Starting step reset thread"
+							timeOfCycleStart=System.currentTimeMillis()
+							while(source.isAvailable() && threadDone==false){
+								Thread.sleep(1)// avoid thread lock
+								try{	
+									walkLoop();
+								}catch(Exception e){
+									BowlerStudio.printStackTrace(e)
+								}
+							}
+							println "Finished step reset thread"
+						}catch(Exception e){
+							BowlerStudio.printStackTrace(e)
+						}
+					}
+					
+					
+				};
+				stepResetter.start();
+			}
+			
+		}catch(Exception e){
+			BowlerStudio.printStackTrace(e)
+		}
+	}
 
 }
 
