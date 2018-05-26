@@ -209,30 +209,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	public void walkingCycle(){
 		
 		long incrementTime = (System.currentTimeMillis()-reset)
-
 		if(incrementTime>miliseconds){
 			timout = true
 		}else
-			timout = false
-		long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
-		if(timeSince>stepCycleTime){
-			//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
-			legs.collect{
-			 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
-			}
-			
-			timeOfCycleStart=System.currentTimeMillis()
-			stepCycyleActiveIndex++
-			if(stepCycyleActiveIndex==numStepCycleGroups){
-				stepCycyleActiveIndex=0;
-			}
-			walkingState=WalkingState.Rising
-			computeUpdatePose()
-		}else{
-			
-			//println " Waiting till "+(timeOfCycleStart+stepCycleTime)+" is "+System.currentTimeMillis()leg
-		}
-		
+			timout = false		
 		
 		//println "Cycle = "+miliseconds+" "+incrementTime
 	
@@ -280,11 +260,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		footStarting.setZ(zLock);
 		return footStarting
 	}
+	private double updateStateMachine(){
+		
+	}
 	private void upStateMachine(def leg){
 		//println "Up Moving to "+percentage
 		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
-		def tf 
+		def tf =dynamicHome( leg)
 		def NewTmpPose = timout?new TransformNR():newPose.inverse()
 		def myPose=timout?new TransformNR():newPose
 
@@ -297,8 +280,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				walkingState= WalkingState.ToHome
 				//println "to Home " 
 				getUpLegs().collect{
-					if(it!=null)
-				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+					if(it!=null&&it.checkTaskSpaceTransform(tf))
+				 		cycleStartPoint.put(it,calcForward(it,tf))
 				}
 			}
 			break;
@@ -314,17 +297,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				dyHome.translateY(-yinc);
 			//}
 			dyHome.setZ(zLock+(stepOverHeight));
-			if(leg.checkTaskSpaceTransform(dyHome))
-				tf=dyHome
-			else{
-				tf=dynamicHome( leg)
-				dyHome.setZ(zLock+(stepOverHeight));
-			}
+			tf=dyHome
 			if(gaitPercentage>0.5) {
 				//println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
-				getUpLegs().collect{if(it!=null)
-				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+				getUpLegs().collect{
+					if(it!=null&&it.checkTaskSpaceTransform(tf))
+				 		cycleStartPoint.put(it,calcForward(it,tf))
 				}
 			}
 			break;
@@ -335,8 +314,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			if(gaitPercentage>0.75) {
 				walkingState= WalkingState.Falling
 				//println "Falling " +gaitIntermediatePercentage
-				getUpLegs().collect{if(it!=null)
-				 	cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+				getUpLegs().collect{
+					if(it!=null&&it.checkTaskSpaceTransform(tf))
+				 		cycleStartPoint.put(it,calcForward(it,tf))
 				}
 			}
 			break;
@@ -344,11 +324,36 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
 			tf = compute(leg,gaitIntermediatePercentage,myPose)
 			tf.setZ(zLock+stepOverHeight-(stepOverHeight*gaitIntermediatePercentage));
+			if(gaitPercentage>1) {
+				walkingState=WalkingState.Rising
+				//print "\r\nWalk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
+				getUpLegs().collect{
+					if(it!=null&&it.checkTaskSpaceTransform(tf))
+						cycleStartPoint.put(it,calcForward(it,tf))
+				}
+				getDownLegs().collect{
+					if(it!=null)
+				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+				}
+				timeOfCycleStart=System.currentTimeMillis()
+				stepCycyleActiveIndex++
+				if(stepCycyleActiveIndex==numStepCycleGroups){
+					stepCycyleActiveIndex=0;
+				}
+				
+				computeUpdatePose()
+			}
 			break;
 		}
 		//println "Gait Percent = "+gaitIntermediatePercentage
 		if(leg.checkTaskSpaceTransform(tf))
 			leg.setDesiredTaskSpaceTransform(tf, 0);
+		else{
+			if(leg.getScriptingName().contains("One")){
+			Log.enableErrorPrint()
+			println leg.getScriptingName()+" failed in state "+ walkingState+" "+tf}
+			
+		}
 	}
 	@Override
 	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
@@ -423,7 +428,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	}
 	def dynamicHome(def leg){
 		//TODO apply dynamics to home location
-		return calcHome(leg)
+		return calcHome(leg).copy()
 	}
 	private void StepHome(def leg){
 		try{
@@ -625,7 +630,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		return max
 	}
-	
 	double getDisplacement(def leg,TransformNR bodyMotion){
 		def vals = getDisplacementIncrement(leg,bodyMotion)
 
