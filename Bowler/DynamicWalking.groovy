@@ -514,7 +514,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
 		double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
 		//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
-		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime>200){
+		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime>200){
 			stepCycleTime-=10
 			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 			newPose=scaleTransform(n,timescaleing)
@@ -522,7 +522,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		if(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups ){
 			// if it still cant fit in the constraints, then we slow down the command
-			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups ){
+			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/(numStepCycleGroups-1) ){
 				sec+=0.01
 				//miliseconds = Math.round(sec*1000)
 				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
@@ -531,7 +531,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				//println "Slowing down target Velocity "+stepCycleTime+" miliseconds "+speedCalc
 			}
 		}
-		while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/numStepCycleGroups && stepCycleTime<2000){
+		while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime<2000){
 			stepCycleTime+=10
 			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 			newPose=scaleTransform(n,timescaleing)
