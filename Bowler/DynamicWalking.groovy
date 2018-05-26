@@ -212,12 +212,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	}
 	public void walkingCycle(){
 		
-		long incrementTime = (System.currentTimeMillis()-reset)
-		if(incrementTime>miliseconds){
-			timout = true
-		}else
-			timout = false		
-		
 		//println "Cycle = "+miliseconds+" "+incrementTime
 	
 		def upLegs = getUpLegs()
@@ -343,7 +337,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				if(stepCycyleActiveIndex==numStepCycleGroups){
 					stepCycyleActiveIndex=0;
 				}
-				
+				long incrementTime = (System.currentTimeMillis()-reset)
+				if(incrementTime>miliseconds){
+					timout = true
+				}else
+					timout = false		
+		
 				computeUpdatePose()
 			}
 			break;
@@ -359,10 +358,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 		}
 	}
-	@Override
-	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
-		DriveArcLocal( source,  newPose,  seconds,true);
-	}
+
 	/**
 	 * Calc Inverse kinematics of a limb .
 	 *
@@ -622,6 +618,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 	}
 	@Override
+	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
+		DriveArcLocal( source,  newPose,  seconds,true);
+	}
+	@Override
 	public void DriveVelocityStraight(MobileBase source, double cmPerSecond) {
 		// TODO Auto-generated method stub
 		
@@ -633,8 +633,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 	}
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
-		
-		while(timout !=true && stepResetter!=null){
+		while((System.currentTimeMillis()-reset)>miliseconds !=true && stepResetter!=null){
 			Thread.sleep(1)
 			//println "Device is still running! "+s+" "+timeout
 			//throw new RuntimeException("Walking command still processing ")
