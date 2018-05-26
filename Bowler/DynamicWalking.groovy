@@ -372,7 +372,17 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 		}
 	}
-
+	private boolean newPosePossible(def newPose){
+		for(def leg:legs){
+			def pose =compute(leg,1,newPose)
+			if(! leg.checkTaskSpaceTransform(pose))
+				return false//one of the legs cant reach this pose
+			pose.setZ(zLock+(stepOverHeight));
+			if(! leg.checkTaskSpaceTransform(pose))
+				return false//one of the legs cant reach this step over pose
+		}
+		return true;
+	}
 	/**
 	 * Calc Inverse kinematics of a limb .
 	 *
@@ -537,7 +547,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			newPose=scaleTransform(n,timescaleing)
 			//println "Slowing down up gait to meet speed "+stepCycleTime
 		}
-			
+		if(!newPosePossible(	newPose)){
+			println "Pose not possible "+newPose
+			newPose=new TransformNR()
+		}
 		
 	}
 	private void buildCycleGroups(){
