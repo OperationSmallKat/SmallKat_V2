@@ -547,8 +547,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			newPose=scaleTransform(n,timescaleing)
 			//println "Slowing down up gait to meet speed "+stepCycleTime
 		}
+		double percentOfPose=1
+		while(!newPosePossible(	newPose) && percentOfPose>0.1){
+			percentOfPose-=0.1
+			newPose=scaleTransform(n,percentOfPose)
+		}
 		if(!newPosePossible(	newPose)){
 			println "Pose not possible "+newPose
+			
 			newPose=new TransformNR()
 		}
 		
