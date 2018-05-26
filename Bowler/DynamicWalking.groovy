@@ -314,7 +314,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				dyHome.translateY(-yinc);
 			//}
 			dyHome.setZ(zLock+(stepOverHeight));
-			tf=dyHome
+			if(leg.checkTaskSpaceTransform(dyHome))
+				tf=dyHome
+			else{
+				tf=dynamicHome( leg)
+				dyHome.setZ(zLock+(stepOverHeight));
+			}
 			if(gaitPercentage>0.5) {
 				//println "To new target " +gaitIntermediatePercentage
 				walkingState= WalkingState.ToNewTarget
