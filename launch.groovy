@@ -90,7 +90,9 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 			int val= getCurrentPosition();
 			if(lastPushedVal!=val){
 				//println "Fire Link Listner "+index+" value "+getCurrentPosition()
+				try{
 				fireLinkListener(val);
+				}catch(java.lang.NullPointerException e){}
 				lastPushedVal=val
 			}else{
 				//println index+" value same "+getCurrentPosition()
@@ -138,8 +140,9 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	
-	HIDSimpleComsDevice d = new HIDSimpleComsDevice( 0x16c0 ,0x480 )
+	HIDSimpleComsDevice d = new HIDSimpleComsDevice(0x16C0 ,0x0486 )
 	d.connect(); // Connect to it.
+
 	LinkFactory.addLinkProvider("hidfast",{LinkConfiguration conf->
 				println "Loading link "
 				return new HIDRotoryLink(d,conf)
