@@ -21,8 +21,8 @@ enum WalkingState {
 
 if(args==null){
 	double stepOverHeight=10;
-	long stepOverTime=40;
-	Double zLock=0;
+	long stepOverTime=200;
+	Double zLock=5;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -70,6 +70,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	Closure calcHome =(Closure)args.get(3);
 	boolean usePhysics=(args.size()>4?((boolean)args.get(4)):false);
 	long stepCycleTime=args.get(5)
+	long stepCycleTimeMax=args.get(5)
 	long timeOfCycleStart= System.currentTimeMillis();
 	int stepCycyleActiveIndex =0
 	int numStepCycleGroups = args.get(6)
@@ -79,6 +80,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	boolean headStable =args.get(10)
 	double maxBodyDisplacementPerStep= args.get(11)
 	double minBodyDisplacementPerStep =args.get(12)
+	
 
 	
 	ArrayList<DHParameterKinematics> legs;
@@ -524,7 +526,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
 		double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
 		//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
-		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime>200){
+		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime>stepOverTime){
 			stepCycleTime-=10
 			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 			newPose=scaleTransform(n,timescaleing)
@@ -541,15 +543,15 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				//println "Slowing down target Velocity "+stepCycleTime+" miliseconds "+speedCalc
 			}
 		}
-		while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime<2000){
+		while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime<stepCycleTimeMax){
 			stepCycleTime+=10
 			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
 			newPose=scaleTransform(n,timescaleing)
 			//println "Slowing down up gait to meet speed "+stepCycleTime
 		}
 		double percentOfPose=1
-		while(!newPosePossible(	newPose) && percentOfPose>0.1){
-			percentOfPose-=0.1
+		while(!newPosePossible(	newPose) && percentOfPose>0.05){
+			percentOfPose-=0.05
 			newPose=scaleTransform(n,percentOfPose)
 		}
 		if(!newPosePossible(	newPose)){
