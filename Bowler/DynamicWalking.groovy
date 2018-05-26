@@ -40,6 +40,7 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =5000
+	long walkingTimeout =5000
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
@@ -59,7 +60,8 @@ if(args==null){
 	coriolisGain,
 	headStable,
 	maxBodyDisplacementPerStep,
-	minBodyDisplacementPerStep]
+	minBodyDisplacementPerStep,
+	walkingTimeout]
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
@@ -80,7 +82,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	boolean headStable =args.get(10)
 	double maxBodyDisplacementPerStep= args.get(11)
 	double minBodyDisplacementPerStep =args.get(12)
-	
+	long walkingTimeout =args.get(13)
 
 	
 	ArrayList<DHParameterKinematics> legs;
@@ -128,8 +130,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return vals
 	}
 	void updateDynamics(IMUUpdate update){
-		if(stepResetter==null)
+		if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
 			return
+			
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		double velocity=0
 		if(	Math.abs(update.getxAcceleration())>0 ||
@@ -413,18 +416,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			walkingCycle()
 			//print " Walk cycle took "+(System.currentTimeMillis()-timeOfLastLoop) 
 		}
-		if(reset+5000 < System.currentTimeMillis()){
+		if(reset+walkingTimeout < System.currentTimeMillis()){
 			println "FIRING reset from reset thread"
 			resetting=true;
 			long tmp= reset;
-			
-			for(int i=0;i<numlegs;i++){
-				StepHome(legs.get(i))
-			}
-			resettingindex=numlegs;
-			resetting=false;
-			threadDone=true;
-			stepResetter=null;
 			for(def d:source.getAllDHChains()){
 				String limbName = d.getScriptingName()
 				try{
@@ -449,6 +444,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					BowlerStudio.printStackTrace(e)
 				}
 			}
+			for(int i=0;i<numlegs;i++){
+				StepHome(legs.get(i))
+			}
+			resettingindex=numlegs;
+			resetting=false;
+			threadDone=true;
+			stepResetter=null;
+			
 		}
 	}
 	def dynamicHome(def leg){
@@ -649,9 +652,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double yinc=(footStarting.getY()-inc.getY());
 		return [xinc,yinc,footStarting]
 	}
-	double getDeltaRotation(TransformNR incoming){
-		
-	}
+
 	@Override
 	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
 		DriveArcLocal( source,  newPose,  seconds,true);
