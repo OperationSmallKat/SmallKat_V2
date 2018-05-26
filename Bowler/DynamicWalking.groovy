@@ -528,6 +528,56 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 		
 	}
+	private void buildCycleGroups(){
+		try{
+			for(int i=0;i<numStepCycleGroups;i++){
+				if(cycleGroups.get(i)==null){
+					def cycleSet = []
+					if(numStepCycleGroups==source.getLegs().size()){
+						cycleSet.add(source.getLegs().get(i))
+					}else if (numStepCycleGroups == 2) {
+						int amount = (int)(source.getLegs().size()/numStepCycleGroups)
+						if((amount%2)==0){
+							for(def leg:source.getLegs()){
+								TransformNR  legRoot= leg.getRobotToFiducialTransform()
+								if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
+									cycleSet.add(leg)
+								}else
+								if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
+									cycleSet.add(leg)
+								}else
+								if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
+									cycleSet.add(leg)
+								}else
+								if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
+									cycleSet.add(leg)
+								}
+							}
+						}else{
+							println "Alternating gait "
+							for(int j=0;j<source.getLegs().size();j++){
+								if(i==0){
+									if((j%2)==0){
+										cycleSet.add(source.getLegs().get(j))
+									}
+								}
+								if(i==1){
+									if((j%2)!=0){
+										cycleSet.add(source.getLegs().get(j))
+									}
+								}
+							}
+						}
+						
+					}
+					//println "Adding "+cycleSet.size()+" to index "+i
+					cycleGroups.put(i, cycleSet)
+				}
+			}
+		}catch(Exception e){
+			BowlerStudio.printStackTrace(e)
+		}
+	}
 	TransformNR scaleTransform(TransformNR incoming, double scale){
 		return new TransformNR(incoming.getX()*scale,
 			  incoming.getY()*scale, 
@@ -580,7 +630,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		// TODO Auto-generated method stub
 		
 	}
-
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
 		
 		while(timout !=true && stepResetter!=null){
@@ -601,6 +650,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				source.getImu().addhardwareListeners({update ->
 					updateDynamics(update)
 				})
+				buildCycleGroups();
 			}
 			cachedNewPose=n;
 			cachedSecond=sec;
@@ -608,58 +658,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 			if(stepResetter==null){
 				computeUpdatePose()
-				try{
-					timeOfCycleStart= System.currentTimeMillis();
-					for(int i=0;i<numStepCycleGroups;i++){
-						if(cycleGroups.get(i)==null){
-							
-							def cycleSet = []
-							if(numStepCycleGroups==source.getLegs().size()){
-								cycleSet.add(source.getLegs().get(i))
-							}else if (numStepCycleGroups == 2) {
-								int amount = (int)(source.getLegs().size()/numStepCycleGroups)
-								if((amount%2)==0){
-									for(def leg:source.getLegs()){
-										TransformNR  legRoot= leg.getRobotToFiducialTransform()
-										if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
-											cycleSet.add(leg)
-										}else
-										if(legRoot.getX()<0&&legRoot.getY()<0 && i==0){
-											cycleSet.add(leg)
-										}else
-										if(legRoot.getX()>0&&legRoot.getY()<0 && i==1){
-											cycleSet.add(leg)
-										}else
-										if(legRoot.getX()<0&&legRoot.getY()>0 && i==1){
-											cycleSet.add(leg)
-										}
-									}
-								}else{
-									println "Alternating gait "
-									for(int j=0;j<source.getLegs().size();j++){
-										if(i==0){
-											if((j%2)==0){
-												cycleSet.add(source.getLegs().get(j))
-											}
-										}
-										if(i==1){
-											if((j%2)!=0){
-												cycleSet.add(source.getLegs().get(j))
-											}
-										}
-									}
-								}
-								
-							}
-							//println "Adding "+cycleSet.size()+" to index "+i
-							cycleGroups.put(i, cycleSet)
-						}
-					}
-				}catch(Exception e){
-					BowlerStudio.printStackTrace(e)
-				}
+
 				stepResetter = new Thread(){
 					public void run(){
+						timeOfCycleStart= System.currentTimeMillis();
 						try{
 							threadDone=false;
 							walkingState= WalkingState.Rising
