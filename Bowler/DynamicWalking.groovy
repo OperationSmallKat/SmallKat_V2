@@ -113,11 +113,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		reset = System.currentTimeMillis();
 	}
 	def getUpLegs(){
-		return cycleGroups.get(stepCycyleActiveIndex)
+		if(null!=cycleGroups.get(stepCycyleActiveIndex))
+			return cycleGroups.get(stepCycyleActiveIndex)
+		return []
 	}
 	def getDownLegs(){
 		def vals= legs.collect{
-				if(!upLegs.contains(it))
+				if(!getUpLegs().contains(it))
 					return it
 			}
 		vals.removeAll([null])
@@ -615,7 +617,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 							if(numStepCycleGroups==source.getLegs().size()){
 								cycleSet.add(source.getLegs().get(i))
 							}else if (numStepCycleGroups == 2) {
-								//if((source.getLegs().size()/numStepCycleGroups)%2==0){
+								int amount = (int)(source.getLegs().size()/numStepCycleGroups)
+								if((amount%2)==0){
 									for(def leg:source.getLegs()){
 										TransformNR  legRoot= leg.getRobotToFiducialTransform()
 										if(legRoot.getX()>0&&legRoot.getY()>0 && i==0){
@@ -631,16 +634,21 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 											cycleSet.add(leg)
 										}
 									}
-								//}else{
-								//	for(int j=0;j<source.getLegs().size();j++){
-								///		if((i%2)==0&&(j%2)==0){
-								//			cycleSet.add(source.getLegs().get(i))
-								//		}
-								//		if((i%2)!=0&&(j%2)!=0){
-								//			cycleSet.add(source.getLegs().get(i))
-								//		}
-								//	}
-								//}
+								}else{
+									println "Alternating gait "
+									for(int j=0;j<source.getLegs().size();j++){
+										if(i==0){
+											if((j%2)==0){
+												cycleSet.add(source.getLegs().get(j))
+											}
+										}
+										if(i==1){
+											if((j%2)!=0){
+												cycleSet.add(source.getLegs().get(j))
+											}
+										}
+									}
+								}
 								
 							}
 							//println "Adding "+cycleSet.size()+" to index "+i
