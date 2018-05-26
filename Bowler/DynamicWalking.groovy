@@ -262,7 +262,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	private void downMove(def leg,double percentage){
 		//println "Down Moving to "+percentage
 		def pose =compute(leg,percentage,newPose)
-		leg.setDesiredTaskSpaceTransform(pose, 0);
+		if(leg.checkTaskSpaceTransform(pose))
+			leg.setDesiredTaskSpaceTransform(pose, 0);
 	}
 	private def getLegCurrentPose(def leg){
 		double[] joints = cycleStartPoint.get(leg)	
@@ -341,8 +342,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			break;
 		}
 		//println "Gait Percent = "+gaitIntermediatePercentage
-		
-		leg.setDesiredTaskSpaceTransform(tf, 0);
+		if(leg.checkTaskSpaceTransform(tf))
+			leg.setDesiredTaskSpaceTransform(tf, 0);
 	}
 	@Override
 	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
