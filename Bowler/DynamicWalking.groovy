@@ -39,9 +39,9 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =5000
+	long stepCycleTime =2000
 	long walkingTimeout =stepCycleTime*2
-	int numStepCycleGroups = 2
+	int numStepCycleGroups = 4
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
@@ -376,8 +376,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				}
 				//computeUpdatePose()
 				
-			}else
-				break;
+			}
+			break;
 		case WalkingState.Falling:
 			gaitIntermediatePercentage=(gaitPercentage-0.75)*4.0
 			if(gaitIntermediatePercentage>1)
@@ -386,6 +386,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			tf.setZ(zLock+stepOverHeight-(stepOverHeight*gaitIntermediatePercentage));
 			//tf.setZ(zLock+stepOverHeight);
 			if(gaitPercentage>1) {
+				//tf = dynamicHome( leg)
 				walkingState=WalkingState.Rising
 				//print "\r\nRising Walk cycle loop time "+(System.currentTimeMillis()-timeOfCycleStart) +" "
 				getUpLegs().collect{
@@ -812,10 +813,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			resetStepTimer();
 		
 			if(stepResetter==null){
-				computeUpdatePose()
 
 				stepResetter = new Thread(){
 					public void run(){
+						computeUpdatePose()
+						legs.collect{
+					 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
+						}
 						timeOfCycleStart= System.currentTimeMillis();
 						try{
 							threadDone=false;
