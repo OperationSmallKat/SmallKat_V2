@@ -240,6 +240,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					      );
 				pose(newTF)
 				for(def d:source.getAllDHChains()){
+					
 					String limbName = d.getScriptingName()
 					try{
 						if(limbName.contentEquals("Tail")){
@@ -260,8 +261,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 										0) // 2 seconds
 										
 						}
-						d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
 						Thread.sleep((long)(stepCycleTime*incremnt/source.getAllDHChains().size()))		
+						d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
+						
 					}catch(Exception e){
 						BowlerStudio.printStackTrace(e)
 					}
