@@ -39,9 +39,9 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =2000
+	long stepCycleTime =5000
 	long walkingTimeout =stepCycleTime*2
-	int numStepCycleGroups = 4
+	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
 	double coriolisGain = 1
@@ -225,65 +225,52 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 	}
 	void sit(double sitAngle){
-		
-			double incremnt = 0.05
-			for(double i=0;i<1;i+=incremnt){
-				double angle =  sitAngle*i+(startAngle*(1-i))
-				println "Sitting to "+angle +" from "+startAngle
-				def newTF =new TransformNR(0,
-							  0, 
-							  0,
-							  new RotationNR(0,
-									  0, 
-									angle
-							  )
-					      );
-				pose(newTF)
-				for(def d:source.getAllDHChains()){
-					
-					String limbName = d.getScriptingName()
-					try{
-						if(limbName.contentEquals("Tail")){
-							d.setDesiredJointAxisValue(0,// link index
-										standardHeadTailAngle+angle/3, //target angle
-										0) // 2 seconds
-							d.setDesiredJointAxisValue(1,// link index
-										0, //target angle
-										0) // 2 seconds
-										
-						} 
-						if(limbName.contentEquals("Head")){
-							d.setDesiredJointAxisValue(0,// link index
-										standardHeadTailAngle-angle/3, //target angle
-										0) // 2 seconds
-							d.setDesiredJointAxisValue(1,// link index
-										0, //target angle
-										0) // 2 seconds
-										
-						}
-						Thread.sleep((long)(stepCycleTime*incremnt/source.getAllDHChains().size()))		
-						d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
-						
-					}catch(Exception e){
-						BowlerStudio.printStackTrace(e)
-					}
-				}
+	
+		double incremnt = 0.05
+		for(double i=0;i<1;i+=incremnt){
+			double angle =  sitAngle*i+(startAngle*(1-i))
+			//println "Sitting to "+angle +" from "+startAngle
+			def newTF =new TransformNR(0,
+						  0, 
+						  0,
+						  new RotationNR(0,
+								  0, 
+								angle
+						  )
+				      );
+			pose(newTF)
+			for(def d:source.getAllDHChains()){
 				
-			}
-			Thread.sleep(100)
-				for(def d:source.getAllDHChains()){
-					
-					try{
-						try {
-							d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							BowlerStudio.printStackTrace(e);
-						}
-					}catch(Exception e){
-						BowlerStudio.printStackTrace(e)
+				String limbName = d.getScriptingName()
+				try{
+					if(limbName.contentEquals("Tail")){
+						d.setDesiredJointAxisValue(0,// link index
+									standardHeadTailAngle+angle/3, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									0, //target angle
+									0) // 2 seconds
+									
+					} 
+					if(limbName.contentEquals("Head")){
+						d.setDesiredJointAxisValue(0,// link index
+									standardHeadTailAngle-angle/3, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									0, //target angle
+									0) // 2 seconds
+									
 					}
+					Thread.sleep((long)(stepCycleTime*incremnt/source.getAllDHChains().size()))		
+					d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
+					
+				}catch(Exception e){
+					BowlerStudio.printStackTrace(e)
 				}
+			}
+			
+		}
+
 		startAngle=sitAngle
 	}
 	private void walkLoop(){
