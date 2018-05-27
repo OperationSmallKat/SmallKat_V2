@@ -40,7 +40,7 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =5000
-	long walkingTimeout =7000
+	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
@@ -395,10 +395,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 				getDownLegs().collect{
-					def pose =compute(it,1,newPose)
-					if(it.checkTaskSpaceTransform(pose))
-				 		cycleStartPoint.put(it,calcForward(it,pose))
-				 	else
+					//def pose =compute(it,1,newPose)
+					//if(it.checkTaskSpaceTransform(pose))
+				 	//	cycleStartPoint.put(it,calcForward(it,pose))
+				 	//else
 				 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 				}
 				timeOfCycleStart=System.currentTimeMillis()
@@ -409,7 +409,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				long start = System.currentTimeMillis()
 				
 				computeUpdatePose()
-				println "Compute new pose took : "+(System.currentTimeMillis()-start)
+				//println "Compute new pose took : "+(System.currentTimeMillis()-start)
 			}
 			break;
 		}
@@ -505,12 +505,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			newPose=new TransformNR()
 		}
 
-		miliseconds = Math.round(sec*percentOfPose*1000)
+		miliseconds = Math.round(sec*percentOfPose*990)
 		BodyDisplacement = Math.sqrt(Math.pow(newPose.getX(),2)+Math.pow(newPose.getY(),2))
 		speedCalc = BodyDisplacement/((double)stepCycleTime)
 		rotCalc = Math.toDegrees(newPose.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
 		println  String.format("Actual displacement = %.2f Moving at down target Absolute Velocity %.2f m/s and  Z degrees per second= %.2f cycle time = %d", BodyDisplacement,speedCalc,rotCalc,stepCycleTime);	
-		resetStepTimer();
+		
 	}
 	private void computeUpdatePoseOld(){
 		if (cachedNewPose==null)
@@ -791,7 +791,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 	}
 	public void DriveArcLocal(MobileBase s, TransformNR n, double sec, boolean retry) {
-
+		
 		try{
 			
 			//println "Walk update "+n
@@ -809,7 +809,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			cachedNewPose=n;
 			cachedSecond=sec;
-			
+			resetStepTimer();
 		
 			if(stepResetter==null){
 				computeUpdatePose()
