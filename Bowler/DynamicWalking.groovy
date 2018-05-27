@@ -275,54 +275,61 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				resetting=false;
 				return
 			}
-			def newTF =new TransformNR(0,
-						  0, 
-						  0,
-						  new RotationNR(0,
-								  0, 
-								 -20
-						  )
-				      );
-			pose(newTF)
-			for(def d:source.getAllDHChains()){
-				String limbName = d.getScriptingName()
-				try{
-					if(limbName.contentEquals("Tail")){
-						d.setDesiredJointAxisValue(0,// link index
-									standardHeadTailAngle-10, //target angle
-									0) // 2 seconds
-						d.setDesiredJointAxisValue(1,// link index
-									0, //target angle
-									0) // 2 seconds		
-					} 
-					if(limbName.contentEquals("Head")){
-						d.setDesiredJointAxisValue(0,// link index
-									standardHeadTailAngle+10, //target angle
-									0) // 2 seconds
-						d.setDesiredJointAxisValue(1,// link index
-									0, //target angle
-									0) // 2 seconds		
+			double incremnt = 0.05
+			for(double i=0;i<1;i+=incremnt){
+				Thread.sleep((long)(stepCycleTime*incremnt))
+				double angle =  -20*i
+				def newTF =new TransformNR(0,
+							  0, 
+							  0,
+							  new RotationNR(0,
+									  0, 
+									angle
+							  )
+					      );
+				pose(newTF)
+				for(def d:source.getAllDHChains()){
+					String limbName = d.getScriptingName()
+					try{
+						if(limbName.contentEquals("Tail")){
+							d.setDesiredJointAxisValue(0,// link index
+										standardHeadTailAngle+angle/2, //target angle
+										0) // 2 seconds
+							d.setDesiredJointAxisValue(1,// link index
+										0, //target angle
+										0) // 2 seconds
+										Thread.sleep((long)(stepCycleTime*incremnt))		
+						} 
+						if(limbName.contentEquals("Head")){
+							d.setDesiredJointAxisValue(0,// link index
+										standardHeadTailAngle-angle/2, //target angle
+										0) // 2 seconds
+							d.setDesiredJointAxisValue(1,// link index
+										0, //target angle
+										0) // 2 seconds
+										Thread.sleep((long)(stepCycleTime*incremnt))		
+						}
+						d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
+					}catch(Exception e){
+						BowlerStudio.printStackTrace(e)
 					}
-
-				}catch(Exception e){
-					BowlerStudio.printStackTrace(e)
 				}
+				
 			}
 			Thread.sleep(100)
-			for(def d:source.getAllDHChains()){
-				String limbName = d.getScriptingName()
-				try{
-					try {
-						d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						BowlerStudio.printStackTrace(e);
+				for(def d:source.getAllDHChains()){
+					
+					try{
+						try {
+							d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							BowlerStudio.printStackTrace(e);
+						}
+					}catch(Exception e){
+						BowlerStudio.printStackTrace(e)
 					}
-				}catch(Exception e){
-					BowlerStudio.printStackTrace(e)
 				}
-			}
-			
 			stepResetter=null;
 		}
 	}
