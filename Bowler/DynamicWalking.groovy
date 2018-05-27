@@ -21,8 +21,8 @@ enum WalkingState {
 
 if(args==null){
 	double stepOverHeight=10;
-	long stepOverTime=200;
-	Double zLock=5;
+	long stepOverTime=20*5*2;// Servo loop times number of points times Nyquest doubeling
+	Double zLock=7.5;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -47,7 +47,7 @@ if(args==null){
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 30
-	double minBodyDisplacementPerStep = 10
+	double minBodyDisplacementPerStep = 20
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
@@ -406,7 +406,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				if(stepCycyleActiveIndex==numStepCycleGroups){
 					stepCycyleActiveIndex=0;
 				}
+				long start = System.currentTimeMillis()
+				
 				computeUpdatePose()
+				println "Compute new pose took : "+(System.currentTimeMillis()-start)
 			}
 			break;
 		}
@@ -467,14 +470,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		while(!newPosePossible(	newPose) &&
 			percentOfPose>0.05 &&
 			stepCycleTime<stepOverTime){
-			percentOfPose-=0.05
+			percentOfPose-=0.1
 			newPose=scaleTransform(n,percentOfPose)
 			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
 			//println "Speeding up gait to meet speed "+stepCycleTime
 		}
 		while(newPosePossible(	newPose) &&
 			stepCycleTime<stepOverTime){
-			percentOfPose+=0.05
+			percentOfPose+=0.1
 			newPose=scaleTransform(n,percentOfPose)
 			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
 			//println "Speeding up gait to meet speed "+stepCycleTime
@@ -483,14 +486,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			stepCycleTime<stepCycleTimeMax&&
 			newPosePossible(	newPose)
 			){
-			percentOfPose+=0.05
+			percentOfPose+=0.75
 			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
 			newPose=scaleTransform(n,percentOfPose)
 			//println "Slowing down up gait to meet speed "+stepCycleTime
 		}
 		while(!newPosePossible(	newPose) &&
 			percentOfPose>0.01 ){
-			percentOfPose-=0.01
+			percentOfPose-=0.1
 			newPose=scaleTransform(n,percentOfPose)
 			stepCycleTime=stepOverTime
 			//println "Speeding up gait to meet speed "+stepCycleTime
