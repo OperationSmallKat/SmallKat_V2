@@ -237,7 +237,44 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			walkingCycle()
 			//print " Walk cycle took "+(System.currentTimeMillis()-timeOfLastLoop) 
 		}
-		if(reset+walkingTimeout*2 < System.currentTimeMillis()){
+		if(reset+walkingTimeout< System.currentTimeMillis()){
+			threadDone=true;
+			stepResetter=null;
+			if(!source.getScriptingName().contains("Kat")){
+				println "FIRING reset from reset thread"
+				resetting=true;
+				long tmp= reset;
+				for(def d:source.getAllDHChains()){
+					String limbName = d.getScriptingName()
+					try{
+						if(limbName.contentEquals("Tail")){
+							d.setDesiredJointAxisValue(0,// link index
+										standardHeadTailAngle, //target angle
+										0) // 2 seconds
+							d.setDesiredJointAxisValue(1,// link index
+										0, //target angle
+										0) // 2 seconds			
+						} 
+						if(limbName.contentEquals("Head")){
+							d.setDesiredJointAxisValue(0,// link index
+										standardHeadTailAngle, //target angle
+										0) // 2 seconds
+							d.setDesiredJointAxisValue(1,// link index
+										0, //target angle
+										0) // 2 seconds			
+						}
+						coriolisIndex=0;
+					}catch(Exception e){
+						BowlerStudio.printStackTrace(e)
+					}
+				}
+				for(int i=0;i<numlegs;i++){
+					StepHome(legs.get(i))
+				}
+				resettingindex=numlegs;
+				resetting=false;
+				return
+			}
 			def newTF =new TransformNR(0,
 						  0, 
 						  0,
@@ -287,42 +324,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			
 			stepResetter=null;
-		}
-		if(reset+walkingTimeout < System.currentTimeMillis() && !threadDone){
-			println "FIRING reset from reset thread"
-			resetting=true;
-			long tmp= reset;
-			for(def d:source.getAllDHChains()){
-				String limbName = d.getScriptingName()
-				try{
-					if(limbName.contentEquals("Tail")){
-						d.setDesiredJointAxisValue(0,// link index
-									standardHeadTailAngle, //target angle
-									0) // 2 seconds
-						d.setDesiredJointAxisValue(1,// link index
-									0, //target angle
-									0) // 2 seconds			
-					} 
-					if(limbName.contentEquals("Head")){
-						d.setDesiredJointAxisValue(0,// link index
-									standardHeadTailAngle, //target angle
-									0) // 2 seconds
-						d.setDesiredJointAxisValue(1,// link index
-									0, //target angle
-									0) // 2 seconds			
-					}
-					coriolisIndex=0;
-				}catch(Exception e){
-					BowlerStudio.printStackTrace(e)
-				}
-			}
-			for(int i=0;i<numlegs;i++){
-				StepHome(legs.get(i))
-			}
-			resettingindex=numlegs;
-			resetting=false;
-			threadDone=true;
-			
 		}
 	}
 	public void walkingCycle(){
