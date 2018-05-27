@@ -409,7 +409,82 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 		}
 	}
+	
 	private void computeUpdatePose(){
+		if (cachedNewPose==null)
+			return
+		resetStepTimer();
+		TransformNR n=cachedNewPose;
+		double sec=cachedSecond
+		cachedNewPose=null
+		
+		//n=new TransformNR()
+		//stepCycleTime=Math.round(sec*1000)
+		numlegs = source.getLegs().size();
+		legs = source.getLegs();
+		global= source.getFiducialToGlobalTransform();
+		if(global==null){
+			global=new TransformNR()
+			
+		}
+		global=new TransformNR(global.getX(),
+		  global.getY(), 
+		  global.getZ(),
+		  new RotationNR(Math.toDegrees(n.getRotation().getRotationTilt()),
+				  Math.toDegrees(global.getRotation().getRotationAzimuth()), 
+				 Math.toDegrees( n.getRotation().getRotationElevation())));
+		source.setGlobalToFiducialTransform(global)
+		n=new TransformNR(n.getX(),
+		  n.getY(), 
+		  n.getZ(),
+		  new RotationNR(0,
+				  Math.toDegrees(n.getRotation().getRotationAzimuth()), 
+				  0));
+		double percentOfPose=1
+		double BodyDisplacement = Math.sqrt(Math.pow(n.getX(),2)+Math.pow(n.getY(),2))/1000
+		double speedCalc = BodyDisplacement/sec
+		double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/sec
+		stepCycleTime=Math.round(sec*percentOfPose*1000.0)
+		//println "\n\nTarget at down target displacement = "+BodyDisplacement+" Absolute Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc+" cycle time = "+stepCycleTime
+		newPose=n
+		
+		double cycleMinimumDisplacement = minBodyDisplacementPerStep/(numStepCycleGroups-1)
+
+		while(!newPosePossible(	newPose) &&
+			percentOfPose>0.05 && 
+			stepCycleTime>stepOverTime){
+			percentOfPose-=0.05
+			newPose=scaleTransform(n,percentOfPose)
+			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
+			//println "Speeding up gait to meet speed "+stepCycleTime
+		}
+		while(getMaximumDisplacement(newPose)< cycleMinimumDisplacement&& 
+			stepCycleTime<stepCycleTimeMax&&
+			newPosePossible(	newPose)
+			){
+			percentOfPose+=0.05
+			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
+			newPose=scaleTransform(n,percentOfPose)
+			//println "Slowing down up gait to meet speed "+stepCycleTime
+		}
+		// rewind last loop
+		percentOfPose-=0.05
+		stepCycleTime=Math.round(sec*percentOfPose*1000.0)
+		newPose=scaleTransform(n,percentOfPose)
+		if(!newPosePossible(	newPose)){
+			println "\n\n\n\n!!!\nPose not possible\n "+newPose+"\n!!!!\n\n"
+			newPose=new TransformNR()
+		}
+
+		miliseconds = Math.round(sec*percentOfPose*1000)
+		BodyDisplacement = Math.sqrt(Math.pow(newPose.getX(),2)+Math.pow(newPose.getY(),2))
+		speedCalc = BodyDisplacement/((double)stepCycleTime)
+		rotCalc = Math.toDegrees(newPose.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
+		println  String.format("Actual displacement = %.2f Moving at down target Absolute Velocity %.2f m/s and  Z degrees per second= %.2f cycle time = %d", BodyDisplacement,speedCalc,rotCalc,stepCycleTime);
+		
+		
+	}
+	private void computeUpdatePoseOld(){
 		if (cachedNewPose==null)
 			return
 		resetStepTimer();
@@ -480,11 +555,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 			newPose=new TransformNR()
 		}
-		miliseconds = stepCycleTime
+		miliseconds =((long) ((double)stepCycleTime)*1.25)
 		double BodyDisplacement = Math.sqrt(Math.pow(newPose.getX(),2)+Math.pow(newPose.getY(),2))
-		speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
+		speedCalc = BodyDisplacement/((double)stepCycleTime)
 		rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
-		println "Moving at down target Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc
+		println "Moving at down target Absolute Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc
 	}
 	private def getLegCurrentPose(def leg){
 		double[] joints = cycleStartPoint.get(leg)	
