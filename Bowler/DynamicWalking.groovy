@@ -185,33 +185,33 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				}
 			}
 			try{
-			if(limbName.contentEquals("Tail")){
-				d.setDesiredJointAxisValue(0,// link index
-							computedTilt, //target angle
-							0) // 2 seconds
-				d.setDesiredJointAxisValue(1,// link index
-							computedPan, //target angle
-							0) // 2 seconds			
-			} 
-			if(limbName.contentEquals("Head")){
-				if(!headStable){
+				if(limbName.contentEquals("Tail")){
 					d.setDesiredJointAxisValue(0,// link index
 								computedTilt, //target angle
 								0) // 2 seconds
 					d.setDesiredJointAxisValue(1,// link index
 								computedPan, //target angle
-								0) // 2 seconds
-				}else{
-					d.setDesiredJointAxisValue(0,// link index
-								standardHeadTailAngle, //target angle
-								0) // 2 seconds
-					d.setDesiredJointAxisValue(1,// link index
-								0, //target angle
-								0) // 2 seconds				
+								0) // 2 seconds			
+				} 
+				if(limbName.contentEquals("Head")){
+					if(!headStable){
+						d.setDesiredJointAxisValue(0,// link index
+									computedTilt, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									computedPan, //target angle
+									0) // 2 seconds
+					}else{
+						d.setDesiredJointAxisValue(0,// link index
+									standardHeadTailAngle, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									0, //target angle
+									0) // 2 seconds				
+					}
 				}
-			}
 			}catch(Exception e){
-				BowlerStudio.printStackTrace(e)
+				//BowlerStudio.printStackTrace(e)
 			}
 		}
 
@@ -265,7 +265,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
 					
 				}catch(Exception e){
-					BowlerStudio.printStackTrace(e)
+					//BowlerStudio.printStackTrace(e)
 				}
 			}
 			
@@ -866,7 +866,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				source=s;
 				source.getImu().clearhardwareListeners()
 				source.getImu().addhardwareListeners({update ->
-					updateDynamics(update)
+					try{
+						updateDynamics(update)
+					}catch(Exception e){
+						e.printStackTrace()
+					}
 				})
 				buildCycleGroups();
 			}
