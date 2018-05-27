@@ -339,8 +339,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				double xinc=(dyHome.getX()-current.getX())*(1-gaitIntermediatePercentage);
 				double yinc=(dyHome.getY()-current.getY())*(1-gaitIntermediatePercentage);
 				
-				//dyHome.translateX(-xinc);
-				//dyHome.translateY(-yinc);
+				dyHome.translateX(-xinc);
+				dyHome.translateY(-yinc);
 			//}
 
 			tf=dyHome
