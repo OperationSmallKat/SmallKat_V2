@@ -40,7 +40,7 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =2000
-	long walkingTimeout =stepCycleTime*2
+	long walkingTimeout =2000
 	int numStepCycleGroups = 4
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
@@ -215,6 +215,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 
 	}
+	void pose(def newAbsolutePose){
+		source.setGlobalToFiducialTransform(newAbsolutePose)
+		for(def leg:legs){
+			def pose =compute(leg,1,new TransformNR())
+			if(leg.checkTaskSpaceTransform(pose))
+				leg.setDesiredTaskSpaceTransform(pose, 0);
+		}
+	}
 	private void walkLoop(){
 		long incrementTime = (System.currentTimeMillis()-reset)
 				if(incrementTime>miliseconds){
@@ -229,7 +237,58 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			walkingCycle()
 			//print " Walk cycle took "+(System.currentTimeMillis()-timeOfLastLoop) 
 		}
-		if(reset+walkingTimeout < System.currentTimeMillis()){
+		if(reset+walkingTimeout*2 < System.currentTimeMillis()){
+			def newTF =new TransformNR(0,
+						  0, 
+						  0,
+						  new RotationNR(0,
+								  0, 
+								 -12
+						  )
+				      );
+			pose(newTF)
+			for(def d:source.getAllDHChains()){
+				String limbName = d.getScriptingName()
+				try{
+					if(limbName.contentEquals("Tail")){
+						d.setDesiredJointAxisValue(0,// link index
+									standardHeadTailAngle-10, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									0, //target angle
+									0) // 2 seconds		
+					} 
+					if(limbName.contentEquals("Head")){
+						d.setDesiredJointAxisValue(0,// link index
+									standardHeadTailAngle+10, //target angle
+									0) // 2 seconds
+						d.setDesiredJointAxisValue(1,// link index
+									0, //target angle
+									0) // 2 seconds		
+					}
+
+				}catch(Exception e){
+					BowlerStudio.printStackTrace(e)
+				}
+			}
+			Thread.sleep(100)
+			for(def d:source.getAllDHChains()){
+				String limbName = d.getScriptingName()
+				try{
+					try {
+						d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						BowlerStudio.printStackTrace(e);
+					}
+				}catch(Exception e){
+					BowlerStudio.printStackTrace(e)
+				}
+			}
+			
+			stepResetter=null;
+		}
+		if(reset+walkingTimeout < System.currentTimeMillis() && !threadDone){
 			println "FIRING reset from reset thread"
 			resetting=true;
 			long tmp= reset;
@@ -263,7 +322,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			resettingindex=numlegs;
 			resetting=false;
 			threadDone=true;
-			stepResetter=null;
 			
 		}
 	}
@@ -827,7 +885,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 							stepCycyleActiveIndex=0;
 							println "Starting step reset thread"
 							timeOfCycleStart=System.currentTimeMillis()
-							while(source.isAvailable() && threadDone==false){
+							while(source.isAvailable() && stepResetter!=null){
 								Thread.sleep(1)// avoid thread lock
 								try{	
 									walkLoop();
