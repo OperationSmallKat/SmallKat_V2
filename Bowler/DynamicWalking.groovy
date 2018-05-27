@@ -21,7 +21,7 @@ enum WalkingState {
 
 if(args==null){
 	double stepOverHeight=10;
-	long stepOverTime=20*5*2;// Servo loop times number of points times Nyquest doubeling
+	long stepOverTime=20*5*4;// Servo loop times number of points times Nyquest doubeling
 	Double zLock=-3;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
@@ -113,6 +113,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double coriolisDivisions = 360.0
 	double coriolisTimeBase = 100.0
 	long coriolisTimeLast=0
+	double startAngle = 0
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
 	}
@@ -224,9 +225,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 	}
 	void sit(double sitAngle){
+		
 			double incremnt = 0.05
 			for(double i=0;i<1;i+=incremnt){
-				double angle =  sitAngle*i
+				double angle =  sitAngle*i+(startAngle*(1-i))
+				println "Sitting to "+angle +" from "+startAngle
 				def newTF =new TransformNR(0,
 							  0, 
 							  0,
@@ -241,7 +244,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					try{
 						if(limbName.contentEquals("Tail")){
 							d.setDesiredJointAxisValue(0,// link index
-										standardHeadTailAngle+angle/2, //target angle
+										standardHeadTailAngle+angle/3, //target angle
 										0) // 2 seconds
 							d.setDesiredJointAxisValue(1,// link index
 										0, //target angle
@@ -250,7 +253,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						} 
 						if(limbName.contentEquals("Head")){
 							d.setDesiredJointAxisValue(0,// link index
-										standardHeadTailAngle-angle/2, //target angle
+										standardHeadTailAngle-angle/3, //target angle
 										0) // 2 seconds
 							d.setDesiredJointAxisValue(1,// link index
 										0, //target angle
@@ -279,6 +282,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						BowlerStudio.printStackTrace(e)
 					}
 				}
+		startAngle=sitAngle
 	}
 	private void walkLoop(){
 		long incrementTime = (System.currentTimeMillis()-reset)
@@ -889,6 +893,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						legs.collect{
 					 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 						}
+						sit(0);
 						timeOfCycleStart= System.currentTimeMillis();
 						try{
 							threadDone=false;
