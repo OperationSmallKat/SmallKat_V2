@@ -22,7 +22,7 @@ enum WalkingState {
 if(args==null){
 	double stepOverHeight=10;
 	long stepOverTime=20*5*2;// Servo loop times number of points times Nyquest doubeling
-	Double zLock=7.5;
+	Double zLock=-3;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -40,7 +40,7 @@ if(args==null){
 	}
 	boolean usePhysicsToMove = true;
 	long stepCycleTime =2000
-	long walkingTimeout =2000
+	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 4
 	double standardHeadTailAngle = -20
 	double staticPanOffset = 10
@@ -243,7 +243,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						  0,
 						  new RotationNR(0,
 								  0, 
-								 -12
+								 -20
 						  )
 				      );
 			pose(newTF)
