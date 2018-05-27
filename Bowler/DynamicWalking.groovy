@@ -605,15 +605,16 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		for(def leg:legs){
 			def ok=true
 			def linkLocation = calcForward( leg , dynamicHome( leg))
-			def linkLocationOld = cycleStartPoint.get(leg)	
+			def linkLocationOld = cycleStartPoint.get(leg)
+			double maxDownPercent = 	(numStepCycleGroups-1)
 			cycleStartPoint.put(leg, linkLocation)	
-			def pose =compute(leg,1,newPose)
+			def pose =compute(leg,maxDownPercent,newPose)
 			if(! leg.checkTaskSpaceTransform(pose))
 				ok= false//one of the legs cant reach this pose
 			pose.setZ(zLock+(stepOverHeight));
 			if(! leg.checkTaskSpaceTransform(pose))
 				ok= false//one of the legs cant reach this step over pose
-			pose =compute(leg,1,newPose.inverse())
+			pose =compute(leg,maxDownPercent,newPose.inverse())
 			if(! leg.checkTaskSpaceTransform(pose))
 				ok= false//one of the legs cant reach this pose
 			pose.setZ(zLock+(stepOverHeight));
