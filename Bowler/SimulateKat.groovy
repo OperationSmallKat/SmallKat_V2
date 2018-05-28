@@ -226,24 +226,25 @@ public class MyMobileBasePhysics {
 					joint6DOF = new HingeConstraint(lastLink, linkSection, localA, localB);
 					joint6DOF.setLimit(-(float) Math.toRadians(abstractLink.getMinEngineeringUnits()),
 							-(float) Math.toRadians(abstractLink.getMaxEngineeringUnits()));
-
+					//joint6DOF.setAngularOnly(true);
 					lastLink = linkSection;
 
 					hingePhysicsManager.setConstraint(joint6DOF);
-
-					if (!conf.isPassive()) {
+					def passive =conf.isPassive()
+					//passive=true
+					if (!passive) {
 						ILinkListener ll = new ILinkListener() {
 							@Override
 							public void onLinkPositionUpdate(AbstractLink source, double engineeringUnitsValue) {
 								// System.out.println("
 								// value="+engineeringUnitsValue);
-								hingePhysicsManager.setTarget(Math.toRadians(-engineeringUnitsValue));
+								//hingePhysicsManager.setTarget(Math.toRadians(-engineeringUnitsValue));
 
-								// joint6DOF.setLimit( (float)
-								// (Math.toRadians(-engineeringUnitsValue )-
-								// LIFT_EPS),
-								// (float) (Math.toRadians(-engineeringUnitsValue )+
-								// LIFT_EPS));
+								joint6DOF.setLimit( (float)
+								(Math.toRadians(-engineeringUnitsValue )-
+								 LIFT_EPS),
+								 (float) (Math.toRadians(-engineeringUnitsValue )+
+								 LIFT_EPS));
 							}
 
 							@Override
@@ -292,7 +293,7 @@ def baseCad=MobileBaseCadManager.getBaseCad(base)
 m = new MyMobileBasePhysics(base, baseCad, simplecad);
 
 //t.start()
-double msLoopTime =100;
+double msLoopTime =5;
 BowlerStudioController.setCsg(PhysicsEngine.getCsgFromEngine());
 System.gc()
 // run the physics engine for a few cycles
@@ -306,7 +307,7 @@ for (int i = 0; i < 40000&& !Thread.interrupted(); i++) {
 		
 	}else{
 		//System.gc()
-		//println "Real time broken! took "+took
+		println "Real time broken! took "+took
 		//System.gc()
 		//if(took>2000)
 		// return null;

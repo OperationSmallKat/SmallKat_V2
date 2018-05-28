@@ -525,41 +525,45 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		if(stepCycleTime<stepOverTime){
 			percentOfPose = ((double)stepOverTime)/((double)stepCycleTime)
 		}
-		newPose=scaleTransform(n,percentOfPose)
-		stepCycleTime=Math.round(sec*percentOfPose*1000.0)
-		//println "\n\nTarget at down target displacement = "+BodyDisplacement+" Absolute Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc+" cycle time = "+stepCycleTime
-		
-		double cycleMinimumDisplacement = minBodyDisplacementPerStep/(numStepCycleGroups-1)
-		while(!newPosePossible(	newPose) &&
-			percentOfPose>0.05 &&
-			stepCycleTime<stepOverTime){
-			percentOfPose-=0.1
+		try{
 			newPose=scaleTransform(n,percentOfPose)
 			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
-			//println "Speeding up gait to meet speed "+stepCycleTime
-		}
-		while(newPosePossible(	newPose) &&
-			stepCycleTime<stepOverTime){
-			percentOfPose+=0.1
-			newPose=scaleTransform(n,percentOfPose)
-			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
-			//println "Speeding up gait to meet speed "+stepCycleTime
-		}
-		while(getMaximumDisplacement(newPose)< cycleMinimumDisplacement&& 
-			stepCycleTime<stepCycleTimeMax&&
-			newPosePossible(	newPose)
-			){
-			percentOfPose+=0.75
-			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
-			newPose=scaleTransform(n,percentOfPose)
-			//println "Slowing down up gait to meet speed "+stepCycleTime
-		}
-		while(!newPosePossible(	newPose) &&
-			percentOfPose>0.01 ){
-			percentOfPose-=0.1
-			newPose=scaleTransform(n,percentOfPose)
-			stepCycleTime=stepOverTime
-			//println "Speeding up gait to meet speed "+stepCycleTime
+			//println "\n\nTarget at down target displacement = "+BodyDisplacement+" Absolute Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc+" cycle time = "+stepCycleTime
+			
+			double cycleMinimumDisplacement = minBodyDisplacementPerStep/(numStepCycleGroups-1)
+			while(!newPosePossible(	newPose) &&
+				percentOfPose>0.05 &&
+				stepCycleTime<stepOverTime){
+				percentOfPose-=0.1
+				newPose=scaleTransform(n,percentOfPose)
+				stepCycleTime=Math.round(sec*percentOfPose*1000.0)
+				//println "Speeding up gait to meet speed "+stepCycleTime
+			}
+			while(newPosePossible(	newPose) &&
+				stepCycleTime<stepOverTime){
+				percentOfPose+=0.1
+				newPose=scaleTransform(n,percentOfPose)
+				stepCycleTime=Math.round(sec*percentOfPose*1000.0)
+				//println "Speeding up gait to meet speed "+stepCycleTime
+			}
+			while(getMaximumDisplacement(newPose)< cycleMinimumDisplacement&& 
+				stepCycleTime<stepCycleTimeMax&&
+				newPosePossible(	newPose)
+				){
+				percentOfPose+=0.75
+				stepCycleTime=Math.round(sec*percentOfPose*1000.0)
+				newPose=scaleTransform(n,percentOfPose)
+				//println "Slowing down up gait to meet speed "+stepCycleTime
+			}
+			while(!newPosePossible(	newPose) &&
+				percentOfPose>0.01 ){
+				percentOfPose-=0.1
+				newPose=scaleTransform(n,percentOfPose)
+				stepCycleTime=stepOverTime
+				//println "Speeding up gait to meet speed "+stepCycleTime
+			}
+		}catch(Exception ex){
+			newPose=new TransformNR()
 		}
 
 		if(!newPosePossible(	newPose)){
