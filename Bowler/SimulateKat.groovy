@@ -130,6 +130,9 @@ public class MyMobileBasePhysics {
 		core.add(baseManager);
 		for (int j = 0; j < base.getAllDHChains().size(); j++) {
 			DHParameterKinematics dh = base.getAllDHChains().get(j);
+			TransformNR limbRoot = dh.getRobotToFiducialTransform()
+		
+		
 			RigidBody lastLink = body;
 			Matrix previousStep = null;
 			// ensure the dh-cache chain is computed and recent
@@ -164,14 +167,20 @@ public class MyMobileBasePhysics {
 														// manipulaters in the CSG will not conflict for resources here
 					// The DH chain calculated the starting location of the link
 					// in its current configuration
-					TransformNR localLink = cached.get(i);
+					//TransformNR offset = new TransformNR(0,0,0,new RotationNR(0,0,0))
+					TransformNR localLink;
+					if(i>0)
+						localLink= cached.get(i-1)
+					else
+						localLink=limbRoot.copy()
+						
 					// Lift it in the air so nothing is below the ground to
 					// start.
 					localLink.translateZ(lift);
 					// Bullet engine transform object
 					Transform linkLoc = new Transform();
 					TransformFactory.nrToBullet(localLink, linkLoc);
-					linkLoc.origin.z = (float) (linkLoc.origin.z - minz + lift);
+					//linkLoc.origin.z = (float) (linkLoc.origin.z - minz + lift);
 
 					// Set the manipulator to the location from the kinematics,
 					// needs to be in UI thread to touch manipulator
@@ -266,7 +275,7 @@ public class MyMobileBasePhysics {
 
 					abstractLink.getCurrentPosition();
 					core.add(hingePhysicsManager);
-					linkSection.setWorldTransform(linkLoc);
+					//linkSection.setWorldTransform(linkLoc);
 				}
 			}
 		}
@@ -274,9 +283,7 @@ public class MyMobileBasePhysics {
 }
 
 
-def base =DeviceManager.getSpecificDevice( "MediumKat",{
-	throw new RuntimeException()
-})
+def base =ScriptingEngine.gitScriptRun("https://github.com/keionbis/SmallKat.git", "loadRobot.groovy", null);
 
 
 PhysicsEngine.clear();
@@ -293,27 +300,10 @@ def baseCad=MobileBaseCadManager.getBaseCad(base)
 m = new MyMobileBasePhysics(base, baseCad, simplecad);
 
 //t.start()
-double msLoopTime =5;
+double msLoopTime =1;
 BowlerStudioController.setCsg(PhysicsEngine.getCsgFromEngine());
 System.gc()
-// run the physics engine for a few cycles
-for (int i = 0; i < 40000&& !Thread.interrupted(); i++) {
-	long start = System.currentTimeMillis();
-	PhysicsEngine.stepMs(msLoopTime);
-	long took = (System.currentTimeMillis() - start);
-	Thread.sleep((long)(msLoopTime));
-	if (took < msLoopTime){
-		
-		
-	}else{
-		//System.gc()
-		println "Real time broken! took "+took
-		//System.gc()
-		//if(took>2000)
-		// return null;
-	}
-	//if(i%100==0)
-	//	new Thread({System.gc()}).start()
- }
+
+PhysicsEngine.stepMs(msLoopTime);
 
 return null
