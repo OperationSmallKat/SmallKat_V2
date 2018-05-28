@@ -225,7 +225,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 	}
 	void sit(double sitAngle){
-	
+	if(!source.getScriptingName().contains("Kat"))
+		return
 		double incremnt = 0.05
 		for(double i=0;i<1;i+=incremnt){
 			double angle =  sitAngle*i+(startAngle*(1-i))
