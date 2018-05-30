@@ -21,7 +21,7 @@ enum WalkingState {
 
 if(args==null){
 	double stepOverHeight=10;
-	long stepOverTime=20*5*2;// Servo loop times number of points times Nyquest doubeling
+	long stepOverTime=20*5*3;// Servo loop times number of points times Nyquest doubeling
 	Double zLock=-3;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
@@ -110,8 +110,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double gaitIntermediatePercentage 
 	TransformNR global
 	int coriolisIndex = 0
-	double coriolisDivisions = 360.0
-	double coriolisTimeBase = 100.0
+	double coriolisDivisions = 36.0
+	double coriolisDivisionsScale = 360.0/coriolisDivisions
+	double coriolisTimeBase =10
 	long coriolisTimeLast=0
 	double startAngle = 0
 	public void resetStepTimer(){
@@ -142,77 +143,67 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		)
 			velocity=update.getRotyAcceleration()
 		else
-			velocity=0
-		if(incrementTime>100){
+			velocity=-10
+		if(incrementTime>10){
 			timeOfLastIMUPrint= System.currentTimeMillis()
-			/*
-			print "\r\nDynmics IMU state \n"
-			for(def state :[update]){
-				print " x = "+update.getxAcceleration()
-				print "  y = "+update.getyAcceleration()
-				print " z = "+update.getzAcceleration()
-				print " rx = "+update.getRotxAcceleration()
-				print " ry = "+update.getRotyAcceleration()
-				print " rz = "+update.getRotzAcceleration()+"\r\n"
-			}
-			*/
-		}
-		long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
-		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
-		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
-		double sinPanOffset = Math.sin(gaitPercentage*Math.PI)*staticPanOffset
-		
-		double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex%2==0?sinPanOffset:-sinPanOffset)
-		double bobingPercent = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*standardHeadTailAngle/2+standardHeadTailAngle/2
-		for(def d:source.getAllDHChains()){
-			String limbName = d.getScriptingName()
-			double sinCop = Math.sin(Math.toRadians(coriolisIndex))
-			double cosCop = Math.cos(Math.toRadians(coriolisIndex))
+			long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
+			double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
+			double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
+			double sinPanOffset = Math.sin(gaitPercentage*Math.PI)*staticPanOffset
 			
-			double computedTilt = bobingPercent+(velocity*sinCop*coriolisGain)
-			double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
-			long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
-			double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
-			//println coriolisIndex+" Time division = "+coriolisTimeDivisionIncrement+" elapsed = "+coriolisincrementTime
-			if(coriolisTimeDivisionIncrement<coriolisincrementTime){
-				coriolisTimeLast=System.currentTimeMillis()
-				if(velocity>0){
-					coriolisIndex++;
-					coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
-				}else{
-					coriolisIndex--;
-					coriolisIndex=(coriolisIndex<0?coriolisDivisions-1:coriolisIndex)
+			double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex%2==0?sinPanOffset:-sinPanOffset)
+			double bobingPercent = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*standardHeadTailAngle/2+standardHeadTailAngle/2
+			for(def d:source.getAllDHChains()){
+				String limbName = d.getScriptingName()
+				double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
+				double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
+				
+				double computedTilt = bobingPercent+(velocity*sinCop*coriolisGain)
+				double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
+				long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
+				double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
+				//println coriolisIndex+" Time division = "+coriolisTimeDivisionIncrement+" elapsed = "+coriolisincrementTime
+				if(coriolisTimeDivisionIncrement<coriolisincrementTime){
+					coriolisTimeLast=System.currentTimeMillis()
+					if(velocity>0){
+						coriolisIndex++;
+						coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
+					}else{
+						coriolisIndex--;
+						coriolisIndex=(coriolisIndex<0?coriolisDivisions-1:coriolisIndex)
+					}
 				}
-			}
-			try{
-				if(limbName.contentEquals("Tail")){
-					d.setDesiredJointAxisValue(0,// link index
-								computedTilt, //target angle
-								0) // 2 seconds
-					d.setDesiredJointAxisValue(1,// link index
-								computedPan, //target angle
-								0) // 2 seconds			
-				} 
-				if(limbName.contentEquals("Head")){
-					if(!headStable){
+				try{
+					if(limbName.contentEquals("Tail")){
 						d.setDesiredJointAxisValue(0,// link index
 									computedTilt, //target angle
 									0) // 2 seconds
 						d.setDesiredJointAxisValue(1,// link index
 									computedPan, //target angle
-									0) // 2 seconds
-					}else{
-						d.setDesiredJointAxisValue(0,// link index
-									standardHeadTailAngle, //target angle
-									0) // 2 seconds
-						d.setDesiredJointAxisValue(1,// link index
-									0, //target angle
-									0) // 2 seconds				
+									0) // 2 seconds			
+					} 
+					if(limbName.contentEquals("Head")){
+						if(!headStable){
+							d.setDesiredJointAxisValue(0,// link index
+										computedTilt, //target angle
+										0) // 2 seconds
+							d.setDesiredJointAxisValue(1,// link index
+										computedPan, //target angle
+										0) // 2 seconds
+						}else{
+							d.setDesiredJointAxisValue(0,// link index
+										standardHeadTailAngle, //target angle
+										0) // 2 seconds
+							d.setDesiredJointAxisValue(1,// link index
+										0, //target angle
+										0) // 2 seconds				
+						}
 					}
+				}catch(Exception e){
+					//BowlerStudio.printStackTrace(e)
 				}
-			}catch(Exception e){
-				//BowlerStudio.printStackTrace(e)
 			}
+
 		}
 
 	}
@@ -263,7 +254,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 									
 					}
 					Thread.sleep((long)(stepCycleTime*incremnt/source.getAllDHChains().size()))		
-					d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
+					//d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
 					
 				}catch(Exception e){
 					//BowlerStudio.printStackTrace(e)
