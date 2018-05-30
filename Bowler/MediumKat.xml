@@ -27,8 +27,8 @@
 	<type>hidfast</type>
 	<index>0</index>
 	<scale>0.7</scale>
-	<upperLimit>243.5820895522388</upperLimit>
-	<lowerLimit>0.0</lowerLimit>
+	<upperLimit>78.0223880597015</upperLimit>
+	<lowerLimit>7.611940298507463</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
 	<staticOffset>31.876030296279794</staticOffset>

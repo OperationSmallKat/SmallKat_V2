@@ -32,6 +32,8 @@ import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import com.neuronrobotics.bowlerstudio.physics.TransformFactory
+import  eu.mihosoft.vrl.v3d.ext.quickhull3d.*
+
 
 public class MyMobileBasePhysics {
 
@@ -98,6 +100,7 @@ public class MyMobileBasePhysics {
 			HashMap<LinkConfiguration, ArrayList<CSG>> simplecad, PhysicsCore core) {
 		this.simplecad = simplecad;
 		double minz = 0;
+		double Maxz =0
 		for (DHParameterKinematics dh : base.getAllDHChains()) {
 			if (dh.getCurrentTaskSpaceTransform().getZ() < minz) {
 				minz = dh.getCurrentTaskSpaceTransform().getZ();
@@ -106,6 +109,9 @@ public class MyMobileBasePhysics {
 		for (CSG c : baseCad) {
 			if (c.getMinZ() < minz) {
 				minz = c.getMinZ();
+			}
+			if (c.getMaxZ() > Maxz) {
+				Maxz = c.getMaxZ();
 			}
 		}
 
@@ -122,7 +128,24 @@ public class MyMobileBasePhysics {
 				TransformFactory.bulletToAffine(baseCad.get(0).getManipulator(), start);
 			}
 		});
-		CSGPhysicsManager baseManager = new CSGPhysicsManager(baseCad, start, base.getMassKg(), false, core);
+		
+		def points = [	]
+		
+		for(DHParameterKinematics leg:base.getAllDHChains()){
+			TransformNR limbRoot = leg.getRobotToFiducialTransform();
+			points.add(new  eu.mihosoft.vrl.v3d.Vector3d(
+				limbRoot.getX(),
+				limbRoot.getY(),
+				limbRoot.getZ()));
+			points.add(new  eu.mihosoft.vrl.v3d.Vector3d(
+					limbRoot.getX(),
+					limbRoot.getY(),
+					limbRoot.getZ()+Maxz));
+		}
+		CSG collisionBod = HullUtil.hull(points)
+
+		CSGPhysicsManager baseManager = new CSGPhysicsManager([collisionBod], start, base.getMassKg(), false, core);
+		baseManager.setBaseCSG(baseCad)
 		RigidBody body = baseManager.getFallRigidBody();
 		baseManager.setUpdateManager(getUpdater(body, base.getImu()));
 		body.setWorldTransform(start);
@@ -193,17 +216,34 @@ public class MyMobileBasePhysics {
 					ThreadUtil.wait(16);
 
 					double mass = conf.getMassKg();
+					double thickness = 10
 					ArrayList<CSG> outCad = new ArrayList<>();
+					ArrayList<CSG> collisions = new ArrayList<>();collisions
 					for (int x = 0; x < thisLinkCad.size(); x++) {
 						Color color = thisLinkCad.get(x).getColor();
-						outCad.add(thisLinkCad.get(x)
+						def cad=thisLinkCad.get(x)
+						def tmp = cad.getBoundingBox()
+						//tmp=tmp.difference(tmp.toXMax())
+						outCad.add(cad
 								.transformed(TransformFactory.nrToCSG(new TransformNR(step).inverse())));
 						outCad.get(x).setManipulator(manipulator);
 						outCad.get(x).setColor(color);
+
+						collisions.add(tmp
+								.transformed(TransformFactory.nrToCSG(new TransformNR(step).inverse())));
+						collisions.get(x).setManipulator(manipulator);
+						collisions.get(x).setColor(color);
+
 					}
+					
+					
+					
+					
 					// Build a hinge based on the link and mass
-					HingeCSGPhysicsManager hingePhysicsManager = new HingeCSGPhysicsManager(outCad, linkLoc, mass,
+					// was outCad
+					HingeCSGPhysicsManager hingePhysicsManager = new HingeCSGPhysicsManager(collisions, linkLoc, mass,
 							core);
+					hingePhysicsManager.setBaseCSG(outCad)
 					HingeCSGPhysicsManager.setMuscleStrength(1000000);
 
 					RigidBody linkSection = hingePhysicsManager.getFallRigidBody();
@@ -213,6 +253,7 @@ public class MyMobileBasePhysics {
 					linkSection.setDamping(0.5f, 08.5f);
 					linkSection.setDeactivationTime(0.8f);
 					linkSection.setSleepingThresholds(1.6f, 2.5f);
+                		linkSection.setActivationState(com.bulletphysics.collision.dispatch.CollisionObject.DISABLE_DEACTIVATION);
 
 					HingeConstraint joint6DOF;
 					Transform localA = new Transform();
@@ -247,13 +288,14 @@ public class MyMobileBasePhysics {
 							public void onLinkPositionUpdate(AbstractLink source, double engineeringUnitsValue) {
 								// System.out.println("
 								// value="+engineeringUnitsValue);
-								//hingePhysicsManager.setTarget(Math.toRadians(-engineeringUnitsValue));
-
+								hingePhysicsManager.setTarget(Math.toRadians(-engineeringUnitsValue));
+								/*
 								joint6DOF.setLimit( (float)
 								(Math.toRadians(-engineeringUnitsValue )-
 								 LIFT_EPS),
 								 (float) (Math.toRadians(-engineeringUnitsValue )+
 								 LIFT_EPS));
+								 */
 							}
 
 							@Override
@@ -274,6 +316,7 @@ public class MyMobileBasePhysics {
 					}
 
 					abstractLink.getCurrentPosition();
+					//if(i!=0)
 					core.add(hingePhysicsManager);
 					//linkSection.setWorldTransform(linkLoc);
 				}
@@ -300,10 +343,16 @@ def baseCad=MobileBaseCadManager.getBaseCad(base)
 m = new MyMobileBasePhysics(base, baseCad, simplecad);
 
 //t.start()
-double msLoopTime =1;
+long msLoopTime =10;
 BowlerStudioController.setCsg(PhysicsEngine.getCsgFromEngine());
 System.gc()
-
-PhysicsEngine.stepMs(msLoopTime);
-
+while(Thread.interrupted()== false){
+	long start = System.currentTimeMillis()
+	PhysicsEngine.stepMs(msLoopTime);
+	long total =msLoopTime-( System.currentTimeMillis()-start)
+	if(total>0)
+		Thread.sleep(total)
+	else
+		println "Broken Real Time over limit by: "+(-total)
+}
 return null
