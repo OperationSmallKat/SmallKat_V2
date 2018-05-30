@@ -216,6 +216,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 										0) // 2 seconds				
 						}
 					}
+					//Thread.sleep(5)
 				}catch(Exception e){
 					//BowlerStudio.printStackTrace(e)
 				}
