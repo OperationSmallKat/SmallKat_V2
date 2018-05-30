@@ -42,8 +42,8 @@ if(args==null){
 	long stepCycleTime =5000
 	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 2
-	double standardHeadTailAngle = -20
-	double staticPanOffset = 10
+	double standardHeadTailAngle =0;// -20
+	double staticPanOffset = 0;// 10
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 30
@@ -143,9 +143,26 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		)
 			velocity=update.getRotyAcceleration()
 		else
+			velocity=0
+		if (velocity>10)
+			velocity=10
+		if (velocity<-10)
 			velocity=-10
 		if(incrementTime>10){
 			timeOfLastIMUPrint= System.currentTimeMillis()
+			if(velocity>0){
+				
+				print "\r\nDynmics IMU state \n"
+				for(def state :[update]){
+					print " x = "+update.getxAcceleration()
+					print "  y = "+update.getyAcceleration()
+					print " z = "+update.getzAcceleration()
+					print " rx = "+update.getRotxAcceleration()
+					print " ry = "+update.getRotyAcceleration()
+					print " rz = "+update.getRotzAcceleration()+"\r\n"
+				}
+				
+			}
 			long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
 			double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
 			double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
@@ -862,6 +879,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				source=s;
 				source.getImu().clearhardwareListeners()
 				source.getImu().addhardwareListeners({update ->
+					try{
+						updateDynamics(update)
+					}catch(Exception e){
+						e.printStackTrace()
+					}
+				})
+				source.getImu().clearvirtualListeners()
+				source.getImu().addvirtualListeners({update ->
 					try{
 						updateDynamics(update)
 					}catch(Exception e){
