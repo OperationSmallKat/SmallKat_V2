@@ -71,15 +71,15 @@ public class MyMobileBasePhysics {
 				orentTrans.mul(gravTrans);
 
 				// A=DeltaV / DeltaT
-				Double rotxAcceleration = (double) ((oldavelocity.x - avelocity.x) / timeStep);
-				Double rotyAcceleration = (double) ((oldavelocity.y - avelocity.y) / timeStep);
-				Double rotzAcceleration = (double) ((oldavelocity.z - avelocity.z) / timeStep);
+				Double rotxAcceleration = avelocity.x
+				Double rotyAcceleration =  avelocity.y
+				Double rotzAcceleration =  avelocity.z
 				Double xAcceleration = (double) (((oldvelocity.x - velocity.x) / timeStep) / PhysicsGravityScalar)
-						+ (orentTrans.origin.x / PhysicsGravityScalar);
+						+ ((10*orentTrans.origin.x )/ PhysicsGravityScalar);
 				Double yAcceleration = (double) (((oldvelocity.y - velocity.y) / timeStep) / PhysicsGravityScalar)
-						+ (orentTrans.origin.y / PhysicsGravityScalar);
+						+ ((10*orentTrans.origin.y) / PhysicsGravityScalar);
 				Double zAcceleration = (double) (((oldvelocity.z - velocity.z) / timeStep) / PhysicsGravityScalar)
-						+ (orentTrans.origin.z / PhysicsGravityScalar);
+						+ ((10*orentTrans.origin.z )/ PhysicsGravityScalar);
 				// tell the virtual IMU the system updated
 				base.setVirtualState(new IMUUpdate(xAcceleration, yAcceleration, zAcceleration, rotxAcceleration,
 						rotyAcceleration, rotzAcceleration));
