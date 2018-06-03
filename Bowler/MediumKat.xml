@@ -1,11 +1,11 @@
 <root>
 <mobilebase>
 	<cadEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<driveEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/DynamicWalking.groovy</file>
 	</driveEngine>
 
@@ -14,7 +14,7 @@
 
 <name>RearLeft</name>
 	<cadEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
@@ -25,13 +25,13 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>0</index>
-	<scale>0.7</scale>
-	<upperLimit>243.5820895522388</upperLimit>
+	<index>1</index>
+	<scale>0.833</scale>
+	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>31.876030296279794</staticOffset>
+	<staticOffset>90.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -79,7 +79,7 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>1</index>
+	<index>2</index>
 	<scale>0.833</scale>
 	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -133,7 +133,7 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>2</index>
+	<index>0</index>
 	<scale>0.833</scale>
 	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
@@ -209,7 +209,7 @@
 
 <name>FrontRight</name>
 	<cadEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
@@ -220,13 +220,13 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>3</index>
-	<scale>0.7</scale>
-	<upperLimit>255.0</upperLimit>
+	<index>5</index>
+	<scale>0.833</scale>
+	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>127.0</staticOffset>
+	<staticOffset>90.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -275,8 +275,8 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>4</index>
-	<scale>0.7</scale>
-	<upperLimit>243.5820895522388</upperLimit>
+	<scale>0.833</scale>
+	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
@@ -328,13 +328,13 @@
 	<name>elbow</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>5</index>
+	<index>3</index>
 	<scale>-0.829</scale>
-	<upperLimit>255.0</upperLimit>
+	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>115.82913789262643</staticOffset>
+	<staticOffset>90.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>145</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -404,7 +404,7 @@
 
 <name>FrontLeft</name>
 	<cadEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
@@ -470,12 +470,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>6</index>
-	<scale>-0.7</scale>
+	<scale>0.833</scale>
 	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>128.0</staticOffset>
+	<staticOffset>90.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -599,7 +599,7 @@
 
 <name>RearRight</name>
 	<cadEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
@@ -611,12 +611,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>8</index>
-	<scale>0.7</scale>
-	<upperLimit>255.0</upperLimit>
+	<scale>0.833</scale>
+	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>127.0</staticOffset>
+	<staticOffset>90.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>105</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -665,12 +665,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>9</index>
-	<scale>-0.5</scale>
-	<upperLimit>255.0</upperLimit>
-	<lowerLimit>1.9029850746268657</lowerLimit>
+	<scale>0.833</scale>
+	<upperLimit>180.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>129.19402985074626</staticOffset>
+	<staticOffset>90.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>97</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -719,12 +719,12 @@
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
 	<index>10</index>
-	<scale>0.64212</scale>
-	<upperLimit>184.58955223880596</upperLimit>
+	<scale>0.833</scale>
+	<upperLimit>180.0</upperLimit>
 	<lowerLimit>0.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>145.26592782356875</staticOffset>
+	<staticOffset>90.0</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>145</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -794,7 +794,7 @@
 
 <name>Head</name>
 	<cadEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
@@ -935,7 +935,7 @@
 
 <name>Tail</name>
 	<cadEngine>
-		<git>https://github.com/CommonWealthRobotics/SmallKat.git</git>
+		<git>https://github.com/keionbis/SmallKat.git</git>
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<kinematics>
