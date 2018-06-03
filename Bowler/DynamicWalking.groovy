@@ -42,8 +42,8 @@ if(args==null){
 	long stepCycleTime =5000
 	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 2
-	double standardHeadTailAngle =0;// -20
-	double staticPanOffset = 0;// 10
+	double standardHeadTailAngle =-20
+	double staticPanOffset =  10
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 30
@@ -103,7 +103,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	TransformNR newPose =new TransformNR()
 	long miliseconds
 	boolean timout = false
-	long loopTimingMS =5
+	long loopTimingMS =30
 	long timeOfLastLoop = System.currentTimeMillis()
 	long timeOfLastIMUPrint = System.currentTimeMillis()
 	int numlegs
@@ -112,7 +112,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	int coriolisIndex = 0
 	double coriolisDivisions = 36.0
 	double coriolisDivisionsScale = 360.0/coriolisDivisions
-	double coriolisTimeBase =10
+	double coriolisTimeBase =100
 	long coriolisTimeLast=0
 	double startAngle = 0
 	public void resetStepTimer(){
@@ -132,6 +132,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return vals
 	}
 	void updateDynamics(IMUUpdate update){
+		
 		if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
 			return
 			
@@ -151,7 +152,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		if(incrementTime>10){
 			timeOfLastIMUPrint= System.currentTimeMillis()
 			if(velocity>0){
-				
+				/*
 				print "\r\nDynmics IMU state \n"
 				for(def state :[update]){
 					print " x = "+update.getxAcceleration()
@@ -161,6 +162,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					print " ry = "+update.getRotyAcceleration()
 					print " rz = "+update.getRotzAcceleration()+"\r\n"
 				}
+				*/
 				
 			}
 			long timeSince=	(System.currentTimeMillis()-timeOfCycleStart)
@@ -191,6 +193,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					}
 				}
 				try{
+					//return
 					if(limbName.contentEquals("Tail")){
 						d.setDesiredJointAxisValue(0,// link index
 									computedTilt, //target angle
@@ -586,7 +589,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		BodyDisplacement = Math.sqrt(Math.pow(newPose.getX(),2)+Math.pow(newPose.getY(),2))
 		speedCalc = BodyDisplacement/((double)stepCycleTime)
 		rotCalc = Math.toDegrees(newPose.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
-		println  String.format("Actual displacement = %.2f Moving at down target Absolute Velocity %.2f m/s and  Z degrees per second= %.2f cycle time = %d", BodyDisplacement,speedCalc,rotCalc,stepCycleTime);	
+		//println  String.format("Actual displacement = %.2f Moving at down target Absolute Velocity %.2f m/s and  Z degrees per second= %.2f cycle time = %d", BodyDisplacement,speedCalc,rotCalc,stepCycleTime);	
 		
 	}
 	private void computeUpdatePoseOld(){
@@ -904,6 +907,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 
 				stepResetter = new Thread(){
 					public void run(){
+						setName("Dynamics updater thread" )
 						computeUpdatePose()
 						legs.collect{
 					 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())

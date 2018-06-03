@@ -1,10 +1,14 @@
 @GrabResolver(name='sonatype', root='https://oss.sonatype.org/content/repositories/releases/')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.1.2')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.1.4')
 @Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.phy.HIDSimplePacketComs;
 import com.neuronrobotics.sdk.addons.kinematics.imu.*;
+
+if(args == null)
+	args = ["https://github.com/keionbis/SmallKat.git",
+		"Bowler/MediumKat.xml"]
 
 public class SimpleServoHID extends HIDSimplePacketComs {
 	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
@@ -156,8 +160,8 @@ def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 	//If the device does not exist, prompt for the connection
 	
 	MobileBase m = MobileBaseLoader.fromGit(
-		"https://github.com/keionbis/SmallKat.git",
-		"Bowler/MediumKat.xml"
+		args[0],
+		args[1]
 		)
 	dev.simple.addEvent(1804, {
 		 double[] imuDataValues = dev.simple.getImuData()
