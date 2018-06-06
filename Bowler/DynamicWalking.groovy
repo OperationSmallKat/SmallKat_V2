@@ -28,8 +28,8 @@ if(args==null){
 			TransformNR tr = leg.forwardOffset(new TransformNR())
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
-			if(legRoot.getY()>0){
-				//tr.translateY(-5)
+			if(legRoot.getX()>0){
+				tr.translateX(10)
 			}else{
 				//tr.translateY(5)
 			}
@@ -419,7 +419,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			gaitIntermediatePercentage=(gaitPercentage-0.5)*4.0
 			if(gaitIntermediatePercentage>1)
 				gaitIntermediatePercentage=1
-			double localPercent = gaitIntermediatePercentage*((double)numStepCycleGroups-1)
+			double localPercent = gaitIntermediatePercentage*((double)numStepCycleGroups-1)*2
 			//localPercent=((double)numStepCycleGroups-1)
 			tf = compute(leg,localPercent,NewTmpPose)
 			tf.setZ(zLock+(stepOverHeight));
