@@ -222,6 +222,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	void sit(double sitAngle){
 	if(!source.getScriptingName().contains("Kat"))
 		return
+		source.getImu().clearhardwareListeners()
+				
 		double incremnt = 0.05
 		for(double i=0;i<1;i+=incremnt){
 			double angle =  sitAngle*i+(startAngle*(1-i))
@@ -266,7 +268,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			
 		}
-
+		source.getImu().addhardwareListeners({update ->
+			try{
+				updateDynamics(update)
+			}catch(Exception e){
+				e.printStackTrace()
+			}
+		})
 		startAngle=sitAngle
 	}
 	private void walkLoop(){
