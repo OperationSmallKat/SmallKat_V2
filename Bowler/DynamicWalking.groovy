@@ -575,6 +575,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		println  String.format("Actual displacement = %.2f Moving at down target Absolute Velocity %.2f m/s and  Z degrees per second= %.2f cycle time = %d", BodyDisplacement,speedCalc,rotCalc,stepCycleTime);	
 		
 	}
+	/*
 	private void computeUpdatePoseOld(){
 		if (cachedNewPose==null)
 			return
@@ -652,6 +653,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
 		println "Moving at down target Absolute Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc
 	}
+	*/
 	private def getLegCurrentPose(def leg){
 		double[] joints = cycleStartPoint.get(leg)	
 		TransformNR armOffset = leg.forwardKinematics(joints)	
