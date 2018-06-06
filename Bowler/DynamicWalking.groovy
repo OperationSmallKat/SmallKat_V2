@@ -330,7 +330,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				resetting=false;
 				return
 			}
-			sit(-20);
+			sit(-15);
 			
 		}
 	}
