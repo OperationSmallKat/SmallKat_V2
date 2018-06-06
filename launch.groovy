@@ -36,19 +36,24 @@ while (!Thread.interrupted()){
 	double scale = 1.0
 	double displacement = 15*(scale*xdata/255.0-scale/2)
 	double rot =((scale*rzdata/255.0)-scale/2)*5
-	double rotx =((rxdata/255.0)-scale/2)*10
-	double roty =((rydata/255.0)-scale/2)*10
+	double rotx =((rxdata/255.0)-scale/2)*5
+	double roty =((rydata/255.0)-scale/2)*5
 	if(Math.abs(displacement)<0.1 ){
 		displacement=0
 	}
 	if( Math.abs(rot)<0.1){
 		rot=0
 	}
-	if(Math.abs(displacement)>0.1 || Math.abs(rot)>0.1||
-	Math.abs(rotx)>0.1 || Math.abs(roty)>0.1){
+	if(Math.abs(rotx)>0.1 || Math.abs(roty)>0.1){
+		TransformNR move = new TransformNR(displacement,0,0,new RotationNR(rotx,0,roty))
+		cat.getWalkingDriveEngine().pose(move)
+	}
+	if(Math.abs(displacement)>0.1 || Math.abs(rot)>0.1){
 		println "displacement "+displacement+" rot "+rot
 		println "tilt "+rotx+" rot "+roty
+		
 		TransformNR move = new TransformNR(displacement,0,0,new RotationNR(rotx,rot,roty))
 		cat.DriveArc(move, toSeconds);
 	}
+	
 }

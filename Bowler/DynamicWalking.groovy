@@ -218,6 +218,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			if(leg.checkTaskSpaceTransform(pose))
 				leg.setDesiredTaskSpaceTransform(pose, 0);
 		}
+		for(def d:source.getAllDHChains()){
+				String limbName = d.getScriptingName()
+				try{		
+					d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
+				}catch(Exception e){
+					//BowlerStudio.printStackTrace(e)
+				}
+			}
 	}
 	void sit(double sitAngle){
 	if(!source.getScriptingName().contains("Kat"))
