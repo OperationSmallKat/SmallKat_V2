@@ -29,7 +29,7 @@ if(args==null){
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
 			if(legRoot.getX()>0){
-				tr.translateX(20)
+				tr.translateX(15)
 			}else{
 				//tr.translateY(5)
 			}
