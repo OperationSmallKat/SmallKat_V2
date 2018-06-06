@@ -17,7 +17,7 @@ if(gameController==null){
 }
 
 byte [] data = gameController.getData() 
-double toSeconds=0.03//100 ms for each increment
+double toSeconds=0.1//100 ms for each increment
 
 while (!Thread.interrupted()){
 	Thread.sleep((long)(toSeconds*1000))
@@ -28,9 +28,11 @@ while (!Thread.interrupted()){
 	if(rzdata<0)
 		rzdata+=256
 	double scale = 1.0
-	double displacement = scale*xdata/255.0-scale/2
-	double rot =scale*rzdata/255.0-scale/2
-	println "displacement "+displacement+" rot "+rot
-	TransformNR move = new TransformNR(displacement,0,0,new RotationNR(0,rot,0))
-	cat.DriveArc(move, toSeconds);
+	double displacement = 15*(scale*xdata/255.0-scale/2)
+	double rot =(scale*rzdata/255.0-scale/2)*5
+	if(Math.abs(displacement)>0.1 || Math.abs(rot)>0.1){
+		println "displacement "+displacement+" rot "+rot
+		TransformNR move = new TransformNR(displacement,0,0,new RotationNR(0,rot,0))
+		cat.DriveArc(move, toSeconds);
+	}
 }

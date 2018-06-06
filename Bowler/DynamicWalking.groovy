@@ -29,7 +29,7 @@ if(args==null){
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
 			if(legRoot.getX()>0){
-				tr.translateX(10)
+				tr.translateX(20)
 			}else{
 				//tr.translateY(5)
 			}
@@ -38,7 +38,7 @@ if(args==null){
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =5000
+	long stepCycleTime =500
 	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
@@ -893,10 +893,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				stepResetter = new Thread(){
 					public void run(){
 						computeUpdatePose()
+						
+						sit(0);
 						legs.collect{
 					 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 						}
-						sit(0);
 						timeOfCycleStart= System.currentTimeMillis();
 						try{
 							threadDone=false;
