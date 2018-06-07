@@ -35,8 +35,8 @@ while (!Thread.interrupted()){
 		rydata+=256
 	double scale = 1.0
 	double displacement = 15*(scale*xdata/255.0-scale/2)
-	double rot =((scale*rzdata/255.0)-scale/2)*2.5
-	double rotx =((rxdata/255.0)-scale/2)*-5
+	double rot =((scale*rzdata/255.0)-scale/2)*-2.5
+	double rotx =((rxdata/255.0)-scale/2)*5
 	double roty =((rydata/255.0)-scale/2)*-5
 	if(Math.abs(displacement)<0.1 ){
 		displacement=0
