@@ -1,11 +1,14 @@
 #!/bin/sh
 # update & upgrade #
+sudo -n true
+test $? -eq 0 || exit 1 "you should have sudo priveledge to run this script"
 passwd
 SmallKat
 sudo apt-get update
 sudo apt-get upgrade
 ##
 ##
+sudo apt install wget
 sudo apt install libopencv2.4-java
 wget https://github.com/CommonWealthRobotics/BowlerStudio/releases/download/0.25.2/BowlerScriptingKernel-0.31.1.jar
 git clone https://github.com/keionbis/SmallKat.git
