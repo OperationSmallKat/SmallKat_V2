@@ -1,7 +1,7 @@
 
-def cat =ScriptingEngine.gitScriptRun(	"https://github.com/keionbis/SmallKat.git", 
+def cat =ScriptingEngine.gitScriptRun(	"https://github.com/OperationSmallKat/SmallKat_V2.git", 
 								"loadRobot.groovy", 
-["https://github.com/keionbis/SmallKat.git",
+["https://github.com/OperationSmallKat/SmallKat_V2.git",
 		"Bowler/MediumKat.xml"]);
 
 def gameController = ScriptingEngine.gitScriptRun(
