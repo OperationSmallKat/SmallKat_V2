@@ -45,13 +45,13 @@ return new ICadGenerator(){
 				return allCad;
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
-				"https://github.com/keionbis/SmallKat.git",
+				"https://github.com/OperationSmallKat/SmallKat_V2.git",
 				"STLs/MKTailandHeadMount.stl");
 	
 			}
 			if(linkIndex ==1){
 				legFile = ScriptingEngine.fileFromGit(
-				"https://github.com/keionbis/SmallKat.git",
+				"https://github.com/OperationSmallKat/SmallKat_V2.git",
 				"STLs/MKTail.stl");
 			}
 	
@@ -61,13 +61,13 @@ return new ICadGenerator(){
 				return allCad;
 			if(linkIndex ==0){
 				legFile = ScriptingEngine.fileFromGit(
-				"https://github.com/keionbis/SmallKat.git",
+				"https://github.com/OperationSmallKat/SmallKat_V2.git",
 				"STLs/MKTailandHeadMount.stl");
 
 			}
 			if(linkIndex ==1){
 				legFile = ScriptingEngine.fileFromGit(
-				"https://github.com/keionbis/SmallKat.git",
+				"https://github.com/OperationSmallKat/SmallKat_V2.git",
 				"STLs/MKHead.stl");
 			}
 	
@@ -77,40 +77,40 @@ return new ICadGenerator(){
 			if(leftSide){
 				if(linkIndex ==0){
 					legFile = ScriptingEngine.fileFromGit(
-					"https://github.com/keionbis/SmallKat.git",
+					"https://github.com/OperationSmallKat/SmallKat_V2.git",
 					"STLs/MKCat Shoulder.stl");
 		
 				}
 				if(linkIndex ==1){
 					legFile = ScriptingEngine.fileFromGit(
-					"https://github.com/keionbis/SmallKat.git",
+					"https://github.com/OperationSmallKat/SmallKat_V2.git",
 					"STLs/MKCat Leg Mirror.stl");
 		
 				}
 		
 				if(linkIndex ==2){
 					legFile = ScriptingEngine.fileFromGit(
-					"https://github.com/keionbis/SmallKat.git",
+					"https://github.com/OperationSmallKat/SmallKat_V2.git",
 					"STLs/MKCat Foot.stl");
 				}
 			}
 			else{
 				if(linkIndex ==0){
 					legFile = ScriptingEngine.fileFromGit(
-					"https://github.com/keionbis/SmallKat.git",
+					"https://github.com/OperationSmallKat/SmallKat_V2.git",
 					"STLs/MKCat Shoulder Mirror.stl");
 		
 				}
 				if(linkIndex ==1){
 					legFile = ScriptingEngine.fileFromGit(
-					"https://github.com/keionbis/SmallKat.git",
+					"https://github.com/OperationSmallKat/SmallKat_V2.git",
 					"STLs/MKCat Leg.stl");
 		
 				}
 		
 				if(linkIndex ==2){
 					legFile = ScriptingEngine.fileFromGit(
-					"https://github.com/keionbis/SmallKat.git",
+					"https://github.com/OperationSmallKat/SmallKat_V2.git",
 					"STLs/MKCat Foot Mirror.stl");
 		
 				}
@@ -188,7 +188,7 @@ return new ICadGenerator(){
 		ArrayList<CSG> allCad=new ArrayList<>();
 
 		File mainBodyFile = ScriptingEngine.fileFromGit(
-			"https://github.com/keionbis/SmallKat.git",
+			"https://github.com/OperationSmallKat/SmallKat_V2.git",
 			"STLs/MKBody.stl");
 
 		// Load the .CSG from the disk and cache it in memory
