@@ -33,6 +33,11 @@ if(args==null){
 			}else{
 				//tr.translateY(5)
 			}
+			if(legRoot.getY()>0){
+				tr.translateY(10)
+			}else{
+				tr.translateY(-10)
+			}
 			
 			return tr;
 	
