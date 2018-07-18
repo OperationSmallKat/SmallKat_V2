@@ -34,12 +34,37 @@ public class SimpleServoHID extends HIDSimplePacketComs {
 	}
 }
 
+public class SimpleServoUDP extends UDPSimplePacketComs {
+	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
+	private PacketType imuData = new edu.wpi.SimplePacketComs.FloatPacketType(1804, 64);
+	private final double[] status = new double[12];
+	private final byte[] data = new byte[16];
+	
+	public SimpleServoHID(def address) {
+		super(address);
+		addPollingPacket(servos);
+		addPollingPacket(imuData);
+		addEvent(1962, {
+			writeBytes(1962, data);
+		});
+		addEvent(1804, {
+			readFloats(1804,status);
+		});
+	}
+	public double[] getImuData() {
+		return status;
+	}
+	public byte[] getData() {
+		return data;
+	}
+}
+
 
 public class HIDSimpleComsDevice extends NonBowlerDevice{
-	SimpleServoHID simple;
+	def simple;
 	
-	public HIDSimpleComsDevice(int vidIn, int pidIn){
-		simple = new SimpleServoHID(vidIn,pidIn)
+	public HIDSimpleComsDevice(def simp){
+		simple = simp
 		setScriptingName("hidbowler")
 	}
 	@Override
@@ -142,8 +167,14 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
-	
-	HIDSimpleComsDevice d = new HIDSimpleComsDevice(0x16C0 ,0x0486 )
+	def simp = null;
+	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses("hidDevice");
+	if (addresses.size() < 1) {
+			simp = new SimpleServoHID(0x16C0 ,0x0486) 
+	}else{
+		simp = new SimpleServoUDP(addresses.get(0))
+	}
+	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp)
 	d.connect(); // Connect to it.
 
 	LinkFactory.addLinkProvider("hidfast",{LinkConfiguration conf->
