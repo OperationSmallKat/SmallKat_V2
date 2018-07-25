@@ -168,6 +168,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	def simp = null;
+	
 	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses("hidDevice");
 	if (addresses.size() < 1) {
 			simp = new SimpleServoHID(0x16C0 ,0x0486) 
