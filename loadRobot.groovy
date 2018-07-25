@@ -2,7 +2,7 @@
 //@Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
 import edu.wpi.SimplePacketComs.*;
-import edu.wpi.SimplePacketComs.phy.HIDSimplePacketComs;
+import edu.wpi.SimplePacketComs.phy.*;
 import com.neuronrobotics.sdk.addons.kinematics.imu.*;
 
 if(args == null)
@@ -40,7 +40,7 @@ public class SimpleServoUDP extends UDPSimplePacketComs {
 	private final double[] status = new double[12];
 	private final byte[] data = new byte[16];
 	
-	public SimpleServoHID(def address) {
+	public SimpleServoUDP(def address) {
 		super(address);
 		addPollingPacket(servos);
 		addPollingPacket(imuData);
