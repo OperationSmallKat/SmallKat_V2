@@ -20,8 +20,9 @@ byte [] data = gameController.getData()
 double toSeconds=0.03//100 ms for each increment
 
 while (!Thread.interrupted()){
-	Thread.sleep((long)(toSeconds*1000))
-	data = gameController.getData()
+	Thread.sleep(30)
+	gameController.getData(data)
+	//println gameController
 	double xdata = data[4]
 	double rzdata = data[3]
 	double rxdata = data[1]
