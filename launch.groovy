@@ -26,6 +26,7 @@ while (!Thread.interrupted()){
 	double rzdata = data[3]
 	double rxdata = data[1]
 	double rydata = data[2]
+	
 	if(xdata<0)
 		xdata+=256
 	if(rzdata<0)
@@ -50,10 +51,10 @@ while (!Thread.interrupted()){
 			TransformNR move = new TransformNR(displacement,0,0,new RotationNR(rotx,0,roty))
 			cat.getWalkingDriveEngine().pose(move)
 		}
-		if(Math.abs(displacement)>3 || Math.abs(rot)>3){
+		if(Math.abs(displacement)>0.1 || Math.abs(rot)>0.1){
 			print "\r\ndisplacement "+displacement+" rot "+rot
 			print " tilt "+rotx+" rot "+roty
-			print " raw "+xdata+" rot "+rzdata
+			print " rawX "+xdata+" rawZ "+rzdata+" data "+data+"\r\n"
 			TransformNR move = new TransformNR(displacement,0,0,new RotationNR(rotx,rot,roty))
 			cat.DriveArc(move, toSeconds);
 		}
