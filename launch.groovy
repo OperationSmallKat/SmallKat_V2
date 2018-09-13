@@ -21,6 +21,7 @@ double toSeconds=0.03//100 ms for each increment
 
 while (!Thread.interrupted()){
 	Thread.sleep((long)(toSeconds*1000))
+	data = gameController.getData()
 	double xdata = data[4]
 	double rzdata = data[3]
 	double rxdata = data[1]
@@ -49,10 +50,10 @@ while (!Thread.interrupted()){
 			TransformNR move = new TransformNR(displacement,0,0,new RotationNR(rotx,0,roty))
 			cat.getWalkingDriveEngine().pose(move)
 		}
-		if(Math.abs(displacement)>0.1 || Math.abs(rot)>0.1){
-			println "displacement "+displacement+" rot "+rot
-			println "tilt "+rotx+" rot "+roty
-			
+		if(Math.abs(displacement)>3 || Math.abs(rot)>3){
+			print "\r\ndisplacement "+displacement+" rot "+rot
+			print " tilt "+rotx+" rot "+roty
+			print " raw "+xdata+" rot "+rzdata
 			TransformNR move = new TransformNR(displacement,0,0,new RotationNR(rotx,rot,roty))
 			cat.DriveArc(move, toSeconds);
 		}
