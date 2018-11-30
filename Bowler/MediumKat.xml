@@ -805,13 +805,13 @@
 	<name>basePan</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>13</index>
+	<index>12</index>
 	<scale>-0.33</scale>
-	<upperLimit>180.0</upperLimit>
-	<lowerLimit>0.0</lowerLimit>
+	<upperLimit>231.3805970149254</upperLimit>
+	<lowerLimit>28.544776119402982</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
-	<staticOffset>18.05970149253731</staticOffset>
+	<staticOffset>128.2089552238806</staticOffset>
 	<isLatch>true</isLatch>
 	<indexLatch>235</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
@@ -859,9 +859,9 @@
 	<name>baseTilt</name>
 	<deviceName>hidDevice</deviceName>
 	<type>hidfast</type>
-	<index>12</index>
+	<index>13</index>
 	<scale>-0.33</scale>
-	<upperLimit>180.0</upperLimit>
+	<upperLimit>105.78358208955225</upperLimit>
 	<lowerLimit>5.0</lowerLimit>
 	<upperVelocity>1.0E8</upperVelocity>
 	<lowerVelocity>-1.0E8</lowerVelocity>
