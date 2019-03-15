@@ -29,14 +29,14 @@ if(args==null){
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
 			if(legRoot.getX()>0){
-				tr.translateX(15)
+				//tr.translateX(15)
 			}else{
 				//tr.translateY(5)
 			}
 			if(legRoot.getY()>0){
-				tr.translateY(10)
+				//tr.translateY(10)
 			}else{
-				tr.translateY(-10)
+				//tr.translateY(-10)
 			}
 			
 			return tr;
@@ -50,8 +50,8 @@ if(args==null){
 	double staticPanOffset = 7.5
 	double coriolisGain = 1
 	boolean headStable = false
-	double maxBodyDisplacementPerStep = 40
-	double minBodyDisplacementPerStep = 30
+	double maxBodyDisplacementPerStep = 50
+	double minBodyDisplacementPerStep = 40
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
