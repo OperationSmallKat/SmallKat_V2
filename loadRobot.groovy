@@ -46,13 +46,13 @@ public class SimpleServoUDP extends UDPSimplePacketComs {
 		super(address);
 		servos.waitToSendMode();
 		addPollingPacket(servos);
-		addPollingPacket(imuData);
+		//addPollingPacket(imuData);
 		addEvent(1962, {
 			writeBytes(1962, data);
 		});
-		addEvent(1804, {
-			readFloats(1804,status);
-		});
+		//addEvent(1804, {
+		//	readFloats(1804,status);
+		//});
 	}
 	public double[] getImuData() {
 		return status;
@@ -124,7 +124,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 				//println "Fire Link Listner "+index+" value "+getCurrentPosition()
 				try{
 				fireLinkListener(val);
-				}catch(java.lang.NullPointerException e){}
+				}catch(Exception e){}
 				lastPushedVal=val
 			}else{
 				//println index+" value same "+getCurrentPosition()
@@ -174,11 +174,11 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	def simp = null;
 	
 	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses("hidDevice");
-	//if (addresses.size() < 1) {
-	//		simp = new SimpleServoHID(0x16C0 ,0x0486) 
-	//}else{
+	if (addresses.size() < 1) {
+			simp = new SimpleServoHID(0x16C0 ,0x0486) 
+	}else{
 		simp = new SimpleServoUDP(addresses.toArray()[0])
-	//}
+	}
 	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp)
 	d.connect(); // Connect to it.
 
@@ -198,6 +198,7 @@ def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 		args[0],
 		args[1]
 		)
+		/*
 	dev.simple.addEvent(1804, {
 		 double[] imuDataValues = dev.simple.getImuData()
 		 m.getImu()
@@ -213,6 +214,7 @@ def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 		 
 		 
 	});
+	*/
 	if(m==null)
 		throw new RuntimeException("Arm failed to assemble itself")
 	println "Connecting new device robot arm "+m
