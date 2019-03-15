@@ -79,6 +79,7 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 	@Override
 	public  boolean connectDeviceImp(){
 		simple.connect()
+		simple.setReadTimeout(100);
 	}
 	void setValue(int i,int position){
 		simple.getData()[i]=(byte)position;
@@ -178,6 +179,7 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 			simp = new SimpleServoHID(0x16C0 ,0x0486) 
 	}else{
 		simp = new SimpleServoUDP(addresses.toArray()[0])
+		
 	}
 	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp)
 	d.connect(); // Connect to it.
