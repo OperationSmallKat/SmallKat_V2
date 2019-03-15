@@ -1,5 +1,6 @@
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.1.9')
-//@Grab(group='org.hid4java', module='hid4java', version='0.5.0')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.8.4')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.1.0')
+@Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.phy.*;
