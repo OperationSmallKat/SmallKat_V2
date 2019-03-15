@@ -43,11 +43,12 @@ public class SimpleServoUDP extends UDPSimplePacketComs {
 	
 	public SimpleServoUDP(def address) {
 		super(address);
+		servos.waitToSendMode();
 		addPollingPacket(servos);
-		addPollingPacket(imuData);
-		addEvent(1962, {
-			writeBytes(1962, data);
-		});
+		//addPollingPacket(imuData);
+		//addEvent(1962, {
+		//	writeBytes(1962, data);
+		//});
 		addEvent(1804, {
 			readFloats(1804,status);
 		});
@@ -196,6 +197,7 @@ def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 		args[0],
 		args[1]
 		)
+		/*
 	dev.simple.addEvent(1804, {
 		 double[] imuDataValues = dev.simple.getImuData()
 		 m.getImu()
@@ -211,6 +213,7 @@ def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 		 
 		 
 	});
+	*/
 	if(m==null)
 		throw new RuntimeException("Arm failed to assemble itself")
 	println "Connecting new device robot arm "+m
