@@ -433,7 +433,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			gaitIntermediatePercentage=(gaitPercentage-0.5)*4.0
 			if(gaitIntermediatePercentage>1)
 				gaitIntermediatePercentage=1
-			double localPercent = gaitIntermediatePercentage*((double)numStepCycleGroups-1)
+			double localPercent = gaitIntermediatePercentage*((double)numStepCycleGroups)
 			//localPercent=((double)numStepCycleGroups-1)
 			tf = compute(leg,localPercent,NewTmpPose)
 			tf.setZ(zLock+(stepOverHeight));
