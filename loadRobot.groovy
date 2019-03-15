@@ -173,11 +173,11 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	def simp = null;
 	
 	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses("hidDevice");
-	if (addresses.size() < 1) {
-			simp = new SimpleServoHID(0x16C0 ,0x0486) 
-	}else{
-		simp = new SimpleServoUDP(addresses.get(0))
-	}
+	//if (addresses.size() < 1) {
+	//		simp = new SimpleServoHID(0x16C0 ,0x0486) 
+	//}else{
+		simp = new SimpleServoUDP(addresses.toArray()[0])
+	//}
 	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp)
 	d.connect(); // Connect to it.
 
