@@ -51,7 +51,7 @@ if(args==null){
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 50
-	double minBodyDisplacementPerStep = 40
+	double minBodyDisplacementPerStep = 10
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
@@ -540,7 +540,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			stepCycleTime=Math.round(sec*percentOfPose*1000.0)
 			//println "\n\nTarget at down target displacement = "+BodyDisplacement+" Absolute Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc+" cycle time = "+stepCycleTime
 			
-			double cycleMinimumDisplacement = minBodyDisplacementPerStep/(numStepCycleGroups-1)
+			double cycleMinimumDisplacement = minBodyDisplacementPerStep/(numStepCycleGroups)
 			while(!newPosePossible(	newPose) &&
 				percentOfPose>0.05 &&
 				stepCycleTime<stepOverTime){
