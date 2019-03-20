@@ -21,7 +21,7 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.*
 if(args==null){
 	double stepOverHeight=10;
 	long stepOverTime=20*5*2;// Servo loop times number of points times Nyquest doubeling
-	Double zLock=-3;
+	Double zLock=5;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -301,7 +301,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		if(reset+walkingTimeout< System.currentTimeMillis()){
 			threadDone=true;
 			stepResetter=null;
-			//if(!source.getScriptingName().contains("Kat")){
+			if(!source.getScriptingName().contains("Kat")){
 				println "FIRING reset from reset thread"
 				resetting=true;
 				long tmp= reset;
@@ -338,7 +338,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			sit(-12);
 			
-		//}
+		}
 	}
 	public void walkingCycle(){
 		
