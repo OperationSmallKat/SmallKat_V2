@@ -47,11 +47,11 @@ if(args==null){
 	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
-	double staticPanOffset = 7.5
+	double staticPanOffset = 10
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 50
-	double minBodyDisplacementPerStep = 10
+	double minBodyDisplacementPerStep = 20
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
