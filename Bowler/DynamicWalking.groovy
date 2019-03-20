@@ -226,7 +226,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 	}
 	void sit(double sitAngle){
-		return;
+
 	if(!source.getScriptingName().contains("Kat"))
 		return
 		source.getImu().clearhardwareListeners()
