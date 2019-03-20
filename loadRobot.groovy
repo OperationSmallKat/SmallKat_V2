@@ -5,10 +5,15 @@
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.phy.*;
 import com.neuronrobotics.sdk.addons.kinematics.imu.*;
-
+import edu.wpi.SimplePacketComs.BytePacketType;
+import edu.wpi.SimplePacketComs.FloatPacketType;
+import edu.wpi.SimplePacketComs.*;
+import edu.wpi.SimplePacketComs.phy.UDPSimplePacketComs;
+import edu.wpi.SimplePacketComs.device.gameController.*;
+import edu.wpi.SimplePacketComs.device.*
 if(args == null)
 	args = ["https://github.com/OperationSmallKat/SmallKat_V2.git",
-		"Bowler/MediumKat.xml"]
+		"Bowler/MediumKat.xml","GameController_22"]
 
 public class SimpleServoHID extends HIDSimplePacketComs {
 	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
@@ -169,7 +174,102 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 
 }
 
+public class GameControllerLocal extends UdpDevice{
+	private PacketType gamestate = new BytePacketType(1970, 64);
+	private  byte[] status = new byte[60];
+	private  byte[] d = new byte[20];
+	private  byte[] dataTmp = new byte[20];
+	private final myLock = new Object()
+	private GameControllerLocal(InetAddress add) throws Exception {
+		super(add);
+		setReadTimeout(200)
+		addPollingPacket(gamestate);
+		addEvent(gamestate.idOfCommand, {
+			readBytes(gamestate.idOfCommand, dataTmp);
+			writeBytes(gamestate.idOfCommand, getStatus());
+			
+			for(int i=1;i<20;i++){
+				if(dataTmp[i]!=0){
+					synchronized(myLock){
+						for(int j=0;j<20;j++){
+							d[j]=dataTmp[j];
+						}
+					}
+					//println this
+					return
+				}
+			}
+			
+			//println "Controller COMS FAULT "+this
+			
+		});
+	}
+	public static List<GameControllerLocal> getc(String n) throws Exception {
+		HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses(n);
+		ArrayList<GameControllerLocal> robots = new ArrayList<>();
+		if (addresses.size() < 1) {
+			System.out.println("No GameControllers found named "+n);
+			return robots;
+		}
+		for (InetAddress add : addresses) {
+			System.out.println("Got " + add.getHostAddress());
+			GameControllerLocal e = new GameControllerLocal(add);
+			robots.add(e);
+		}
+		return robots;
+	}
 
+	public byte[] getStatus() {
+		return status;
+	}
+	public void getData(byte[] back) {
+		synchronized(myLock){
+			for(int j=0;j<20;j++)
+				back[j]=d[j];
+		}
+	}
+	
+	public byte[] getData() {
+		byte[] back = new byte[20];
+		getData( back)
+		return back
+	}
+	
+	public byte getControllerIndex() {
+		return d[0];
+	}
+	public String getName() {
+		return super.getName()
+	}
+	public boolean connect() {
+		return super.connect()
+	}
+	
+	public void disconnect() {
+		 super.disconnect()
+	}
+
+	@Override 
+	public String toString(){
+		return ""+d+" "+dataTmp 
+	}
+}
+def n =args[2]
+println args
+def gc= DeviceManager.getSpecificDevice(n,{
+		def controllers =GameControllerLocal.getc(n)
+		def control = controllers[0]
+		if(control==null)
+			return null
+		control.connect()
+		Thread.sleep(100)// wait for the name packet to be sent
+		println "Device named ="+control.getName()
+		for (def method : control.getClass().getMethods()) {
+			if(method.getName().contains("connect"))
+				println method.getName()
+		}
+		return control;
+	})
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	def simp = null;
