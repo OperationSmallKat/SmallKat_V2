@@ -28,15 +28,11 @@ if(args==null){
 			TransformNR tr = leg.forwardOffset(new TransformNR())
 			tr.setZ(zLock)
 			//Bambi-on-ice the legs a bit
-			if(legRoot.getX()>0){
-				//tr.translateX(15)
-			}else{
-				//tr.translateY(5)
-			}
+
 			if(legRoot.getY()>0){
-				//tr.translateY(10)
+				tr.translateY(10)
 			}else{
-				//tr.translateY(-10)
+				tr.translateY(-10)
 			}
 			
 			return tr;
