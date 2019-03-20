@@ -301,7 +301,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		if(reset+walkingTimeout< System.currentTimeMillis()){
 			threadDone=true;
 			stepResetter=null;
-			if(!source.getScriptingName().contains("Kat")){
+			//if(!source.getScriptingName().contains("Kat")){
 				println "FIRING reset from reset thread"
 				resetting=true;
 				long tmp= reset;
@@ -338,7 +338,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			sit(-12);
 			
-		}
+		//}
 	}
 	public void walkingCycle(){
 		
