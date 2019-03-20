@@ -283,6 +283,9 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	}
 	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp)
 	d.connect(); // Connect to it.
+	if(simp.isVirtual()){
+		println "\n\n\nDevice is in virtual mode!\n\n\n"
+	}
 
 	LinkFactory.addLinkProvider("hidfast",{LinkConfiguration conf->
 				println "Loading link "
