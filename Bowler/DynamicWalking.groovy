@@ -226,6 +226,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		
 	}
 	void sit(double sitAngle){
+		return;
 	if(!source.getScriptingName().contains("Kat"))
 		return
 		source.getImu().clearhardwareListeners()
@@ -589,85 +590,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		println  String.format("Actual displacement = %.2f Moving at down target Absolute Velocity %.2f m/s and  Z degrees per second= %.2f cycle time = %d", BodyDisplacement,speedCalc,rotCalc,stepCycleTime);	
 		
 	}
-	/*
-	private void computeUpdatePoseOld(){
-		if (cachedNewPose==null)
-			return
-		resetStepTimer();
-		TransformNR n=cachedNewPose;
-		double sec=cachedSecond
-		cachedNewPose=null
-		
-		//n=new TransformNR()
-		miliseconds = Math.round(sec*1000)
-		//stepCycleTime=Math.round(sec*1000)
-		numlegs = source.getLegs().size();
-		legs = source.getLegs();
-		global= source.getFiducialToGlobalTransform();
-		if(global==null){
-			global=new TransformNR()
-			
-		}
-		global=new TransformNR(global.getX(),
-		  global.getY(), 
-		  global.getZ(),
-		  new RotationNR(Math.toDegrees(n.getRotation().getRotationTilt()),
-				  Math.toDegrees(global.getRotation().getRotationAzimuth()), 
-				 Math.toDegrees( n.getRotation().getRotationElevation())));
-		source.setGlobalToFiducialTransform(global)
-		n=new TransformNR(n.getX(),
-		  n.getY(), 
-		  n.getZ(),
-		  new RotationNR(0,
-				  Math.toDegrees(n.getRotation().getRotationAzimuth()), 
-				  0));
-				  		  
-		double timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-		newPose=scaleTransform(n,timescaleing)
-		// Compute the incremental transform size
-		double speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
-		double rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
-		//println "Speed = " +speedCalc+" m/s "+rotCalc+" degrees per second" 
-		while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime>stepOverTime){
-			stepCycleTime-=10
-			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-			newPose=scaleTransform(n,timescaleing)
-			//println "Speeding up gait to meet speed "+stepCycleTime
-		}
-		if(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/numStepCycleGroups ){
-			// if it still cant fit in the constraints, then we slow down the command
-			while(getMaximumDisplacement(newPose)>maxBodyDisplacementPerStep/(numStepCycleGroups-1) ){
-				sec+=0.01
-				//miliseconds = Math.round(sec*1000)
-				timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-				newPose=scaleTransform(n,timescaleing)
-				speedCalc = getMaximumDisplacement(newPose)/((double)stepCycleTime)
-				//println "Slowing down target Velocity "+stepCycleTime+" miliseconds "+speedCalc
-			}
-		}
-		while(getMaximumDisplacement(newPose)<minBodyDisplacementPerStep/(numStepCycleGroups-1) && stepCycleTime<stepCycleTimeMax){
-			stepCycleTime+=10
-			timescaleing = ((double)stepCycleTime)/(sec*1000.0)
-			newPose=scaleTransform(n,timescaleing)
-			//println "Slowing down up gait to meet speed "+stepCycleTime
-		}
-		double percentOfPose=1
-		while(!newPosePossible(	newPose) && percentOfPose>0.05){
-			percentOfPose-=0.05
-			newPose=scaleTransform(n,percentOfPose)
-		}
-		if(!newPosePossible(	newPose)){
-			println "Pose not possible "+newPose
-			
-			newPose=new TransformNR()
-		}
-		miliseconds =((long) ((double)stepCycleTime)*1.25)
-		double BodyDisplacement = Math.sqrt(Math.pow(newPose.getX(),2)+Math.pow(newPose.getY(),2))
-		speedCalc = BodyDisplacement/((double)stepCycleTime)
-		rotCalc = Math.toDegrees(n.getRotation().getRotationAzimuth())/((double)stepCycleTime)*1000.0
-		println "Moving at down target Absolute Velocity "+speedCalc+"m/s and  Z degrees per second= "+rotCalc
-	}
-	*/
+	
 	private def getLegCurrentPose(def leg){
 		double[] joints = cycleStartPoint.get(leg)	
 		TransformNR armOffset = leg.forwardKinematics(joints)	
