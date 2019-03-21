@@ -1,6 +1,6 @@
 @GrabResolver(name='nr', root='https://oss.sonatype.org/content/repositories/staging/')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.9.0')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.1.0')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.9.2')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.9.2')
 @Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
 import edu.wpi.SimplePacketComs.*;
@@ -175,95 +175,34 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 
 }
 
-public class GameControllerLocal extends UdpDevice{
-	private PacketType gamestate = new BytePacketType(1970, 64);
-	private  byte[] status = new byte[60];
-	private  byte[] d = new byte[20];
-	private  byte[] dataTmp = new byte[20];
-	private final myLock = new Object()
-	private GameControllerLocal(InetAddress add) throws Exception {
-		super(add);
-		setReadTimeout(200)
-		addPollingPacket(gamestate);
-		addEvent(gamestate.idOfCommand, {
-			readBytes(gamestate.idOfCommand, dataTmp);
-			writeBytes(gamestate.idOfCommand, getStatus());
-			
-			for(int i=1;i<20;i++){
-				if(dataTmp[i]!=0){
-					synchronized(myLock){
-						for(int j=0;j<20;j++){
-							d[j]=dataTmp[j];
-						}
-					}
-					//println this
-					return
-				}
-			}
-			
-			//println "Controller COMS FAULT "+this
-			
-		});
-	}
-	public static List<GameControllerLocal> getc(String n) throws Exception {
-		HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses(n);
-		ArrayList<GameControllerLocal> robots = new ArrayList<>();
-		if (addresses.size() < 1) {
-			System.out.println("No GameControllers found named "+n);
-			return robots;
-		}
-		for (InetAddress add : addresses) {
-			System.out.println("Got " + add.getHostAddress());
-			GameControllerLocal e = new GameControllerLocal(add);
-			robots.add(e);
-		}
-		return robots;
-	}
 
-	public byte[] getStatus() {
-		return status;
-	}
-	public void getData(byte[] back) {
-		synchronized(myLock){
-			for(int j=0;j<20;j++)
-				back[j]=d[j];
+def gc= DeviceManager.getSpecificDevice(args[2],{
+		def controllers =GameController.get(args[2])
+		def control = controllers[0]
+		if(control==null)
+			return null
+		control.connect()
+
+		while(control.getName().getBytes().size()==0){
+			println "Waiting for device name..."
+			Thread.sleep(500)// wait for the name packet to be sent
+			//String n = control.getName();
 		}
-	}
-	
-	public byte[] getData() {
-		byte[] back = new byte[20];
-		getData( back)
-		return back
-	}
-	
-	public byte getControllerIndex() {
-		return d[0];
-	}
-	public String getName() {
-		return super.getName()
-	}
-	public boolean connect() {
-		return super.connect()
-	}
-	
-	public void disconnect() {
-		 super.disconnect()
-	}
+		String n = control.getName();
+		println "Device named ="+n.getBytes()+" " + n
 
-	@Override 
-	public String toString(){
-		return ""+d+" "+dataTmp 
-	}
-}
-
+		return control;
+	})
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	def simp = null;
 	
 	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses("hidDevice");
+	
 	if (addresses.size() < 1) {
 			simp = new SimpleServoHID(0x16C0 ,0x0486) 
 	}else{
+		println "Servo Servers at "+addresses
 		simp = new SimpleServoUDP(addresses.toArray()[0])
 				simp.setReadTimeout(100);
 	}
@@ -282,23 +221,6 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	return d
 })
 
-def gc= DeviceManager.getSpecificDevice(args[2],{
-		def controllers =GameControllerLocal.getc(args[2])
-		def control = controllers[0]
-		if(control==null)
-			return null
-		control.connect()
-
-		while(control.getName().getBytes().size()==0){
-			println "Waiting for device name..."
-			Thread.sleep(500)// wait for the name packet to be sent
-			//String n = control.getName();
-		}
-		String n = control.getName();
-		println "Device named ="+n.getBytes()+" " + n
-
-		return control;
-	})
 def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 	//If the device does not exist, prompt for the connection
 	
