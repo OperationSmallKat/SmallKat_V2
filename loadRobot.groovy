@@ -296,10 +296,7 @@ def gc= DeviceManager.getSpecificDevice(args[2],{
 		}
 		String n = control.getName();
 		println "Device named ="+n.getBytes()+" " + n
-		for (def method : control.getClass().getMethods()) {
-			if(method.getName().contains("connect"))
-				println method.getName()
-		}
+
 		return control;
 	})
 def cat =DeviceManager.getSpecificDevice( "MediumKat",{
