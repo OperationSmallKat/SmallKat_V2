@@ -1,4 +1,5 @@
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.8.4')
+@GrabResolver(name='nr', root='https://oss.sonatype.org/content/repositories/staging/')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.9.0')
 @Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.1.0')
 @Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
@@ -254,22 +255,7 @@ public class GameControllerLocal extends UdpDevice{
 		return ""+d+" "+dataTmp 
 	}
 }
-def n =args[2]
-println args
-def gc= DeviceManager.getSpecificDevice(n,{
-		def controllers =GameControllerLocal.getc(n)
-		def control = controllers[0]
-		if(control==null)
-			return null
-		control.connect()
-		Thread.sleep(100)// wait for the name packet to be sent
-		println "Device named ="+control.getName()
-		for (def method : control.getClass().getMethods()) {
-			if(method.getName().contains("connect"))
-				println method.getName()
-		}
-		return control;
-	})
+
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	def simp = null;
@@ -296,6 +282,26 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	return d
 })
 
+def gc= DeviceManager.getSpecificDevice(args[2],{
+		def controllers =GameControllerLocal.getc(args[2])
+		def control = controllers[0]
+		if(control==null)
+			return null
+		control.connect()
+
+		while(control.getName().getBytes().size()==0){
+			println "Waiting for device name..."
+			Thread.sleep(500)// wait for the name packet to be sent
+			//String n = control.getName();
+		}
+		String n = control.getName();
+		println "Device named ="+n.getBytes()+" " + n
+		for (def method : control.getClass().getMethods()) {
+			if(method.getName().contains("connect"))
+				println method.getName()
+		}
+		return control;
+	})
 def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 	//If the device does not exist, prompt for the connection
 	
