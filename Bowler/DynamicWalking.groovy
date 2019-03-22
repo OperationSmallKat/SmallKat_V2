@@ -19,7 +19,7 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 
 if(args==null){
-	double stepOverHeight=5;
+	double stepOverHeight=8;
 	long stepOverTime=20*5*2;// Servo loop times number of points times Nyquest doubeling
 	Double zLock=5;
 	Closure calcHome = { DHParameterKinematics leg -> 
