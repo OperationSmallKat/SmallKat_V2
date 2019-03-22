@@ -19,7 +19,7 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 
 if(args==null){
-	double stepOverHeight=8;
+	double stepOverHeight=10;
 	long stepOverTime=20*5*2;// Servo loop times number of points times Nyquest doubeling
 	Double zLock=5;
 	Closure calcHome = { DHParameterKinematics leg -> 
@@ -43,7 +43,7 @@ if(args==null){
 	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 2
 	double standardHeadTailAngle = -20
-	double staticPanOffset = 10
+	double staticPanOffset = 15
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 50
