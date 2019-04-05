@@ -20,7 +20,7 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 if(args==null){
 	double stepOverHeight=12;
-	long stepOverTime=400;// Servo loop times number of points times Nyquest doubeling
+	long stepOverTime=300;// Servo loop times number of points times Nyquest doubeling
 	Double zLock=5;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
@@ -51,7 +51,7 @@ if(args==null){
 	double staticPanOffset = 20
 	double coriolisGain = 1
 	boolean headStable = false
-	double maxBodyDisplacementPerStep = 50
+	double maxBodyDisplacementPerStep = 30
 	double minBodyDisplacementPerStep = 7.5
 	args =  [stepOverHeight,
 	stepOverTime,
@@ -163,12 +163,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 			double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex%2==0?sinPanOffset:-sinPanOffset)
 			double bobingPercent = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*standardHeadTailAngle/2+standardHeadTailAngle/2
+			double bobingPercentHead = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*-52.8/2+-52.8/2
 			for(def d:source.getAllDHChains()){
 				String limbName = d.getScriptingName()
 				double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 				double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 				
 				double computedTilt = bobingPercent+(velocity*sinCop*coriolisGain)
+				double computedTilHeadt = bobingPercentHead+(velocity*sinCop*coriolisGain)
 				double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
 				long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
 				double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
@@ -195,7 +197,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					if(limbName.contentEquals("Head")){
 						if(!headStable){
 							d.setDesiredJointAxisValue(0,// link index
-										computedTilt, //target angle
+										computedTilHeadt, //target angle
 										0) // 2 seconds
 							d.setDesiredJointAxisValue(1,// link index
 										computedPan, //target angle
