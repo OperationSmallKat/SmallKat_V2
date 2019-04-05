@@ -174,7 +174,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	}
 
 }
-
+try{
 
 def gc= DeviceManager.getSpecificDevice(args[2],{
 		def controllers =GameController.get(args[2])
@@ -193,6 +193,7 @@ def gc= DeviceManager.getSpecificDevice(args[2],{
 
 		return control;
 	})
+}catch (Throwable t){}
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	def simp = null;
