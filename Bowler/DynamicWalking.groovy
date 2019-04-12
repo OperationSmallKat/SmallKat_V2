@@ -19,9 +19,9 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 
 if(args==null){
-	double stepOverHeight=12;
-	long stepOverTime=400;// Servo loop times number of points times Nyquest doubeling
-	Double zLock=5;
+	double stepOverHeight=15;
+	long stepOverTime=450;// Servo loop times number of points times Nyquest doubeling
+	Double zLock=10;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
 	 		TransformNR  legRoot= leg.getRobotToFiducialTransform()
@@ -36,23 +36,23 @@ if(args==null){
 			}
 
 			if(legRoot.getX()>0){
-				//tr.translateX(10)
+				tr.translateX(10)
 			}
 			
 			return tr;
 	
 	}
 	boolean usePhysicsToMove = true;
-	long stepCycleTime =800
+	long stepCycleTime =600
 	long walkingTimeout =stepCycleTime*2
 	int numStepCycleGroups = 2
 	
 	double standardHeadTailAngle = -20
-	double staticPanOffset = 20
+	double staticPanOffset = 15
 	double coriolisGain = 1
 	boolean headStable = false
 	double maxBodyDisplacementPerStep = 30
-	double minBodyDisplacementPerStep = 15
+	double minBodyDisplacementPerStep = 20
 	args =  [stepOverHeight,
 	stepOverTime,
 	zLock,
@@ -163,7 +163,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 			double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex%2==0?sinPanOffset:-sinPanOffset)
 			double bobingPercent = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*standardHeadTailAngle/2+standardHeadTailAngle/2
-			double bobingPercentHead = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*-52.8/2+-52.8/2
+			double bobingPercentHead = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*-42.8/2+-42.8/2
 			for(def d:source.getAllDHChains()){
 				String limbName = d.getScriptingName()
 				double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
