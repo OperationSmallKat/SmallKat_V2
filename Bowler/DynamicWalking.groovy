@@ -147,11 +147,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		double velocity=0
-		if(	Math.abs(update.getxAcceleration())>0 ||
-			Math.abs(update.getyAcceleration())>0 ||
-			Math.abs(update.getzAcceleration())>0 
+		if(	Math.abs(update.getRotxAcceleration())>0 ||
+			Math.abs(update.getRotyAcceleration())>0 ||
+			Math.abs(update.getRotzAcceleration())>0 
 		){
-			println update
+			//println update.getxAcceleration()+" "+update.getzAcceleration()
+			velocity =update.getzAcceleration()*1.5
 			//velocity=update.getRotyAcceleration()
 		}else
 			velocity=0
@@ -187,6 +188,29 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					}
 				}
 				try{
+					def l1 = d.getAbstractLink(0)
+					def l2 = d.getAbstractLink(1)
+					//
+					if(computedTilt>l1.getMaxEngineeringUnits()){
+						computedTilt=l1.getMaxEngineeringUnits();
+					}
+					if(computedTilt<l1.getMinEngineeringUnits()){
+						computedTilt=l1.getMinEngineeringUnits();
+					}
+					//
+					if(computedTilHeadt>l1.getMaxEngineeringUnits()){
+						computedTilHeadt=l1.getMaxEngineeringUnits();
+					}
+					if(computedTilHeadt<l1.getMinEngineeringUnits()){
+						computedTilHeadt=l1.getMinEngineeringUnits();
+					}
+					//
+					if(computedPan>l2.getMaxEngineeringUnits()){
+						computedPan=l2.getMaxEngineeringUnits();
+					}
+					if(computedPan<l2.getMinEngineeringUnits()){
+						computedPan=l2.getMinEngineeringUnits();
+					}
 					if(limbName.contentEquals("Tail")){
 						d.setDesiredJointAxisValue(0,// link index
 									computedTilt, //target angle
@@ -197,6 +221,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					} 
 					if(limbName.contentEquals("Head")){
 						if(!headStable){
+							
+							
 							d.setDesiredJointAxisValue(0,// link index
 										computedTilHeadt, //target angle
 										0) // 2 seconds
@@ -213,7 +239,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						}
 					}
 				}catch(Exception e){
-					BowlerStudio.printStackTrace(e)
+					//BowlerStudio.printStackTrace(e)
 				}
 			}
 
