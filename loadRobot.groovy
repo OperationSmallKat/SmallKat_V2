@@ -235,7 +235,7 @@ def cat =DeviceManager.getSpecificDevice( "MediumKat",{
 		 m.getImu()
 		 .setHardwareState(
 		 		new IMUUpdate(
-		 			-printData[9],	-printData[11],	-printData[10],
+		 			-imuDataValues[9],	-imuDataValues[11],	-imuDataValues[10],
 					imuDataValues[3],//Double rotxAcceleration,
 					imuDataValues[4],//Double rotyAcceleration,
 					imuDataValues[5],//Double rotzAcceleration 
