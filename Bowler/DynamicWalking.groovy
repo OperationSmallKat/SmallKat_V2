@@ -148,11 +148,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		double velocity=0
 		if(	Math.abs(update.getxAcceleration())>0 ||
-			Math.abs(update.getxAcceleration())>0 ||
-			Math.abs(update.getxAcceleration())>0 
-		)
-			velocity=update.getRotyAcceleration()
-		else
+			Math.abs(update.getyAcceleration())>0 ||
+			Math.abs(update.getzAcceleration())>0 
+		){
+			//velocity=update.getRotyAcceleration()
+		}else
 			velocity=0
 		if(incrementTime>10){
 			timeOfLastIMUPrint= System.currentTimeMillis()
