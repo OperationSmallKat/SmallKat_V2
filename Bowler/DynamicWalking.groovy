@@ -151,6 +151,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			Math.abs(update.getyAcceleration())>0 ||
 			Math.abs(update.getzAcceleration())>0 
 		){
+			println update
 			//velocity=update.getRotyAcceleration()
 		}else
 			velocity=0
@@ -212,7 +213,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 						}
 					}
 				}catch(Exception e){
-					//BowlerStudio.printStackTrace(e)
+					BowlerStudio.printStackTrace(e)
 				}
 			}
 
