@@ -143,8 +143,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return vals
 	}
 	void updateDynamics(IMUUpdate update){
-		//if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
-		//	return
+		if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
+			return
 			
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		double velocity=0
