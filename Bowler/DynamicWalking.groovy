@@ -152,7 +152,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			Math.abs(update.getRotzAcceleration())>0 
 		){
 			//println update.getxAcceleration()+" "+update.getzAcceleration()
-			velocity =update.getzAcceleration()*1.5
+			velocity =update.getzAcceleration()*2.5
 			//velocity=update.getRotyAcceleration()
 		}else
 			velocity=0
