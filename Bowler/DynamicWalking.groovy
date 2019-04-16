@@ -120,9 +120,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double gaitIntermediatePercentage 
 	TransformNR global
 	int coriolisIndex = 0
-	double coriolisDivisions = 36.0
+	double coriolisTimeBase =20.0
+	double coriolisDivisions = 360.0/coriolisTimeBase
 	double coriolisDivisionsScale = 360.0/coriolisDivisions
-	double coriolisTimeBase =10
+
 	long coriolisTimeLast=0
 	double startAngle = 0
 	public void resetStepTimer(){
