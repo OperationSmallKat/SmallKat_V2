@@ -20,7 +20,7 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 if(args==null){
 	double stepOverHeight=10;
-	long stepOverTime=400;// Servo loop times number of points times Nyquest doubeling
+	long stepOverTime=300;// Servo loop times number of points times Nyquest doubeling
 	Double zLock=5;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
@@ -142,8 +142,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return vals
 	}
 	void updateDynamics(IMUUpdate update){
-		if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
-			return
+		//if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
+		//	return
 			
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		double velocity=0
@@ -166,6 +166,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			double standardHeadTailPan = (stepResetter==null)?0:(stepCycyleActiveIndex%2==0?sinPanOffset:-sinPanOffset)
 			double bobingPercent = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*standardHeadTailAngle/2+standardHeadTailAngle/2
 			double bobingPercentHead = Math.cos(gaitPercentage*Math.PI-Math.PI/2)*-42.8/2+-42.8/2
+			if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis()){
+				standardHeadTailPan=0;
+				bobingPercent=0;
+				bobingPercentHead=0;
+			}
 			for(def d:source.getAllDHChains()){
 				String limbName = d.getScriptingName()
 				double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
@@ -174,6 +179,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				double computedTilt = bobingPercent+(velocity*sinCop*coriolisGain)
 				double computedTilHeadt = bobingPercentHead+(velocity*sinCop*coriolisGain)
 				double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
+				double computedPanHead = standardHeadTailPan+(velocity*-cosCop*coriolisGain)
+				
 				long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
 				double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
 				//println coriolisIndex+" Time division = "+coriolisTimeDivisionIncrement+" elapsed = "+coriolisincrementTime
@@ -211,6 +218,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					if(computedPan<l2.getMinEngineeringUnits()){
 						computedPan=l2.getMinEngineeringUnits();
 					}
+					//
+					if(computedPanHead>l2.getMaxEngineeringUnits()){
+						computedPanHead=l2.getMaxEngineeringUnits();
+					}
+					if(computedPanHead<l2.getMinEngineeringUnits()){
+						computedPanHead=l2.getMinEngineeringUnits();
+					}
 					if(limbName.contentEquals("Tail")){
 						d.setDesiredJointAxisValue(0,// link index
 									computedTilt, //target angle
@@ -227,7 +241,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 										computedTilHeadt, //target angle
 										0) // 2 seconds
 							d.setDesiredJointAxisValue(1,// link index
-										computedPan, //target angle
+										computedPanHead, //target angle
 										0) // 2 seconds
 						}else{
 							d.setDesiredJointAxisValue(0,// link index
