@@ -425,7 +425,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf =dynamicHome( leg)
 		def NewTmpPose = timout?new TransformNR():newPose.inverse()
-		double tiltAngle = 2.0
+		double tiltAngle = 5.0
 		if(stepCycyleActiveIndex%2!=0)
 			tiltAngle=tiltAngle*-1
 		def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*gaitPercentage)),0,0))
