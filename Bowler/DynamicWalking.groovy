@@ -101,6 +101,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	TransformNR previousGLobalState;
 	TransformNR target;
 	TransformNR cachedNewPose;
+	TransformNR cachedNewPoseStarting;
 	double cachedSeconds;
 	RotationNR rot;
 	int resettingindex=0;
@@ -424,6 +425,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf =dynamicHome( leg)
 		def NewTmpPose = timout?new TransformNR():newPose.inverse()
+		double tiltAngle = 2.0
+		def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*gaitPercentage)-tiltAngle/2),
+																			0,
+																			0))
+		pose(tilt)
 		def myPose=timout?new TransformNR():newPose
 
 		switch(walkingState){
@@ -859,6 +865,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				buildCycleGroups();
 			}
 			cachedNewPose=n;
+			cachedNewPoseStarting=n;
 			cachedSecond=sec;
 			resetStepTimer();
 		
