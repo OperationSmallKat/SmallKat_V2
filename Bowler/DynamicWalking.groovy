@@ -428,9 +428,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double tiltAngle = 2.0
 		if(stepCycyleActiveIndex%2==0)
 			tiltAngle=tiltAngle*-1
-		def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*gaitPercentage)),
-																			0,
-																			0))
+		def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*gaitPercentage)),0,0))
 		pose(tilt)
 		def myPose=timout?new TransformNR():newPose
 
