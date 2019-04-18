@@ -19,8 +19,8 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.*
 
 
 if(args==null){
-	double stepOverHeight=10;
-	long stepOverTime=300;// Servo loop times number of points times Nyquest doubeling
+	double stepOverHeight=15;
+	long stepOverTime=400;// Servo loop times number of points times Nyquest doubeling
 	Double zLock=5;
 	Closure calcHome = { DHParameterKinematics leg -> 
 			TransformNR h=leg.calcHome() 
@@ -154,7 +154,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			Math.abs(update.getRotzAcceleration())>0 
 		){
 			//println update.getxAcceleration()+" "+update.getzAcceleration()
-			velocity =update.getzAcceleration()*2.5
+			velocity =update.getzAcceleration()*0.5
 			//velocity=update.getRotyAcceleration()
 		}else
 			velocity=0
@@ -426,10 +426,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		def tf =dynamicHome( leg)
 		def NewTmpPose = timout?new TransformNR():newPose.inverse()
 		double tiltAngle = 2.0
-		if(stepCycyleActiveIndex%2!=0)
+		if(stepCycyleActiveIndex%2==0)
 			tiltAngle=tiltAngle*-1
 		def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*Math.sin(gaitPercentage*Math.PI))),0,0))
-		pose(tilt)
+		//pose(tilt)
 		def myPose=timout?new TransformNR():newPose
 
 		switch(walkingState){
