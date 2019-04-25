@@ -42,20 +42,30 @@ public class SimpleServoHID extends HIDSimplePacketComs {
 	}
 }
 
-public class SimpleServoUDP extends UDPSimplePacketComs {
+public class SimpleServoUDPServo extends UDPSimplePacketComs {
 	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
-	private PacketType imuData = new edu.wpi.SimplePacketComs.FloatPacketType(1804, 64);
-	private final double[] status = new double[12];
 	private final byte[] data = new byte[16];
-	
 	public SimpleServoUDP(def address) {
 		super(address);
 		servos.waitToSendMode();
 		addPollingPacket(servos);
-		addPollingPacket(imuData);
 		addEvent(1962, {
 			writeBytes(1962, data);
 		});
+	}
+
+	public byte[] getData() {
+		return data;
+	}
+}
+
+public class SimpleServoUDPImu extends UDPSimplePacketComs {
+	private PacketType imuData = new edu.wpi.SimplePacketComs.FloatPacketType(1804, 64);
+	private final double[] status = new double[12];
+	
+	public SimpleServoUDP(def address) {
+		super(address);
+		addPollingPacket(imuData);
 		addEvent(1804, {
 			readFloats(1804,status);
 		});
@@ -63,38 +73,36 @@ public class SimpleServoUDP extends UDPSimplePacketComs {
 	public double[] getImuData() {
 		return status;
 	}
-	public byte[] getData() {
-		return data;
-	}
 }
-
 
 public class HIDSimpleComsDevice extends NonBowlerDevice{
 	def simple;
-	
-	public HIDSimpleComsDevice(def simp){
+	def simpleServo;
+	public HIDSimpleComsDevice(def simp, def servo){
 		simple = simp
+		simpleServo=servo
 		setScriptingName("hidbowler")
 	}
 	@Override
 	public  void disconnectDeviceImp(){		
 		simple.disconnect()
+		simpleServo.disconnect()
 		println "HID device Termination signel shutdown"
 	}
 	
 	@Override
 	public  boolean connectDeviceImp(){
 		simple.connect()
-
+		simpleServo.connect()
 	}
 	void setValue(int i,int position){
-		simple.getData()[i]=(byte)position;
-		simple.servos.pollingMode();
+		simpleServo.getData()[i]=(byte)position;
+		simpleServo.servos.pollingMode();
 	}
 	int getValue(int i){
-		if(simple.getData()[i]>0)
-			return simple.getData()[i]
-		return ((int)simple.getData()[i])+256
+		if(simpleServo.getData()[i]>0)
+			return simpleServo.getData()[i]
+		return ((int)simpleServo.getData()[i])+256
 	}
 	public float[] getImuData() {
 		return simple.getImuData();
@@ -197,17 +205,21 @@ def gc= DeviceManager.getSpecificDevice(args[2],{
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	//If the device does not exist, prompt for the connection
 	def simp = null;
+	def srv = null
 	
 	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses("hidDevice");
 	
 	if (addresses.size() < 1) {
 			simp = new SimpleServoHID(0x16C0 ,0x0486) 
+			srv=simp
 	}else{
 		println "Servo Servers at "+addresses
-		simp = new SimpleServoUDP(addresses.toArray()[0])
-				simp.setReadTimeout(10);
+		simp = new SimpleServoUDPImu(addresses.toArray()[0])
+		simp.setReadTimeout(10);
+		srv = new SimpleServoUDPServo(addresses.toArray()[0])
+		srv.setReadTimeout(10);
 	}
-	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp)
+	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp,srv)
 	d.connect(); // Connect to it.
 	if(simp.isVirtual()){
 		println "\n\n\nDevice is in virtual mode!\n\n\n"
