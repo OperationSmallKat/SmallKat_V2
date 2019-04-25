@@ -1,6 +1,6 @@
 @GrabResolver(name='nr', root='https://oss.sonatype.org/content/repositories/staging/')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.9.2')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.9.2')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.10.0')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.10.0')
 @Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
 import edu.wpi.SimplePacketComs.*;
@@ -13,8 +13,8 @@ import edu.wpi.SimplePacketComs.phy.UDPSimplePacketComs;
 import edu.wpi.SimplePacketComs.device.gameController.*;
 import edu.wpi.SimplePacketComs.device.*
 if(args == null)
-	args = ["https://github.com/OperationSmallKat/SmallKat_V2.git",
-		"Bowler/MediumKat.xml","GameController_22"]
+	args = ["https://github.com/OperationSmallKat/greycat.git",
+		"MediumKat.xml","GameController_22"]
 
 public class SimpleServoHID extends HIDSimplePacketComs {
 	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
@@ -45,7 +45,7 @@ public class SimpleServoHID extends HIDSimplePacketComs {
 public class SimpleServoUDPServo extends UDPSimplePacketComs {
 	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
 	private final byte[] data = new byte[16];
-	public SimpleServoUDP(def address) {
+	public SimpleServoUDPServo(def address) {
 		super(address);
 		servos.waitToSendMode();
 		addPollingPacket(servos);
@@ -63,7 +63,7 @@ public class SimpleServoUDPImu extends UDPSimplePacketComs {
 	private PacketType imuData = new edu.wpi.SimplePacketComs.FloatPacketType(1804, 64);
 	private final double[] status = new double[12];
 	
-	public SimpleServoUDP(def address) {
+	public SimpleServoUDPImu(def address) {
 		super(address);
 		addPollingPacket(imuData);
 		addEvent(1804, {
@@ -133,7 +133,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 		device=c
 		if(device ==null)
 			throw new RuntimeException("Device can not be null")
-		c.simple.addEvent(command,{
+		c.simpleServo.addEvent(command,{
 			int val= getCurrentPosition();
 			if(lastPushedVal!=val){
 				//println "Fire Link Listner "+index+" value "+getCurrentPosition()
