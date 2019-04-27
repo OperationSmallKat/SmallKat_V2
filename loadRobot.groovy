@@ -40,6 +40,9 @@ public class SimpleServoHID extends HIDSimplePacketComs {
 	public byte[] getData() {
 		return data;
 	}
+	public byte[] getDataUp() {
+		return servos.getUpstream();
+	}
 }
 
 public class SimpleServoUDPServo extends UDPSimplePacketComs {
@@ -53,9 +56,11 @@ public class SimpleServoUDPServo extends UDPSimplePacketComs {
 			writeBytes(1962, data);
 		});
 	}
-
-	public byte[] getData() {
+	public byte[] getDataUp() {
 		return servos.getUpstream();
+	}
+	public byte[] getData() {
+		return data;
 	}
 }
 
@@ -100,9 +105,9 @@ public class HIDSimpleComsDevice extends NonBowlerDevice{
 		simpleServo.servos.pollingMode();
 	}
 	int getValue(int i){
-		if(simpleServo.getData()[i]>0)
-			return simpleServo.getData()[i]
-		return ((int)simpleServo.getData()[i])+256
+		if(simpleServo.getDataUp()[i]>0)
+			return simpleServo.getDataUp()[i]
+		return ((int)simpleServo.getDataUp()[i])+256
 	}
 	public float[] getImuData() {
 		return simple.getImuData();
