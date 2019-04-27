@@ -154,7 +154,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			Math.abs(update.getRotzAcceleration())>0 
 		){
 			//println update.getxAcceleration()+" "+update.getzAcceleration()
-			velocity =update.getzAcceleration()*0.5
+			velocity =update.getzAcceleration()*2.5
 			//velocity=update.getRotyAcceleration()
 		}else
 			velocity=0
@@ -182,6 +182,12 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				double computedTilHeadt = bobingPercentHead+(velocity*sinCop*coriolisGain)
 				double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
 				double computedPanHead = standardHeadTailPan+(velocity*-cosCop*coriolisGain)
+				if(Math.abs(velocity)>5){
+					computedTilt = (velocity*sinCop*coriolisGain)
+					computedTilHeadt = (velocity*sinCop*coriolisGain)
+					computedPan = (velocity*cosCop*coriolisGain)
+					computedPanHead = (velocity*-cosCop*coriolisGain)
+				}
 				
 				long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
 				double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
