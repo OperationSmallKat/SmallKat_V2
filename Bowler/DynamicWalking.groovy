@@ -121,7 +121,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double gaitIntermediatePercentage 
 	TransformNR global
 	int coriolisIndex = 0
-	double coriolisTimeBase =20.0
+	double coriolisTimeBase =10.0
 	double coriolisDivisions = 360.0/coriolisTimeBase
 	double coriolisDivisionsScale = 360.0/coriolisDivisions
 
@@ -154,7 +154,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			Math.abs(update.getRotzAcceleration())>0 
 		){
 			//println update.getxAcceleration()+" "+update.getzAcceleration()
-			velocity =update.getzAcceleration()*2.5
+			velocity =update.getzAcceleration()*1.5
 			//velocity=update.getRotyAcceleration()
 		}else
 			velocity=0
