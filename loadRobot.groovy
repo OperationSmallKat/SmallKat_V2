@@ -211,9 +211,9 @@ def dev = DeviceManager.getSpecificDevice( "hidDevice",{
 	}else{
 		println "Servo Servers at "+addresses
 		simp = new SimpleServoUDPImu(addresses.toArray()[0])
-		simp.setReadTimeout(30);
+		simp.setReadTimeout(10);
 		srv = new SimpleServoUDPServo(addresses.toArray()[0])
-		srv.setReadTimeout(30);
+		srv.setReadTimeout(10);
 	}
 	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp,srv)
 	d.connect(); // Connect to it.
