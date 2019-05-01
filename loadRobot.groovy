@@ -190,7 +190,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 try{
 
 def gc= DeviceManager.getSpecificDevice(args[2],{
-	return = ScriptingEngine.gitScriptRun(
+	return  ScriptingEngine.gitScriptRun(
             "https://gist.github.com/e26c0d8ef7d5283ef44fb22441a603b8.git", // git location of the library
             "LoadGameController.groovy" , // file to load
             // Parameters passed to the function
