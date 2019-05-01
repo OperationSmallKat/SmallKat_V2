@@ -190,21 +190,12 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 try{
 
 def gc= DeviceManager.getSpecificDevice(args[2],{
-		def controllers =GameController.get(args[2])
-		def control = controllers[0]
-		if(control==null)
-			return null
-		control.connect()
-
-		while(control.getName().getBytes().size()==0){
-			println "Waiting for device name..."
-			Thread.sleep(500)// wait for the name packet to be sent
-			//String n = control.getName();
-		}
-		String n = control.getName();
-		println "Device named ="+n.getBytes()+" " + n
-
-		return control;
+	return = ScriptingEngine.gitScriptRun(
+            "https://gist.github.com/e26c0d8ef7d5283ef44fb22441a603b8.git", // git location of the library
+            "LoadGameController.groovy" , // file to load
+            // Parameters passed to the function
+            [args[2]]
+            )
 	})
 }catch (Throwable t){}
 def dev = DeviceManager.getSpecificDevice( "hidDevice",{
