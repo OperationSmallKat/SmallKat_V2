@@ -279,8 +279,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		try{
 			def tipList = new HashMap<DHParameterKinematics,TransformNR >()
 			for(def leg:legs){
-				//def home = dynamicHome(leg)
-				def home =leg.getCurrentTaskSpaceTransform()
+				def home = dynamicHome(leg)
+				//def home =leg.getCurrentTaskSpaceTransform()
 				home.setZ( zLock )
 				//tipList.put(leg,leg.getCurrentTaskSpaceTransform())
 				tipList.put(leg,home)
