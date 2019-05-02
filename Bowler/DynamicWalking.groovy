@@ -70,7 +70,7 @@ if(args==null){
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
-	
+	double sitZ=-5;
     int Rising=0
     int ToHome=1
     int ToNewTarget=2
@@ -127,6 +127,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 
 	long coriolisTimeLast=0
 	double startAngle = 0
+	double startSitz=0;
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
 	}
@@ -271,27 +272,39 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 
 	}
 	void pose(def newAbsolutePose){
-		source.setGlobalToFiducialTransform(newAbsolutePose)
-		for(def leg:legs){
-			def pose =compute(leg,1,new TransformNR())
-			if(leg.checkTaskSpaceTransform(pose))
-				leg.setDesiredTaskSpaceTransform(pose, 0);
+		try{
+			def tipList = new HashMap<DHParameterKinematics,TransformNR >()
+			for(def leg:legs){
+				def home = dynamicHome(leg)
+				TransformNR down = home.copy()
+				down.setZ( zLock )
+				//tipList.put(leg,leg.getCurrentTaskSpaceTransform())
+				tipList.put(leg,down)
+			}
+			source.setGlobalToFiducialTransform(newAbsolutePose)
+			for(def leg:legs){
+				def pose =tipList.get(leg)
+				if(leg.checkTaskSpaceTransform(pose))
+					leg.setDesiredTaskSpaceTransform(pose, 0);
+			}
+		}catch (Throwable t){
+			BowlerStudio.printStackTrace(t)
 		}
-		
 	}
-	void sit(double sitAngle){
+	void sit(double sitAngle, double targetZ){
 
-	if(!source.getScriptingName().contains("Kat"))
-		return
+		if(!source.getScriptingName().contains("Kat"))
+			return
 		source.getImu().clearhardwareListeners()
 				
 		double incremnt = 0.05
 		for(double i=0;i<1;i+=incremnt){
 			double angle =  sitAngle*i+(startAngle*(1-i))
+			double nowZ =  targetZ*i+(startSitz*(1-i))
 			//println "Sitting to "+angle +" from "+startAngle
 			def newTF =new TransformNR(0,
 						  0, 
-						  0,
+						  nowZ,
 						  new RotationNR(0,
 								  0, 
 								angle
@@ -336,7 +349,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				e.printStackTrace()
 			}
 		})
+		
 		startAngle=sitAngle
+		startSitz=targetZ
 	}
 	private void walkLoop(){
 		long incrementTime = (System.currentTimeMillis()-reset)
@@ -354,45 +369,13 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		}
 		if(reset+walkingTimeout< System.currentTimeMillis()){
 			threadDone=true;
-			stepResetter=null;
-			if(!source.getScriptingName().contains("Kat")){
-				println "FIRING reset from reset thread"
-				resetting=true;
-				long tmp= reset;
-				for(def d:source.getAllDHChains()){
-					String limbName = d.getScriptingName()
-					try{
-						if(limbName.contentEquals("Tail")){
-							d.setDesiredJointAxisValue(0,// link index
-										standardHeadTailAngle, //target angle
-										0) // 2 seconds
-							d.setDesiredJointAxisValue(1,// link index
-										0, //target angle
-										0) // 2 seconds			
-						} 
-						if(limbName.contentEquals("Head")){
-							d.setDesiredJointAxisValue(0,// link index
-										standardHeadTailAngle, //target angle
-										0) // 2 seconds
-							d.setDesiredJointAxisValue(1,// link index
-										0, //target angle
-										0) // 2 seconds			
-						}
-						coriolisIndex=0;
-					}catch(Exception e){
-						BowlerStudio.printStackTrace(e)
-					}
-				}
-				for(int i=0;i<numlegs;i++){
-					StepHome(legs.get(i))
-				}
-				resettingindex=numlegs;
-				resetting=false;
-				return
-			}
-			sit(-12);
+			stepResetter=null;	
 			
 		}
+	}
+	double getGaitPercentage(){
+		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
+		return gaitTimeRemaining/(double)(stepCycleTime)
 	}
 	public void walkingCycle(){
 		
@@ -407,8 +390,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				upStateMachine(leg)
 			
 		}
-		double gaitTimeRemaining = (double) (System.currentTimeMillis()-timeOfCycleStart)
-		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
+		double gaitPercentage = getGaitPercentage()
 		if(!timout){
 			double timeRemaining =(double) (System.currentTimeMillis()-reset)
 			//double percentage =timeRemaining/ (double)(miliseconds)
@@ -883,7 +865,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 					public void run(){
 						computeUpdatePose()
 						
-						sit(0);
+						sit(0,0);
 						legs.collect{
 					 		cycleStartPoint.put(it,it.getCurrentJointSpaceVector())
 						}
@@ -902,7 +884,55 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 									BowlerStudio.printStackTrace(e)
 								}
 							}
+							cachedNewPose=new TransformNR();
+							cachedNewPoseStarting=cachedNewPose;
+							cachedSecond=sec;
+							while(source.isAvailable() && getGaitPercentage()<0.99){// finish out the gait loop
+								Thread.sleep(1)// avoid thread lock
+								try{	
+									walkLoop();
+								}catch(Exception e){
+									BowlerStudio.printStackTrace(e)
+								}
+							}
+							
+							
 							println "Finished step reset thread"
+							if(!source.getScriptingName().contains("Kat")){
+								println "FIRING reset from reset thread"
+								resetting=true;
+								long tmp= reset;
+								for(def d:source.getAllDHChains()){
+									String limbName = d.getScriptingName()
+									try{
+										if(limbName.contentEquals("Tail")){
+											d.setDesiredJointAxisValue(0,// link index
+														standardHeadTailAngle, //target angle
+														0) // 2 seconds
+											d.setDesiredJointAxisValue(1,// link index
+														0, //target angle
+														0) // 2 seconds			
+										} 
+										if(limbName.contentEquals("Head")){
+											d.setDesiredJointAxisValue(0,// link index
+														standardHeadTailAngle, //target angle
+														0) // 2 seconds
+											d.setDesiredJointAxisValue(1,// link index
+														0, //target angle
+														0) // 2 seconds			
+										}
+										coriolisIndex=0;
+									}catch(Exception e){
+										BowlerStudio.printStackTrace(e)
+									}
+								}
+								for(int i=0;i<numlegs;i++){
+									StepHome(legs.get(i))
+								}
+								resettingindex=numlegs;
+								resetting=false;
+							}else
+								sit(-12,sitZ);
 						}catch(Exception e){
 							BowlerStudio.printStackTrace(e)
 						}
