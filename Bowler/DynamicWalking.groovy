@@ -178,15 +178,17 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 				double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 				
-				double computedTilt = bobingPercent+(velocity*sinCop*coriolisGain)
-				double computedTilHeadt = bobingPercentHead+(velocity*sinCop*coriolisGain)
+				//double computedTilt = bobingPercent+(velocity*sinCop*coriolisGain)
+				//double computedTilHeadt = bobingPercentHead+(velocity*sinCop*coriolisGain)
+				double computedTilt = (velocity*sinCop*coriolisGain)
+				double computedTilHeadt = (velocity*sinCop*coriolisGain)
 				double computedPan = standardHeadTailPan+(velocity*cosCop*coriolisGain)
 				double computedPanHead = standardHeadTailPan+(velocity*-cosCop*coriolisGain)
 				if(Math.abs(velocity)>5){
-					computedTilt = (velocity*sinCop*coriolisGain)
-					computedTilHeadt = (velocity*sinCop*coriolisGain)
-					computedPan = (velocity*cosCop*coriolisGain)
-					computedPanHead = (velocity*-cosCop*coriolisGain)
+					//computedTilt = (velocity*sinCop*coriolisGain)
+					//computedTilHeadt = (velocity*sinCop*coriolisGain)
+					//computedPan = (velocity*cosCop*coriolisGain)
+					//computedPanHead = (velocity*-cosCop*coriolisGain)
 				}
 				
 				long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
