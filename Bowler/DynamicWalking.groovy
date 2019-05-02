@@ -423,7 +423,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		if(stepCycyleActiveIndex%2==0)
 			tiltAngle=tiltAngle*-1
 		//def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*Math.sin(gaitPercentage*Math.PI))),0,0))
-		def tilt = new TransformNR(0,0,0,new RotationNR(dynamicAngleX/2,0,0))
+		def tilt = new TransformNR(0,0,0,new RotationNR(-dynamicAngleX/4,0,0))
 		//pose(tilt)
 		source.setGlobalToFiducialTransform(tilt)
 		
