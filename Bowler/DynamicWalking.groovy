@@ -128,6 +128,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	long coriolisTimeLast=0
 	double startAngle = 0
 	double startSitz=0;
+	double dynamicAngleX=0;
+	double dynamicAngleY=0;
 	public void resetStepTimer(){
 		reset = System.currentTimeMillis();
 	}
@@ -156,6 +158,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		){
 			//println update.getxAcceleration()+" "+update.getzAcceleration()
 			velocity =update.getzAcceleration()*1.5
+			dynamicAngleX=update.getzAcceleration();
+			dynamicAngleY=update.getyAcceleration();
 			//velocity=update.getRotyAcceleration()
 		}else
 			velocity=0
@@ -275,11 +279,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		try{
 			def tipList = new HashMap<DHParameterKinematics,TransformNR >()
 			for(def leg:legs){
-				def home = dynamicHome(leg)
-				TransformNR down = home.copy()
-				down.setZ( zLock )
+				//def home = dynamicHome(leg)
+				def home =leg.getCurrentTaskSpaceTransform()
+				home.setZ( zLock )
 				//tipList.put(leg,leg.getCurrentTaskSpaceTransform())
-				tipList.put(leg,down)
+				tipList.put(leg,home)
 			}
 			source.setGlobalToFiducialTransform(newAbsolutePose)
 			for(def leg:legs){
@@ -418,8 +422,11 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double tiltAngle = 2.0
 		if(stepCycyleActiveIndex%2==0)
 			tiltAngle=tiltAngle*-1
-		def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*Math.sin(gaitPercentage*Math.PI))),0,0))
+		//def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*Math.sin(gaitPercentage*Math.PI))),0,0))
+		def tilt = new TransformNR(0,0,0,new RotationNR(dynamicAngleX/2,0,0))
 		//pose(tilt)
+		source.setGlobalToFiducialTransform(tilt)
+		
 		def myPose=timout?new TransformNR():newPose
 
 		switch(walkingState){
