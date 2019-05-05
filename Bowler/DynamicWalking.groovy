@@ -70,7 +70,7 @@ if(args==null){
 }
 
 return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
-	double sitZ=-5;
+	double sitZ=-2;
     int Rising=0
     int ToHome=1
     int ToNewTarget=2
@@ -419,10 +419,10 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf =dynamicHome( leg)
 		def NewTmpPose = timout?new TransformNR():newPose.inverse()
-		double tiltAngle = 5.0
+		double tiltAngle = 1.0
 		//if(stepCycyleActiveIndex%2==0)
 		//	tiltAngle=tiltAngle*-1
-		def zmove =tiltAngle*Math.sin(-gaitPercentage*Math.PI)
+		def zmove =tiltAngle*Math.sin(gaitPercentage*Math.PI)
 		//if(Math.abs(dynamicAngleX)>1){
 			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*75
 			def angle = dynamicAngleX/4
@@ -430,7 +430,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				angle=0;
 				ymove=0;
 			}
-			def tilt = new TransformNR(0,ymove,zmove,new RotationNR(angle,0,0))
+			def tilt = new TransformNR(0,ymove,0,new RotationNR(angle,0,0))
 			//pose(tilt)
 			source.setGlobalToFiducialTransform(tilt)
 			//println "Moving y "+ymove+" angle "+angle
