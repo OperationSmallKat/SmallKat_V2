@@ -423,9 +423,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		if(stepCycyleActiveIndex%2==0)
 			tiltAngle=tiltAngle*-1
 		//def tilt = new TransformNR(0,0,0,new RotationNR(((tiltAngle*Math.sin(gaitPercentage*Math.PI))),0,0))
-		def tilt = new TransformNR(0,0,0,new RotationNR(-dynamicAngleX/4,0,0))
-		//pose(tilt)
-		source.setGlobalToFiducialTransform(tilt)
+		if(Math.abs(dynamicAngleX)>1){
+			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*75
+			def angle = dynamicAngleX/4
+			def tilt = new TransformNR(0,ymove,0,new RotationNR(angle,0,0))
+			//pose(tilt)
+			source.setGlobalToFiducialTransform(tilt)
+			//println "Moving y "+ymove+" angle "+angle
+		}
 		
 		def myPose=timout?new TransformNR():newPose
 
