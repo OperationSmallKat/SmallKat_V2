@@ -147,12 +147,14 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return vals
 	}
 	void updateDynamics(IMUUpdate update){
+		if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
+			return
 		double tiltAngle = -1.0
 		//println "Cycle = "+miliseconds+" "+incrementTime
 			//if(stepCycyleActiveIndex%2==0)
 		//	tiltAngle=tiltAngle*-1
 		def zmove =tiltAngle*Math.sin(gaitPercentage*Math.PI)
-		zmove=0
+		//zmove=0
 		//if(Math.abs(dynamicAngleX)>1){
 			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*50
 			def angle = dynamicAngleX/4
@@ -165,8 +167,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			source.setGlobalToFiducialTransform(tilt)
 			//println "Moving y "+ymove+" angle "+angle
 		//}
-		if(stepResetter==null||reset+walkingTimeout < System.currentTimeMillis())
-			return
+
 			
 		long incrementTime = (System.currentTimeMillis()-timeOfLastIMUPrint)
 		double velocity=0
