@@ -57,7 +57,8 @@ public class SimpleServoUDPServo extends UDPSimplePacketComs {
 		});
 	}
 	public byte[] getDataUp() {
-		return servos.getUpstream();
+		//return servos.getUpstream();
+		return data;
 	}
 	public byte[] getData() {
 		return data;
