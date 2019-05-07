@@ -382,7 +382,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return gaitTimeRemaining/(double)(stepCycleTime)
 	}
 	public void walkingCycle(){
-		double tiltAngle = 2.0
+		double tiltAngle = 1.0
 		//println "Cycle = "+miliseconds+" "+incrementTime
 			//if(stepCycyleActiveIndex%2==0)
 		//	tiltAngle=tiltAngle*-1
