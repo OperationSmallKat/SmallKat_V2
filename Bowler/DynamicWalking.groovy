@@ -387,8 +387,9 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			//if(stepCycyleActiveIndex%2==0)
 		//	tiltAngle=tiltAngle*-1
 		def zmove =tiltAngle*Math.sin(gaitPercentage*Math.PI)
+		zmove=0
 		//if(Math.abs(dynamicAngleX)>1){
-			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*75
+			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*50
 			def angle = dynamicAngleX/4
 			if(Math.abs(dynamicAngleX)<1){
 				angle=0;
