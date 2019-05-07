@@ -382,9 +382,23 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		return gaitTimeRemaining/(double)(stepCycleTime)
 	}
 	public void walkingCycle(){
-		
+		double tiltAngle = 2.0
 		//println "Cycle = "+miliseconds+" "+incrementTime
-	
+			//if(stepCycyleActiveIndex%2==0)
+		//	tiltAngle=tiltAngle*-1
+		def zmove =tiltAngle*Math.sin(gaitPercentage*Math.PI)
+		//if(Math.abs(dynamicAngleX)>1){
+			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*75
+			def angle = dynamicAngleX/4
+			if(Math.abs(dynamicAngleX)<1){
+				angle=0;
+				ymove=0;
+			}
+			def tilt = new TransformNR(0,ymove,zmove,new RotationNR(angle,0,0))
+			//pose(tilt)
+			source.setGlobalToFiducialTransform(tilt)
+			//println "Moving y "+ymove+" angle "+angle
+		//}
 		def upLegs = getUpLegs()
 		def downLegs =getDownLegs()
 		//println upLegs
@@ -419,22 +433,8 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double gaitPercentage = gaitTimeRemaining/(double)(stepCycleTime)
 		def tf =dynamicHome( leg)
 		def NewTmpPose = timout?new TransformNR():newPose.inverse()
-		double tiltAngle = 1.0
-		//if(stepCycyleActiveIndex%2==0)
-		//	tiltAngle=tiltAngle*-1
-		def zmove =tiltAngle*Math.sin(gaitPercentage*Math.PI)
-		//if(Math.abs(dynamicAngleX)>1){
-			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*75
-			def angle = dynamicAngleX/4
-			if(Math.abs(dynamicAngleX)<1){
-				angle=0;
-				ymove=0;
-			}
-			def tilt = new TransformNR(0,ymove,0,new RotationNR(angle,0,0))
-			//pose(tilt)
-			source.setGlobalToFiducialTransform(tilt)
-			//println "Moving y "+ymove+" angle "+angle
-		//}
+
+
 		
 		def myPose=timout?new TransformNR():newPose
 
@@ -578,7 +578,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		  new RotationNR(Math.toDegrees(n.getRotation().getRotationTilt()),
 				  Math.toDegrees(global.getRotation().getRotationAzimuth()), 
 				 Math.toDegrees( n.getRotation().getRotationElevation())));
-		//source.setGlobalToFiducialTransform(global)
 		n=new TransformNR(n.getX(),
 		  n.getY(), 
 		  n.getZ(),
