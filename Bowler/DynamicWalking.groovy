@@ -950,7 +950,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 								resettingindex=numlegs;
 								resetting=false;
 							}else
-								sit(-12,sitZ);
+								sit(-10,sitZ);
 						}catch(Exception e){
 							BowlerStudio.printStackTrace(e)
 						}
