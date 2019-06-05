@@ -164,7 +164,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			}
 			def tilt = new TransformNR(0,ymove,zmove,new RotationNR(angle,0,0))
 			//pose(tilt)
-			source.setGlobalToFiducialTransform(tilt)
+			//source.setGlobalToFiducialTransform(tilt)
 			//println "Moving y "+ymove+" angle "+angle
 		//}
 
