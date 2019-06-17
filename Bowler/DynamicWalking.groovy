@@ -370,7 +370,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		//	tiltAngle=tiltAngle*-1
 		def zmove =tiltAngle*Math.sin(gaitPercentage*Math.PI)
 		//zmove=0
-		//if(Math.abs(dynamicAngleX)>1){
+		if(Math.abs(dynamicAngleX)>1){
 			def ymove = Math.sin(Math.toRadians(dynamicAngleX))*50
 			def angle = dynamicAngleX/4
 			if(Math.abs(dynamicAngleX)<1){
@@ -381,7 +381,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 			//pose(tilt)
 			source.setGlobalToFiducialTransform(tilt)
 			//println "Moving y "+ymove+" angle "+angle
-		//}
+		}
 
 		long time = System.currentTimeMillis()-timeOfLastLoop
 		if(time>loopTimingMS){
