@@ -320,9 +320,19 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 				
 				String limbName = d.getScriptingName()
 				try{
+					def headAngle = standardHeadTailAngle-angle/3
+					def tailAngle=standardHeadTailAngle+angle/3
+					def l1 = d.getAbstractLink(0)
+
 					if(limbName.contentEquals("Tail")){
+						if(tailAngle>l1.getMaxEngineeringUnits()){
+							tailAngle=l1.getMaxEngineeringUnits();
+						}
+						if(tailAngle<l1.getMinEngineeringUnits()){
+							tailAngle=l1.getMinEngineeringUnits();
+						}
 						d.setDesiredJointAxisValue(0,// link index
-									standardHeadTailAngle+angle/3, //target angle
+									tailAngle, //target angle
 									0) // 2 seconds
 						d.setDesiredJointAxisValue(1,// link index
 									0, //target angle
@@ -330,21 +340,28 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 									
 					} 
 					if(limbName.contentEquals("Head")){
+						if(headAngle>l1.getMaxEngineeringUnits()){
+							headAngle=l1.getMaxEngineeringUnits();
+						}
+						if(headAngle<l1.getMinEngineeringUnits()){
+							headAngle=l1.getMinEngineeringUnits();
+						}
 						d.setDesiredJointAxisValue(0,// link index
-									standardHeadTailAngle-angle/3, //target angle
+									headAngle, //target angle
 									0) // 2 seconds
 						d.setDesiredJointAxisValue(1,// link index
 									0, //target angle
 									0) // 2 seconds
 									
 					}
-					Thread.sleep((long)(stepCycleTime*incremnt/source.getAllDHChains().size()))		
+						
 					//d.setDesiredTaskSpaceTransform(d.getCurrentTaskSpaceTransform(),  0);
 					
 				}catch(Exception e){
 					//BowlerStudio.printStackTrace(e)
 				}
 			}
+			Thread.sleep((long)(stepCycleTime*incremnt/source.getAllDHChains().size()))	
 			
 		}
 		source.getImu().addhardwareListeners({update ->
