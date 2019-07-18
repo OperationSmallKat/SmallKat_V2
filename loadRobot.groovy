@@ -14,8 +14,10 @@ import edu.wpi.SimplePacketComs.device.gameController.*;
 import edu.wpi.SimplePacketComs.device.*
 if(args == null)
 	args = ["https://github.com/OperationSmallKat/greycat.git",
-		"MediumKat.xml","GameController_22"]
-
+		"MediumKat.xml","GameController_22","hidDevice"]
+def hidDeviceName = "hidDevice"
+if(args.size()>3)
+	hidDeviceName=args[3]
 public class SimpleServoHID extends HIDSimplePacketComs {
 	private PacketType servos = new edu.wpi.SimplePacketComs.BytePacketType(1962, 64);
 	private PacketType imuData = new edu.wpi.SimplePacketComs.FloatPacketType(1804, 64);
@@ -199,12 +201,12 @@ def gc= DeviceManager.getSpecificDevice(args[2],{
             )
 	})
 }catch (Throwable t){}
-def dev = DeviceManager.getSpecificDevice( "hidDevice",{
+def dev = DeviceManager.getSpecificDevice( hidDeviceName,{
 	//If the device does not exist, prompt for the connection
 	def simp = null;
 	def srv = null
 	
-	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses("hidDevice");
+	HashSet<InetAddress> addresses = UDPSimplePacketComs.getAllAddresses(hidDeviceName);
 	
 	if (addresses.size() < 1) {
 			simp = new SimpleServoHID(0x16C0 ,0x0486) 
