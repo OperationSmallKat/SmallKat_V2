@@ -79,7 +79,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double stepOverHeight=(double)args.get(0);
 	long stepOverTime=(long)args.get(1);
 	private Double zLock=(Double)args.get(2);
-	Closure calcHome =(Closure)args.get(3);
+	Closure calcHome =(Closure)args.get(3);Abell, Phillip Benjamin 
 	boolean usePhysics=(args.size()>4?((boolean)args.get(4)):false);
 	long stepCycleTime=args.get(5)
 	long stepCycleTimeMax=args.get(5)
@@ -126,7 +126,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double coriolisDivisionsScale = 360.0/coriolisDivisions
 
 	long coriolisTimeLast=0
-	double startAngle = 0
+	double startAngle = 0Abell, Phillip Benjamin 
 	double startSitz=0;
 	double dynamicAngleX=0;
 	double dynamicAngleY=0;
@@ -155,7 +155,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 		double velocity=0
 		if(	Math.abs(update.getRotxAcceleration())>0 ||
 			Math.abs(update.getRotyAcceleration())>0 ||
-			Math.abs(update.getRotzAcceleration())>0 
+			Math.abs(update.getzAcceleration())>0 
 		){
 			//println update.getxAcceleration()+" "+update.getzAcceleration()
 			velocity =update.getzAcceleration()*1.5
