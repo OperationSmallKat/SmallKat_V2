@@ -79,7 +79,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double stepOverHeight=(double)args.get(0);
 	long stepOverTime=(long)args.get(1);
 	private Double zLock=(Double)args.get(2);
-	Closure calcHome =(Closure)args.get(3);Abell, Phillip Benjamin 
+	Closure calcHome =(Closure)args.get(3);
 	boolean usePhysics=(args.size()>4?((boolean)args.get(4)):false);
 	long stepCycleTime=args.get(5)
 	long stepCycleTimeMax=args.get(5)
@@ -93,7 +93,6 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double maxBodyDisplacementPerStep= args.get(11)
 	double minBodyDisplacementPerStep =args.get(12)
 	long walkingTimeout =args.get(13)
-
 	
 	ArrayList<DHParameterKinematics> legs;
 	HashMap<Integer,ArrayList<DHParameterKinematics> > cycleGroups=new HashMap<>();
@@ -126,7 +125,7 @@ return new com.neuronrobotics.sdk.addons.kinematics.IDriveEngine (){
 	double coriolisDivisionsScale = 360.0/coriolisDivisions
 
 	long coriolisTimeLast=0
-	double startAngle = 0Abell, Phillip Benjamin 
+	double startAngle = 0
 	double startSitz=0;
 	double dynamicAngleX=0;
 	double dynamicAngleY=0;
