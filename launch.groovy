@@ -1,5 +1,9 @@
+import com.neuronrobotics.bowlerstudio.scripting.ScriptingEngine
+import com.neuronrobotics.sdk.addons.kinematics.MobileBase
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR
 
-def cat =ScriptingEngine.gitScriptRun(	"https://github.com/OperationSmallKat/SmallKat_V2.git", 
+MobileBase cat =ScriptingEngine.gitScriptRun(	"https://github.com/OperationSmallKat/SmallKat_V2.git", 
 								"loadRobot.groovy", 
 ["https://github.com/OperationSmallKat/SmallKat_V2.git",
 		"Bowler/MediumKat.xml"]);

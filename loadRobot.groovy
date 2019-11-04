@@ -5,7 +5,16 @@
 
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.phy.*;
+
+import com.neuronrobotics.bowlerstudio.creature.MobileBaseLoader
+import com.neuronrobotics.sdk.addons.kinematics.AbstractRotoryLink
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration
+import com.neuronrobotics.sdk.addons.kinematics.LinkFactory
+import com.neuronrobotics.sdk.addons.kinematics.MobileBase
 import com.neuronrobotics.sdk.addons.kinematics.imu.*;
+import com.neuronrobotics.sdk.common.DeviceManager
+import com.neuronrobotics.sdk.common.NonBowlerDevice
+
 import edu.wpi.SimplePacketComs.BytePacketType;
 import edu.wpi.SimplePacketComs.FloatPacketType;
 import edu.wpi.SimplePacketComs.*;
@@ -233,7 +242,7 @@ def dev = DeviceManager.getSpecificDevice( hidDeviceName,{
 	return d
 })
 
-def cat =DeviceManager.getSpecificDevice( "MediumKat",{
+MobileBase cat =DeviceManager.getSpecificDevice( "MediumKat",{
 	//If the device does not exist, prompt for the connection
 	
 	MobileBase m = MobileBaseLoader.fromGit(

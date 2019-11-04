@@ -31,6 +31,12 @@ import eu.mihosoft.vrl.v3d.CSG;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
+
+import com.neuronrobotics.bowlerstudio.physics.CSGPhysicsManager
+import com.neuronrobotics.bowlerstudio.physics.HingeCSGPhysicsManager
+import com.neuronrobotics.bowlerstudio.physics.IPhysicsUpdate
+import com.neuronrobotics.bowlerstudio.physics.PhysicsCore
+import com.neuronrobotics.bowlerstudio.physics.PhysicsEngine
 import com.neuronrobotics.bowlerstudio.physics.TransformFactory
 import  eu.mihosoft.vrl.v3d.ext.quickhull3d.*
 
