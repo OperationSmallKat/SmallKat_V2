@@ -1,5 +1,5 @@
 @GrabResolver(name='nr', root='https://oss.sonatype.org/content/repositories/staging/')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.10.1')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.12.0')
 @Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.13.0')
 @Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
@@ -223,9 +223,10 @@ def dev = DeviceManager.getSpecificDevice( hidDeviceName,{
 	}else{
 		println "Servo Servers at "+addresses
 		simp = new SimpleServoUDPImu(addresses.toArray()[0])
-		simp.setReadTimeout(30);
+		simp.setReadTimeout(20);
 		srv = new SimpleServoUDPServo(addresses.toArray()[0])
-		srv.setReadTimeout(30);
+		srv.setReadTimeout(20);
+		
 	}
 	HIDSimpleComsDevice d = new HIDSimpleComsDevice(simp,srv)
 	d.connect(); // Connect to it.
