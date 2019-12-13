@@ -199,7 +199,7 @@ return new ICadGenerator(){
 
 		File mainBodyFile = ScriptingEngine.fileFromGit(
 			"https://github.com/OperationSmallKat/SmallKat_V2.git",
-			"STLs/LunaBody.stl");
+			"STLs/MKBody.stl");
 
 		// Load the .CSG from the disk and cache it in memory
 		CSG body  = Vitamins.get(mainBodyFile)
