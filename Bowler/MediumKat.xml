@@ -1100,7 +1100,7 @@
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
 	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>45.23809523809524</x>
+	<imuFromCentroid>	<x>0.0</x>
 	<y>0.0</y>
 	<z>120.0</z>
 	<rotw>1.0</rotw>
