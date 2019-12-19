@@ -238,7 +238,7 @@ def dev = DeviceManager.getSpecificDevice( hidDeviceName,{
 	}
 
 	LinkFactory.addLinkProvider("hidfast",{LinkConfiguration conf->
-				println "Loading link "
+				//println "Loading link "
 				return new HIDRotoryLink(d,conf)
 		}
 	)
