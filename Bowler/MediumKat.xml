@@ -5,8 +5,8 @@
 		<file>Bowler/MediumCad.groovy</file>
 	</cadEngine>
 	<driveEngine>
-		<git>https://github.com/madhephaestusdemo/FinalProjectSmallKat.git</git>
-		<file>walking.groovy</file>
+		<git>https://github.com/OperationSmallKat/SmallKat_V2.git</git>
+		<file>Bowler/DynamicWalking.groovy</file>
 	</driveEngine>
 
 <name>MediumKat</name>
