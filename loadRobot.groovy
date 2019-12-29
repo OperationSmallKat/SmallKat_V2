@@ -153,6 +153,7 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 		device=c
 		if(device ==null)
 			throw new RuntimeException("Device can not be null")
+		conf.setDeviceScriptingName(c.simpleServo.getName())	
 		c.simpleServo.addEvent(command,{
 			int val= getCurrentPosition();
 			if(lastPushedVal!=val){
