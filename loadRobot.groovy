@@ -147,13 +147,13 @@ public class HIDRotoryLink extends AbstractRotoryLink{
 	 * @param c the c
 	 * @param conf the conf
 	 */
-	public HIDRotoryLink(HIDSimpleComsDevice c,LinkConfiguration conf) {
+	public HIDRotoryLink(HIDSimpleComsDevice c,LinkConfiguration conf,String devName) {
 		super(conf);
 		index = conf.getHardwareIndex()
 		device=c
 		if(device ==null)
 			throw new RuntimeException("Device can not be null")
-		conf.setDeviceScriptingName(c.simpleServo.getName())	
+		conf.setDeviceScriptingName(devName)	
 		c.simpleServo.addEvent(command,{
 			int val= getCurrentPosition();
 			if(lastPushedVal!=val){
@@ -240,7 +240,7 @@ def dev = DeviceManager.getSpecificDevice( hidDeviceName,{
 
 	LinkFactory.addLinkProvider("hidfast",{LinkConfiguration conf->
 				//println "Loading link "
-				return new HIDRotoryLink(d,conf)
+				return new HIDRotoryLink(d,conf,hidDeviceName)
 		}
 	)
 	println "Connecting new device: "+d
