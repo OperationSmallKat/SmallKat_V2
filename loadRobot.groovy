@@ -1,7 +1,5 @@
 @GrabResolver(name='nr', root='https://oss.sonatype.org/content/repositories/staging/')
 @Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.12.0')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava-HID', version='0.13.0')
-@Grab(group='org.hid4java', module='hid4java', version='0.5.0')
 
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.phy.*;
