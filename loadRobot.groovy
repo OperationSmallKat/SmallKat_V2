@@ -48,20 +48,6 @@ MobileBase cat =DeviceManager.getSpecificDevice( obotDevicename,{
 		args[0],
 		args[1]
 		)
-	def dev = DeviceManager.getSpecificDevice( hidDeviceName)	
-	dev.simple.addEvent(1804, {
-		 double[] imuDataValues = dev.simple.getImuData()
-		 m.getImu()
-		 .setHardwareState(
-		 		new IMUUpdate(
-		 			-imuDataValues[9],	-imuDataValues[11],	-imuDataValues[10],
-					imuDataValues[3],//Double rotxAcceleration,
-					imuDataValues[4],//Double rotyAcceleration,
-					imuDataValues[5],//Double rotzAcceleration 
-			))
-		 
-		 
-	});
 	
 	if(m==null)
 		throw new RuntimeException("Arm failed to assemble itself")
