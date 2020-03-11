@@ -21,8 +21,8 @@ import edu.wpi.SimplePacketComs.device.gameController.*;
 import edu.wpi.SimplePacketComs.device.*
 if(args == null)
 	args = ["https://github.com/OperationSmallKat/greycat.git",
-		"MediumKat.xml","GameController_22","hidDevice"]
-def hidDeviceName = "hidDevice"
+		"MediumKat.xml","GameController_22","kevkat"]
+def hidDeviceName = "kevkat"
 def obotDevicename ="MediumKat"
 if(args.size()>3)
 	hidDeviceName=args[3]
@@ -48,6 +48,7 @@ MobileBase cat =DeviceManager.getSpecificDevice( obotDevicename,{
 		args[0],
 		args[1]
 		)
+	println  "Loading Device "+hidDeviceName
 	def dev = DeviceManager.getSpecificDevice( hidDeviceName)	
 	dev.simple.addEvent(1804, {
 		 double[] imuDataValues = dev.simple.getImuData()
