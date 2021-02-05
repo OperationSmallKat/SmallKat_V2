@@ -59,7 +59,7 @@ class BodyController{
 			//no break
 			case CycleState.stepThroughPoints:
 				if(pontsIndex<legTipMap.values()[0].size()) {
-					println "Interpolation point "+pontsIndex+" time elapsed "+timeElapsedSinceLastCommand
+					//println "Interpolation point "+pontsIndex+" time elapsed "+timeElapsedSinceLastCommand
 					doStep()
 					pontsIndex++;
 				}else {
@@ -103,7 +103,7 @@ class BodyController{
 				if(index>=numberOfInterpolatedPointsInALoop)
 					index -=numberOfInterpolatedPointsInALoop
 			}
-			println "Leg "+leg.getScriptingName()+" index "+index
+			//println "Leg "+leg.getScriptingName()+" index "+index
 			// Get the tip location for this leg at the given index
 			def newTip=feetTipsAll.get((int)index)
 			// Check if the leg can achive the tip location and set
@@ -158,7 +158,7 @@ class BodyController{
 						loop();
 						long elapsed =  System.currentTimeMillis()-start
 						def numMsOfLoopElapsed = numMsOfLoop-elapsed
-						if(numMsOfLoopElapsed<16) {
+						if(numMsOfLoopElapsed<=16) {
 							println "Real time in Body Controller broken! Loop took:"+elapsed+" sleep time "+numMsOfLoopElapsed
 							Thread.sleep(16);
 						}else
@@ -396,6 +396,8 @@ IDriveEngine engine = new IDriveEngine () {
 				con.timeOfMostRecentCommand=System.currentTimeMillis()
 			}
 		}
+
+return engine
 
 TransformNR T_deltBody = new TransformNR(3, 0, 0, new RotationNR(0,0,0))
 for(int i=0;i<100;i++) {
