@@ -25,40 +25,44 @@ class BodyController{
 	double unitScale =1.0/(numPointsInLoop/2.0)
 	Thread bodyLoop = null;
 	boolean availible=true;
-	int numMsOfLoop = 20;
+	int numMsOfLoop = 25;
 	double cycleTime = numMsOfLoop*numPointsInLoop*numberOfInterpolationPoints
-	int numberOfInterpolatedPointsInALoop = numPointsInLoop*numberOfInterpolationPoints
+	int numberOfInterpolatedPointsInALoop = numPointsInLoop*(numberOfInterpolationPoints+1)
 	MobileBase source=null;
 	TransformNR newPose=null;
+	TransformNR incomingPose=null;
+	double incomingSeconds=0;
 	double seconds=0;
 	long timeOfMostRecentCommand=0;
 	boolean cycleStarted=false;
 
 	def state=CycleState.waiting;
-	int pontsIndex=0; 
+	int pontsIndex=0;
 	HashMap<DHParameterKinematics,ArrayList<TransformNR>> legTipMap=null;
-	
+
 	private void loop() {
 		double timeElapsedSinceLastCommand = ((double)(System.currentTimeMillis()-timeOfMostRecentCommand))/1000.0
 		switch(state) {
 			case CycleState.waiting:
 				if(source!=null) {
 					state=CycleState.cycleStart;
+					newPose=incomingPose
+					seconds=incomingSeconds
 					println "Walk cycle starting "+cycleTime;
-				}else					
+				}else
 					break;
 			case CycleState.cycleStart:
 				pontsIndex=0;
 				setupCycle()
 				println "Starting steps"
 				state=CycleState.stepThroughPoints
-				//no break
+			//no break
 			case CycleState.stepThroughPoints:
-				if(pontsIndex<numberOfInterpolatedPointsInALoop) {
+				if(pontsIndex<legTipMap.values()[0].size()) {
 					println "Interpolation point "+pontsIndex+" time elapsed "+timeElapsedSinceLastCommand
 					doStep()
 					pontsIndex++;
-				}else {					
+				}else {
 					state=CycleState.checkForContinue
 				}
 				break;
@@ -72,7 +76,7 @@ class BodyController{
 				}
 				break;
 			case CycleState.cycleFinish:
-				 doFinishingMove()
+				doFinishingMove()
 				state=CycleState.waiting
 				println "Finising move"
 				source=null
@@ -80,7 +84,7 @@ class BodyController{
 				break;
 		}
 	}
-	
+
 	void doFinishingMove() {
 		for(DHParameterKinematics leg:source.getLegs()) {
 			ArrayList<TransformNR> feetTipsAll=legTipMap.get(leg)
@@ -99,11 +103,14 @@ class BodyController{
 				if(index>=numberOfInterpolatedPointsInALoop)
 					index -=numberOfInterpolatedPointsInALoop
 			}
+			println "Leg "+leg.getScriptingName()+" index "+index
 			// Get the tip location for this leg at the given index
 			def newTip=feetTipsAll.get((int)index)
 			// Check if the leg can achive the tip location and set
 			if(leg.checkTaskSpaceTransform(newTip))
 				leg.setDesiredTaskSpaceTransform(newTip, 0)
+			else
+				println "Leg "+leg.getScriptingName()+" failed in body controller"
 		}
 	}
 	void setupCycle(){
@@ -172,7 +179,7 @@ class BodyController{
 	void disconnect() {
 		println "Disconnecting Body Controller"
 		availible=false;
-		 
+
 	}
 
 	/**
@@ -384,13 +391,13 @@ IDriveEngine engine = new IDriveEngine () {
 					return bc;
 				})
 				con.source=source
-				con.newPose=newPose
-				con.seconds=seconds
+				con.incomingPose=newPose
+				con.incomingSeconds=seconds
 				con.timeOfMostRecentCommand=System.currentTimeMillis()
 			}
 		}
 
-TransformNR T_deltBody = new TransformNR(0, 0, 0, new RotationNR(0,0.9,0))
+TransformNR T_deltBody = new TransformNR(3, 0, 0, new RotationNR(0,0,0))
 for(int i=0;i<100;i++) {
 	engine.DriveArc(cat,T_deltBody,0.02)
 	Thread.sleep(20)
