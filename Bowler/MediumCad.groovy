@@ -1,3 +1,5 @@
+package Bowler;
+
 import com.neuronrobotics.bowlerstudio.creature.ICadGenerator;
 import com.neuronrobotics.bowlerstudio.creature.CreatureLab;
 import org.apache.commons.io.IOUtils;
