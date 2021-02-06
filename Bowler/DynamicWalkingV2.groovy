@@ -25,7 +25,7 @@ class BodyController{
 	double unitScale =1.0/(numPointsInLoop/2.0)
 	Thread bodyLoop = null;
 	boolean availible=true;
-	int numMsOfLoop = 25;
+	int numMsOfLoop = 18;
 	double cycleTime = numMsOfLoop*numPointsInLoop*numberOfInterpolationPoints
 	int numberOfInterpolatedPointsInALoop = numPointsInLoop*(numberOfInterpolationPoints+1)
 	MobileBase source=null;
@@ -46,15 +46,14 @@ class BodyController{
 			case CycleState.waiting:
 				if(source!=null) {
 					state=CycleState.cycleStart;
-					newPose=incomingPose
-					seconds=incomingSeconds
 					println "Walk cycle starting "+cycleTime;
 				}else
 					break;
 			case CycleState.cycleStart:
 				pontsIndex=0;
+				newPose=incomingPose
+				seconds=incomingSeconds
 				setupCycle()
-				println "Starting steps"
 				state=CycleState.stepThroughPoints
 			//no break
 			case CycleState.stepThroughPoints:
@@ -69,7 +68,7 @@ class BodyController{
 			case CycleState.checkForContinue:
 				if((timeElapsedSinceLastCommand-(cycleTime/1000.0))<seconds) {
 					state=CycleState.cycleStart
-					println "Cycle not finished, stepping again"
+					//println "Cycle not finished, stepping again"
 					break;
 				}else {
 					state=CycleState.cycleFinish
@@ -84,7 +83,6 @@ class BodyController{
 				break;
 		}
 	}
-
 	void doFinishingMove() {
 		for(DHParameterKinematics leg:source.getLegs()) {
 			ArrayList<TransformNR> feetTipsAll=legTipMap.get(leg)
@@ -118,10 +116,19 @@ class BodyController{
 		if(seconds ==0)
 			seconds=maximumLoopTIme
 		while(seconds<maximumLoopTIme) {
-			println "Loop too fast, foot cycle must take at least "+maximumLoopTIme+", targeted: "+seconds
+			//println "Loop too fast, foot cycle must take at least "+maximumLoopTIme+", targeted: "+seconds
 			newPose=newPose.times(newPose)
 			seconds=seconds+seconds
 		}
+		//rescale transform for one step cycle
+		def scale = seconds/maximumLoopTIme
+		if(scale>1.000001||scale<0.999999) {
+			println "Transform Scaled by "+scale
+			seconds=maximumLoopTIme;
+			newPose=newPose.scale(scale)
+		}
+		
+		
 		int numSteps=1;
 		for(int i=1;i<100;i++) {
 			try {
@@ -135,7 +142,7 @@ class BodyController{
 				// the incoming transform is not possible, scale it into an integer number of steps
 			}
 		}
-		println "Cycle setup, will take "+numSteps+" steps"
+		println "Cycle setup, will take "+newPose+" in "+seconds
 	}
 
 	void clearLegTips() {
@@ -399,10 +406,10 @@ IDriveEngine engine = new IDriveEngine () {
 
 return engine
 
-TransformNR T_deltBody = new TransformNR(3, 0, 0, new RotationNR(0,0,0))
+TransformNR T_deltBody = new TransformNR(0.01, 0, 0, new RotationNR(0,0,0))
 for(int i=0;i<100;i++) {
-	engine.DriveArc(cat,T_deltBody,0.02)
-	Thread.sleep(20)
+	engine.DriveArc(cat,T_deltBody,0.0020)
+	ThreadUtil.wait(30)
 }
 
 
