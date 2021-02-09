@@ -393,7 +393,7 @@ IDriveEngine engine = new IDriveEngine () {
 	 * @param seconds how many seconds it should take
 	 */
 	public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
-		def con = DeviceManager.getSpecificDevice("BodyController-"+cat.getScriptingName(),{
+		def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
 			BodyController bc= new BodyController()
 			bc.connect();
 			return bc;
