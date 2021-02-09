@@ -17,7 +17,7 @@ enum CycleState {
 }
 class BodyController{
 	int numberOfInterpolationPoints=1
-	double stepOverHeight = 15
+	double stepOverHeight = 7
 
 	double zoffsetOfFeetHome = -12.5
 	double xOffsetOfFeetHome = 10
@@ -25,27 +25,64 @@ class BodyController{
 	double unitScale =1.0/(numPointsInLoop/2.0)
 	Thread bodyLoop = null;
 	boolean availible=true;
-	int numMsOfLoop = 20;
+	int numMsOfLoop = 16;
 	double cycleTime = numMsOfLoop*numPointsInLoop*numberOfInterpolationPoints
 	int numberOfInterpolatedPointsInALoop = numPointsInLoop*(numberOfInterpolationPoints+1)
 	MobileBase source=null;
+	MobileBase lastSource=null
 	TransformNR newPose=null;
 	TransformNR incomingPose=null;
 	double incomingSeconds=0;
 	double seconds=0;
 	long timeOfMostRecentCommand=0;
 	boolean cycleStarted=false;
-
+	TransformNR measuredPose=null ;
 	def state=CycleState.waiting;
 	int pontsIndex=0;
+	DHParameterKinematics head=null;
+	DHParameterKinematics tail=null;
 	HashMap<DHParameterKinematics,ArrayList<TransformNR>> legTipMap=null;
-
+	
+	double tailDefaultLift=0;
 	private void loop() {
+		
 		double timeElapsedSinceLastCommand = ((double)(System.currentTimeMillis()-timeOfMostRecentCommand))/1000.0
 		switch(state) {
 			case CycleState.waiting:
 				if(source==null) {
+//					if(lastSource!=null && measuredPose!=null) {
+//						lastSource.setGlobalToFiducialTransform(measuredPose)
+//					}
 					break;
+				}else {
+				
+					if(lastSource!=null) {
+						lastSource.setGlobalToFiducialTransform(new TransformNR())
+						lastSource.getImu().clearhardwareListeners()
+					}
+					lastSource=source;
+					source.getImu().addhardwareListeners({update ->
+						measuredPose=new TransformNR(0,0,0,new RotationNR(	-update.getxAcceleration(),
+								update.getyAcceleration()-90,	update.getzAcceleration()	))
+									.times(new TransformNR(0,0,0,new RotationNR(180,0,0)))
+									.times(new TransformNR(0,0,0,new RotationNR(0,90,0)))
+					})
+					measuredPose=new TransformNR();
+					for(DHParameterKinematics d:source.getAllDHChains()) {
+						if(d.getScriptingName().contentEquals("Tail")) {
+							tail=d;
+							for(int i=0;i<d.numberOfLinks;i++) {
+								tail.getAbstractLink(i).setUseLimits(false);
+							}
+						}
+						if(d.getScriptingName().contentEquals("Head")) {
+							head=d;
+							for(int i=0;i<d.numberOfLinks;i++) {
+								head.getAbstractLink(i).setUseLimits(false);
+							}
+						}
+					}
+					tailDefaultLift = tail.getAbstractLink(0).getMinEngineeringUnits()
 				}
 				state=CycleState.cycleStart;
 				println "Walk cycle starting "+cycleTime;
@@ -82,6 +119,61 @@ class BodyController{
 				clearLegTips()
 				break;
 		}
+		runDynamics();
+	}
+	int coriolisIndex = 0
+	double coriolisTimeBase =30
+	double coriolisDivisions = 360.0/coriolisTimeBase
+	double coriolisDivisionsScale = 360.0/coriolisDivisions
+	double coriolisGain=1.5
+	long coriolisTimeLast=0
+	
+	void runDynamics() {
+		if(measuredPose!=null) {
+			double tiltAngle = Math.toDegrees(measuredPose.getRotation().getRotationTilt())
+			double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
+			double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
+			double computedTilt = (tiltAngle*sinCop*coriolisGain)
+			double computedPan = (tiltAngle*cosCop*coriolisGain)
+			long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
+			double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
+			//println coriolisIndex+" Time division = "+coriolisTimeDivisionIncrement+" elapsed = "+coriolisincrementTime
+			if(coriolisTimeDivisionIncrement<coriolisincrementTime){
+				coriolisTimeLast=System.currentTimeMillis()
+				if(tiltAngle>0){
+					coriolisIndex++;
+					coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
+				}else{
+					coriolisIndex--;
+					coriolisIndex=(coriolisIndex<0?coriolisDivisions-1:coriolisIndex)
+				}
+			}
+			if(Math.abs(tiltAngle)>2) {
+				//println "Pan "+computedPan+" tilt "+computedTilt
+				double[] vect =tail.getCurrentJointSpaceVector()
+				vect[0]=computedTilt
+				vect[1]=computedPan
+				tail.setDesiredJointSpaceVector(vect, 0)
+			}
+
+		}
+	}
+	void boundSet(DHParameterKinematics d, int index,double value) {
+		value=bound(d,index,value)
+		double[] vect =d.getCurrentJointSpaceVector()
+		vect[index]=value
+		d.getAbstractLink(index).setUseLimits(false);
+		d.setDesiredJointSpaceVector(vect, 0)
+	}
+	double bound(DHParameterKinematics d, int index,double value) {
+		def l1 = d.getAbstractLink(index)
+		if(value>l1.getMaxEngineeringUnits()){
+			value=l1.getMaxEngineeringUnits();
+		}
+		if(value<l1.getMinEngineeringUnits()){
+			value=l1.getMinEngineeringUnits();
+		}
+		return value
 	}
 	void doFinishingMove() {
 		for(DHParameterKinematics leg:source.getLegs()) {
@@ -167,9 +259,9 @@ class BodyController{
 						loop();
 						long elapsed =  System.currentTimeMillis()-start
 						def numMsOfLoopElapsed = numMsOfLoop-elapsed
-						if(numMsOfLoopElapsed<=10) {
+						if(numMsOfLoopElapsed<=5) {
 							println "Real time in Body Controller broken! Loop took:"+elapsed+" sleep time "+numMsOfLoopElapsed
-							Thread.sleep(10);
+							Thread.sleep(5);
 						}else
 							Thread.sleep(numMsOfLoopElapsed);
 					}
@@ -181,6 +273,11 @@ class BodyController{
 					disconnect();
 				}
 				println "Body Controller Thread exited ok"
+				disconnect();
+				if(lastSource!=null) {
+					lastSource.setGlobalToFiducialTransform(new TransformNR())
+					lastSource.getImu().clearhardwareListeners()
+				}
 			})
 			bodyLoop.start();
 		}
@@ -367,7 +464,7 @@ class BodyController{
 
 
 IDriveEngine engine = new IDriveEngine () {
-	/**
+			/**
 	 * Driving kinematics should be implemented in here
 	 *
 	 *
@@ -392,18 +489,18 @@ IDriveEngine engine = new IDriveEngine () {
 	 * @param newPose the new pose that should be achived.
 	 * @param seconds how many seconds it should take
 	 */
-	public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
-		def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
-			BodyController bc= new BodyController()
-			bc.connect();
-			return bc;
-		})
-		con.source=source
-		con.incomingPose=newPose
-		con.incomingSeconds=seconds
-		con.timeOfMostRecentCommand=System.currentTimeMillis()
-	}
-}
+			public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
+				def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
+					BodyController bc= new BodyController()
+					bc.connect();
+					return bc;
+				})
+				con.source=source
+				con.incomingPose=newPose
+				con.incomingSeconds=seconds
+				con.timeOfMostRecentCommand=System.currentTimeMillis()
+			}
+		}
 
 return engine
 
