@@ -25,7 +25,7 @@ class BodyController{
 	double unitScale =1.0/(numPointsInLoop/2.0)
 	Thread bodyLoop = null;
 	boolean availible=true;
-	int numMsOfLoop = 18;
+	int numMsOfLoop = 20;
 	double cycleTime = numMsOfLoop*numPointsInLoop*numberOfInterpolationPoints
 	int numberOfInterpolatedPointsInALoop = numPointsInLoop*(numberOfInterpolationPoints+1)
 	MobileBase source=null;
@@ -44,11 +44,12 @@ class BodyController{
 		double timeElapsedSinceLastCommand = ((double)(System.currentTimeMillis()-timeOfMostRecentCommand))/1000.0
 		switch(state) {
 			case CycleState.waiting:
-				if(source!=null) {
-					state=CycleState.cycleStart;
-					println "Walk cycle starting "+cycleTime;
-				}else
+				if(source==null) {
 					break;
+				}
+				state=CycleState.cycleStart;
+				println "Walk cycle starting "+cycleTime;
+			//no break
 			case CycleState.cycleStart:
 				pontsIndex=0;
 				newPose=incomingPose
@@ -57,7 +58,7 @@ class BodyController{
 				state=CycleState.stepThroughPoints
 			//no break
 			case CycleState.stepThroughPoints:
-				if(pontsIndex<legTipMap.values()[0].size()) {
+				if(pontsIndex<numberOfInterpolatedPointsInALoop) {
 					//println "Interpolation point "+pontsIndex+" time elapsed "+timeElapsedSinceLastCommand
 					doStep()
 					pontsIndex++;
@@ -69,7 +70,6 @@ class BodyController{
 				if((timeElapsedSinceLastCommand-(cycleTime/1000.0))<seconds) {
 					state=CycleState.cycleStart
 					//println "Cycle not finished, stepping again"
-					break;
 				}else {
 					state=CycleState.cycleFinish
 				}
@@ -121,28 +121,30 @@ class BodyController{
 			seconds=seconds+seconds
 		}
 		//rescale transform for one step cycle
-		def scale = seconds/maximumLoopTIme
+		def scale = maximumLoopTIme/seconds
 		if(scale>1.000001||scale<0.999999) {
-			println "Transform Scaled by "+scale
+			//println "Transform Scaled by "+scale
 			seconds=maximumLoopTIme;
 			newPose=newPose.scale(scale)
 		}
-		
-		
+
+
 		int numSteps=1;
 		for(int i=1;i<100;i++) {
 			try {
 				clearLegTips()
 				// generate the tip trajectories for all legs at all interpolated points
-				legTipMap =generateLegPlan(newPose.inverse().scale(1.0/((double)i)),numberOfInterpolationPoints,stepOverHeight,source)
+				def scaletmp = 1.0/((double)i)
+				legTipMap =generateLegPlan(newPose.inverse().scale(scaletmp),numberOfInterpolationPoints,stepOverHeight,source)
 				// if plan check passes, store the number of steps and move on
 				numSteps=i;
+				seconds = seconds*scale
 				break;
 			}	catch(RuntimeException ex) {
 				// the incoming transform is not possible, scale it into an integer number of steps
 			}
 		}
-		println "Cycle setup, will take "+newPose+" in "+seconds
+		//println "Cycle setup, will take "+newPose+" in "+seconds
 	}
 
 	void clearLegTips() {
@@ -165,9 +167,9 @@ class BodyController{
 						loop();
 						long elapsed =  System.currentTimeMillis()-start
 						def numMsOfLoopElapsed = numMsOfLoop-elapsed
-						if(numMsOfLoopElapsed<=16) {
+						if(numMsOfLoopElapsed<=10) {
 							println "Real time in Body Controller broken! Loop took:"+elapsed+" sleep time "+numMsOfLoopElapsed
-							Thread.sleep(16);
+							Thread.sleep(10);
 						}else
 							Thread.sleep(numMsOfLoopElapsed);
 					}
@@ -361,12 +363,11 @@ class BodyController{
 
 
 }
-MobileBase cat = DeviceManager.getSpecificDevice("SmallKatGenerated")
 
 
 
 IDriveEngine engine = new IDriveEngine () {
-			/**
+	/**
 	 * Driving kinematics should be implemented in here
 	 *
 	 *
@@ -391,26 +392,21 @@ IDriveEngine engine = new IDriveEngine () {
 	 * @param newPose the new pose that should be achived.
 	 * @param seconds how many seconds it should take
 	 */
-			public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
-				def con = DeviceManager.getSpecificDevice("BodyController-"+cat.getScriptingName(),{
-					BodyController bc= new BodyController()
-					bc.connect();
-					return bc;
-				})
-				con.source=source
-				con.incomingPose=newPose
-				con.incomingSeconds=seconds
-				con.timeOfMostRecentCommand=System.currentTimeMillis()
-			}
-		}
+	public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
+		def con = DeviceManager.getSpecificDevice("BodyController-"+cat.getScriptingName(),{
+			BodyController bc= new BodyController()
+			bc.connect();
+			return bc;
+		})
+		con.source=source
+		con.incomingPose=newPose
+		con.incomingSeconds=seconds
+		con.timeOfMostRecentCommand=System.currentTimeMillis()
+	}
+}
 
 return engine
 
-TransformNR T_deltBody = new TransformNR(0.01, 0, 0, new RotationNR(0,0,0))
-for(int i=0;i<100;i++) {
-	engine.DriveArc(cat,T_deltBody,0.0020)
-	ThreadUtil.wait(30)
-}
 
 
 
