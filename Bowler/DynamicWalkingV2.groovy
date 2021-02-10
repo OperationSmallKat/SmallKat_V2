@@ -123,7 +123,6 @@ class BodyController{
 				clearLegTips()
 				break;
 		}
-		runDynamics();
 	}
 	int coriolisIndex = 0
 	double coriolisTimeBase =30
@@ -265,6 +264,7 @@ class BodyController{
 					while(availible) {
 						long start = System.currentTimeMillis();
 						loop();
+						runDynamics();
 						long elapsed =  System.currentTimeMillis()-start
 						def numMsOfLoopElapsed = numMsOfLoop-elapsed
 						if(numMsOfLoopElapsed<=5) {
