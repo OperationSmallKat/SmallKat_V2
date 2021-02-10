@@ -16,7 +16,7 @@ enum CycleState {
 	cycleFinish
 }
 class BodyController{
-	int numberOfInterpolationPoints=1
+	int numberOfInterpolationPoints=0
 	double stepOverHeight = 7
 
 	double zoffsetOfFeetHome = -12.5
@@ -25,8 +25,8 @@ class BodyController{
 	double unitScale =1.0/(numPointsInLoop/2.0)
 	Thread bodyLoop = null;
 	boolean availible=true;
-	int numMsOfLoop = 16;
-	double cycleTime = numMsOfLoop*numPointsInLoop*numberOfInterpolationPoints
+	int numMsOfLoop = 28;
+	double cycleTime = numMsOfLoop*numPointsInLoop*(numberOfInterpolationPoints+1)+(numMsOfLoop*1)
 	int numberOfInterpolatedPointsInALoop = numPointsInLoop*(numberOfInterpolationPoints+1)
 	MobileBase source=null;
 	MobileBase lastSource=null
@@ -42,7 +42,7 @@ class BodyController{
 	DHParameterKinematics head=null;
 	DHParameterKinematics tail=null;
 	HashMap<DHParameterKinematics,ArrayList<TransformNR>> legTipMap=null;
-	
+	long timeOfStartOfCycle = System.currentTimeMillis()
 	double tailDefaultLift=0;
 	private void loop() {
 		
@@ -85,9 +85,11 @@ class BodyController{
 					tailDefaultLift = tail.getAbstractLink(0).getMinEngineeringUnits()
 				}
 				state=CycleState.cycleStart;
-				println "Walk cycle starting "+cycleTime;
+				
 			//no break
 			case CycleState.cycleStart:
+				println "Walk cycle starting "+cycleTime + " last Took "+(System.currentTimeMillis()-timeOfStartOfCycle);
+				timeOfStartOfCycle = System.currentTimeMillis()
 				pontsIndex=0;
 				newPose=incomingPose
 				seconds=incomingSeconds
@@ -99,18 +101,20 @@ class BodyController{
 					//println "Interpolation point "+pontsIndex+" time elapsed "+timeElapsedSinceLastCommand
 					doStep()
 					pontsIndex++;
+					break;
 				}else {
 					state=CycleState.checkForContinue
 				}
-				break;
+				//no break
 			case CycleState.checkForContinue:
 				if((timeElapsedSinceLastCommand-(cycleTime/1000.0))<seconds) {
 					state=CycleState.cycleStart
 					//println "Cycle not finished, stepping again"
+					break;
 				}else {
 					state=CycleState.cycleFinish
 				}
-				break;
+				// no break
 			case CycleState.cycleFinish:
 				doFinishingMove()
 				state=CycleState.waiting
@@ -235,7 +239,6 @@ class BodyController{
 				legTipMap =generateLegPlan(newPose.inverse().scale(scaletmp),numberOfInterpolationPoints,stepOverHeight,source)
 				// if plan check passes, store the number of steps and move on
 				numSteps=i;
-				seconds = seconds*scale
 				break;
 			}	catch(RuntimeException ex) {
 				// the incoming transform is not possible, scale it into an integer number of steps
@@ -401,8 +404,10 @@ class BodyController{
 			TransformNR newTip=feetTips.get(i)
 			// compute the delta from previous tip and this one
 			TransformNR delta =previous.inverse().times(newTip)
+			double numInterpPoints= numberOfInterpolationPoints+1.0
+			double increment =(1.0/numInterpPoints)
 			// for each interpolated point
-			for(double j=0;j<=1;j+=(1/numberOfInterpolationPoints)) {
+			for(double j=increment;j<=1;j+=(1/numInterpPoints)) {
 				// scale the delta from 0 to 1 (j)
 				// and apply it to the previous transform
 				def interm =previous.times(delta.scale(j))
