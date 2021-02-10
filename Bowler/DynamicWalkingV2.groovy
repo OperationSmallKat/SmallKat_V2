@@ -135,7 +135,7 @@ class BodyController{
 				tiltAngle+=-180
 			if(tiltAngle<-90)
 				tiltAngle+=180
-			println "Measured tilt = "+tiltAngle
+			//println "Measured tilt = "+tiltAngle
 			double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 			double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 			double computedTilt = (tiltAngle*sinCop*coriolisGain)
