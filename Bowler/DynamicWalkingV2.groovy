@@ -131,6 +131,11 @@ class BodyController{
 	void runDynamics() {
 		if(measuredPose!=null) {
 			double tiltAngle = Math.toDegrees(measuredPose.getRotation().getRotationTilt())
+			if(tiltAngle>90)
+				tiltAngle+=-180
+			if(tiltAngle<-90)
+				tiltAngle+=180
+			println "Measured tilt = "+tiltAngle
 			double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 			double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 			double computedTilt = (tiltAngle*sinCop*coriolisGain)
