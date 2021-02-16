@@ -107,9 +107,9 @@ class BodyController{
 				}
 				//no break
 			case CycleState.checkForContinue:
-				if((timeElapsedSinceLastCommand-(cycleTime/1000.0))<seconds) {
+				if((timeElapsedSinceLastCommand)<seconds/3) {
 					state=CycleState.cycleStart
-					//println "Cycle not finished, stepping again"
+					println "Cycle not finished, stepping again took "+timeElapsedSinceLastCommand+" expected "+seconds
 					break;
 				}else {
 					state=CycleState.cycleFinish
