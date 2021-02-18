@@ -26,6 +26,15 @@ class BodyController{
 	Thread bodyLoop = null;
 	boolean availible=true;
 	int numMsOfLoop = 32;
+	int coriolisIndex = 0
+	// ms ofst the tail loop
+	double timeOfTailLoop = numMsOfLoop*8
+	double coriolisTimeBase =numMsOfLoop
+	// degrees per time slice
+	double coriolisDivisions = timeOfTailLoop/coriolisTimeBase
+	double coriolisDivisionsScale = 360.0/coriolisDivisions
+	double coriolisGain=2.5
+	
 	double cycleTime = numMsOfLoop*numPointsInLoop*(numberOfInterpolationPoints+1)+(numMsOfLoop*1)
 	int numberOfInterpolatedPointsInALoop = numPointsInLoop*(numberOfInterpolationPoints+1)
 	MobileBase source=null;
@@ -57,27 +66,33 @@ class BodyController{
 				}else {
 				
 					if(lastSource!=null) {
+						// remove old hardware listeners
 						lastSource.setGlobalToFiducialTransform(new TransformNR())
 						lastSource.getImu().clearhardwareListeners()
 					}
 					lastSource=source;
+					// Add the IMU listener
 					source.getImu().addhardwareListeners({update ->
+						// read the IMU and transform it to match the hardware
 						measuredPose=new TransformNR(0,0,0,new RotationNR(	-update.getxAcceleration(),
 								update.getyAcceleration()-90,	update.getzAcceleration()	))
 									.times(new TransformNR(0,0,0,new RotationNR(180,0,0)))
 									.times(new TransformNR(0,0,0,new RotationNR(0,90,0)))
 					})
 					measuredPose=new TransformNR();
+					// Search for the head and tail limbs
 					for(DHParameterKinematics d:source.getAllDHChains()) {
 						if(d.getScriptingName().contentEquals("Tail")) {
 							tail=d;
 							for(int i=0;i<d.numberOfLinks;i++) {
+								// disable link limit exceptions
 								tail.getAbstractLink(i).setUseLimits(false);
 							}
 						}
 						if(d.getScriptingName().contentEquals("Head")) {
 							head=d;
 							for(int i=0;i<d.numberOfLinks;i++) {
+								// disable link limit exceptions
 								head.getAbstractLink(i).setUseLimits(false);
 							}
 						}
@@ -88,7 +103,7 @@ class BodyController{
 				
 			//no break
 			case CycleState.cycleStart:
-				println "Walk cycle starting "+cycleTime + " last Took "+(System.currentTimeMillis()-timeOfStartOfCycle);
+				//println "Walk cycle starting "+cycleTime + " last Took "+(System.currentTimeMillis()-timeOfStartOfCycle);
 				timeOfStartOfCycle = System.currentTimeMillis()
 				pontsIndex=0;
 				newPose=incomingPose
@@ -107,9 +122,9 @@ class BodyController{
 				}
 				//no break
 			case CycleState.checkForContinue:
-				if((timeElapsedSinceLastCommand)<seconds/3) {
+				if((timeElapsedSinceLastCommand)<seconds/2) {
 					state=CycleState.cycleStart
-					println "Cycle not finished, stepping again took "+timeElapsedSinceLastCommand+" expected "+seconds
+					//println "Cycle not finished, stepping again took "+timeElapsedSinceLastCommand+" expected "+seconds
 					break;
 				}else {
 					state=CycleState.cycleFinish
@@ -118,19 +133,13 @@ class BodyController{
 			case CycleState.cycleFinish:
 				doFinishingMove()
 				state=CycleState.waiting
-				println "Finising move"
+				//println "Finising move"
 				source=null
 				clearLegTips()
 				break;
 		}
 	}
-	int coriolisIndex = 0
-	double coriolisTimeBase =30
-	double coriolisDivisions = 360.0/coriolisTimeBase
-	double coriolisDivisionsScale = 360.0/coriolisDivisions
-	double coriolisGain=1.5
-	long coriolisTimeLast=0
-	
+
 	void runDynamics() {
 		if(measuredPose!=null) {
 			double tiltAngle = Math.toDegrees(measuredPose.getRotation().getRotationTilt())
@@ -143,27 +152,23 @@ class BodyController{
 			double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
 			double computedTilt = (tiltAngle*sinCop*coriolisGain)
 			double computedPan = (tiltAngle*cosCop*coriolisGain)
-			long coriolisincrementTime = (System.currentTimeMillis()-coriolisTimeLast)
-			double coriolisTimeDivisionIncrement = (coriolisTimeBase/coriolisDivisions)
-			//println coriolisIndex+" Time division = "+coriolisTimeDivisionIncrement+" elapsed = "+coriolisincrementTime
-			if(coriolisTimeDivisionIncrement<coriolisincrementTime){
-				coriolisTimeLast=System.currentTimeMillis()
-				if(tiltAngle>0){
-					coriolisIndex++;
-					coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
-				}else{
-					coriolisIndex--;
-					coriolisIndex=(coriolisIndex<0?coriolisDivisions-1:coriolisIndex)
-				}
+			if(tiltAngle>0){
+				coriolisIndex++;
+				coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
+			}else{
+				coriolisIndex--;
+				coriolisIndex=(coriolisIndex<0?coriolisDivisions-1:coriolisIndex)
 			}
+	
+			double[] vect =tail.getCurrentJointSpaceVector()
+			vect[0]=0
+			vect[1]=0
 			if(Math.abs(tiltAngle)>2) {
 				//println "Pan "+computedPan+" tilt "+computedTilt
-				double[] vect =tail.getCurrentJointSpaceVector()
-				vect[0]=computedTilt
-				vect[1]=computedPan
-				tail.setDesiredJointSpaceVector(vect, 0)
+				vect[0]+=computedTilt
+				vect[1]+=computedPan	
 			}
-
+			tail.setDesiredJointSpaceVector(vect, 0)
 		}
 	}
 	void boundSet(DHParameterKinematics d, int index,double value) {
@@ -183,6 +188,7 @@ class BodyController{
 		}
 		return value
 	}
+	// Put the feet back into the nutral pose
 	void doFinishingMove() {
 		for(DHParameterKinematics leg:source.getLegs()) {
 			ArrayList<TransformNR> feetTipsAll=legTipMap.get(leg)
@@ -216,7 +222,7 @@ class BodyController{
 		if(seconds ==0)
 			seconds=maximumLoopTIme
 		while(seconds<maximumLoopTIme) {
-			//println "Loop too fast, foot cycle must take at least "+maximumLoopTIme+", targeted: "+seconds
+			//println "Loop too fast, foot cycle took "+maximumLoopTIme+", targeted: "+seconds
 			newPose=newPose.times(newPose)
 			seconds=seconds+seconds
 		}
@@ -259,32 +265,49 @@ class BodyController{
 		println "Connecting Body Controller"
 		availible=true;
 		if(bodyLoop==null) {
+			// Create a thread to run the body controller
 			bodyLoop=new Thread({
 				try {
+					// initialize real-time initial conditions
+					long start = System.currentTimeMillis();
+					long index=0;
+					// run body controller until disconnected
 					while(availible) {
-						long start = System.currentTimeMillis();
+						// update the gait generation
 						loop();
+						// update the dynamics controller
 						runDynamics();
-						long elapsed =  System.currentTimeMillis()-start
+						// compute the real-time condition
+						long elapsed =  System.currentTimeMillis()-(start +(numMsOfLoop*index) )
 						def numMsOfLoopElapsed = numMsOfLoop-elapsed
-						if(numMsOfLoopElapsed<=5) {
+						// check for real-time overrun
+						if(numMsOfLoopElapsed<=16) {
 							println "Real time in Body Controller broken! Loop took:"+elapsed+" sleep time "+numMsOfLoopElapsed
-							Thread.sleep(5);
-						}else
+							// this controller must run slower than the UI thread
+							Thread.sleep(16);
+						}else {
+							// sleep for the computed amount of time to keep the start of loop consistant
 							Thread.sleep(numMsOfLoopElapsed);
+						}
+						// update the real-time index
+						index++
 					}
-					source=null;
-					newPose=null;
-					clearLegTips()
 				}catch(Throwable t) {
 					BowlerStudio.printStackTrace(t)
-					disconnect();
 				}
+				// cleanup internal variables
+				source=null;
+				newPose=null;
+				clearLegTips()
 				println "Body Controller Thread exited ok"
-				disconnect();
+				if(availible)
+					disconnect();
 				if(lastSource!=null) {
-					lastSource.setGlobalToFiducialTransform(new TransformNR())
-					lastSource.getImu().clearhardwareListeners()
+					if(lastSource.isAvailable()) {
+						// undo the display
+						lastSource.setGlobalToFiducialTransform(new TransformNR())
+						lastSource.getImu().clearhardwareListeners()
+					}
 				}
 			})
 			bodyLoop.start();
@@ -499,18 +522,25 @@ IDriveEngine engine = new IDriveEngine () {
 	 * @param newPose the new pose that should be achived.
 	 * @param seconds how many seconds it should take
 	 */
-			public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
-				def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
-					BodyController bc= new BodyController()
-					bc.connect();
-					return bc;
-				})
-				con.source=source
-				con.incomingPose=newPose
-				con.incomingSeconds=seconds
-				con.timeOfMostRecentCommand=System.currentTimeMillis()
-			}
+	
+	boolean firstRun=true
+	public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
+		try {
+
+			def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
+				BodyController bc= new BodyController()
+				bc.connect();
+				return bc;
+			})
+			con.source=source
+			con.incomingPose=newPose
+			con.incomingSeconds=seconds
+			con.timeOfMostRecentCommand=System.currentTimeMillis()
+		}catch(Throwable t) {
+			t.printStackTrace()
 		}
+	}
+}
 
 return engine
 
