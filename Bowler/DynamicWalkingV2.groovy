@@ -18,7 +18,6 @@ enum CycleState {
 class BodyController{
 	int numberOfInterpolationPoints=0
 	double stepOverHeight = 7
-
 	double zoffsetOfFeetHome = -12.5
 	double xOffsetOfFeetHome = 10
 	double numPointsInLoop =12.0
@@ -27,13 +26,13 @@ class BodyController{
 	boolean availible=true;
 	int numMsOfLoop = 32;
 	int coriolisIndex = 0
-	// ms ofst the tail loop
-	double timeOfTailLoop = numMsOfLoop*8
+	// ms of the tail loop
+	double timeOfTailLoop = numMsOfLoop*10
 	double coriolisTimeBase =numMsOfLoop
 	// degrees per time slice
 	double coriolisDivisions = timeOfTailLoop/coriolisTimeBase
 	double coriolisDivisionsScale = 360.0/coriolisDivisions
-	double coriolisGain=2.5
+	double coriolisGain=3.5
 	
 	double cycleTime = numMsOfLoop*numPointsInLoop*(numberOfInterpolationPoints+1)+(numMsOfLoop*1)
 	int numberOfInterpolatedPointsInALoop = numPointsInLoop*(numberOfInterpolationPoints+1)
@@ -53,6 +52,7 @@ class BodyController{
 	HashMap<DHParameterKinematics,ArrayList<TransformNR>> legTipMap=null;
 	long timeOfStartOfCycle = System.currentTimeMillis()
 	double tailDefaultLift=0;
+	
 	private void loop() {
 		
 		double timeElapsedSinceLastCommand = ((double)(System.currentTimeMillis()-timeOfMostRecentCommand))/1000.0
@@ -163,7 +163,7 @@ class BodyController{
 			double[] vect =tail.getCurrentJointSpaceVector()
 			vect[0]=0
 			vect[1]=0
-			if(Math.abs(tiltAngle)>2) {
+			if(Math.abs(tiltAngle)>5) {
 				//println "Pan "+computedPan+" tilt "+computedTilt
 				vect[0]+=computedTilt
 				vect[1]+=computedPan	
@@ -171,42 +171,64 @@ class BodyController{
 			tail.setDesiredJointSpaceVector(vect, 0)
 		}
 	}
-	void boundSet(DHParameterKinematics d, int index,double value) {
-		value=bound(d,index,value)
-		double[] vect =d.getCurrentJointSpaceVector()
-		vect[index]=value
-		d.getAbstractLink(index).setUseLimits(false);
-		d.setDesiredJointSpaceVector(vect, 0)
-	}
-	double bound(DHParameterKinematics d, int index,double value) {
-		def l1 = d.getAbstractLink(index)
-		if(value>l1.getMaxEngineeringUnits()){
-			value=l1.getMaxEngineeringUnits();
-		}
-		if(value<l1.getMinEngineeringUnits()){
-			value=l1.getMinEngineeringUnits();
-		}
-		return value
-	}
-	// Put the feet back into the nutral pose
+
+	// Put the feet back into the neutral pose
 	void doFinishingMove() {
 		for(DHParameterKinematics leg:source.getLegs()) {
 			ArrayList<TransformNR> feetTipsAll=legTipMap.get(leg)
 			leg.setDesiredTaskSpaceTransform(feetTipsAll.get((int)0), 0)
 		}
 	}
+	/**
+	 * Determine if the leg is A group or B group
+	 * @param leg the leg to check
+	 * @return true if the leg is in group B, false otherwise
+	 */
+	boolean isAgroup(DHParameterKinematics leg) {
+		// Check the limbs root for its location to determine corners
+		TransformNR  legRoot= leg.getRobotToFiducialTransform()
+		if(legRoot.getX()<=0&&legRoot.getY()<0 ){
+			return true
+		}else
+		if(legRoot.getX()>=0&&legRoot.getY()>=0 ){
+			return true
+		}
+		return false
+	}
+	/**
+	 * Determine if the leg is A group or B group
+	 * @param leg the leg to check
+	 * @return true if the leg is in group B, false otherwise
+	 */
+	boolean isBgroup(DHParameterKinematics leg) {
+		// Check the limbs root for its location to determine corners
+		TransformNR  legRoot= leg.getRobotToFiducialTransform()
+		if(legRoot.getX()>0&&legRoot.getY()<0 ){
+			return true
+		}else
+		if(legRoot.getX()<0&&legRoot.getY()>=0 ){
+			return true
+		}
+		return false
+	}
+
+
 	void doStep(){
 		// for each leg in the cat
 		for(DHParameterKinematics leg:source.getLegs()) {
 			ArrayList<TransformNR> feetTipsAll=legTipMap.get(leg)
+			def index =0
 			// A group follows the index
-			def index = pontsIndex;
+			if(isAgroup( leg)) {
+				index=pontsIndex
+			}
 			// B group is offset by half of the cycle.
 			if(isBgroup( leg)) {
-				index+=numberOfInterpolatedPointsInALoop/2
-				if(index>=numberOfInterpolatedPointsInALoop)
-					index -=numberOfInterpolatedPointsInALoop
+				index=pontsIndex+numberOfInterpolatedPointsInALoop/2
 			}
+			
+			if(index>=numberOfInterpolatedPointsInALoop)
+				index -=numberOfInterpolatedPointsInALoop
 			//println "Leg "+leg.getScriptingName()+" index "+index
 			// Get the tip location for this leg at the given index
 			def newTip=feetTipsAll.get((int)index)
@@ -235,7 +257,6 @@ class BodyController{
 		}
 
 
-		int numSteps=1;
 		for(int i=1;i<100;i++) {
 			try {
 				clearLegTips()
@@ -243,7 +264,6 @@ class BodyController{
 				def scaletmp = 1.0/((double)i)
 				legTipMap =generateLegPlan(newPose.inverse().scale(scaletmp),numberOfInterpolationPoints,stepOverHeight,source)
 				// if plan check passes, store the number of steps and move on
-				numSteps=i;
 				break;
 			}	catch(RuntimeException ex) {
 				// the incoming transform is not possible, scale it into an integer number of steps
@@ -473,22 +493,6 @@ class BodyController{
 			legTipMap.put(leg,feetTipsAll)
 		}
 		return legTipMap
-	}
-	/**
-	 * Determine if the leg is A group or B group
-	 * @param leg the leg to check
-	 * @return true if the leg is in group B, false otherwise
-	 */
-	boolean isBgroup(DHParameterKinematics leg) {
-		// Check the limbs root for its location to determine corners
-		TransformNR  legRoot= leg.getRobotToFiducialTransform()
-		if(legRoot.getX()>0&&legRoot.getY()<0 ){
-			return true
-		}else
-		if(legRoot.getX()<0&&legRoot.getY()>0 ){
-			return true
-		}
-		return false
 	}
 
 
