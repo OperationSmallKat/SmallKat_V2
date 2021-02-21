@@ -18,8 +18,7 @@ enum CycleState {
 class BodyController{
 	int numberOfInterpolationPoints=0
 	double stepOverHeight = 7
-	double zoffsetOfFeetHome = -12.5
-	double xOffsetOfFeetHome = 10
+
 	double numPointsInLoop =12.0
 	double unitScale =1.0/(numPointsInLoop/2.0)
 	Thread bodyLoop = null;
@@ -140,7 +139,7 @@ class BodyController{
 		}
 	}
 
-	void runDynamics() {
+	private void runDynamics() {
 		if(measuredPose!=null) {
 			double tiltAngle = Math.toDegrees(measuredPose.getRotation().getRotationTilt())
 			if(tiltAngle>90)
@@ -403,10 +402,7 @@ class BodyController{
 	 */
 	ArrayList<TransformNR> computeFootCorners(MobileBase cat,DHParameterKinematics leg,ArrayList<TransformNR> cycle) {
 		// Compute the "home" location for the feet, where do they start the cycle
-		TransformNR T_tg = leg.calcHome()
-				.translateZ(zoffsetOfFeetHome)// move the starting point down
-				.translateX(xOffsetOfFeetHome); // move the starting point forward
-		// store the 12 global space tips of the given limb
+		TransformNR T_tg = cat.calcHome(leg)
 		ArrayList<TransformNR> tips = []
 		// The previous tip is initialized to the "home" for the given limb
 		def lastTip = T_tg
@@ -528,12 +524,22 @@ IDriveEngine engine = new IDriveEngine () {
 	 */
 	
 	boolean firstRun=true
+	double zoffsetOfFeetHome = -12.5
+	double xOffsetOfFeetHome = 5
+	double ySplayOut = 10
 	public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
 		try {
 
 			def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
 				BodyController bc= new BodyController()
 				bc.connect();
+				source.setHomeProvider({limb->
+					return limb.calcHome()
+								.translateZ(zoffsetOfFeetHome)// move the starting point down
+								.translateX(xOffsetOfFeetHome) // move the starting point forward
+								.translateY(limb.getRobotToFiducialTransform().getY()>0?ySplayOut:-ySplayOut) // move the starting point forward
+								
+				})
 				return bc;
 			})
 			con.source=source
