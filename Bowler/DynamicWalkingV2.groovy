@@ -8,6 +8,69 @@ import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR
 import com.neuronrobotics.sdk.common.DeviceManager
 import com.neuronrobotics.sdk.common.Log
+
+IDriveEngine engine = new IDriveEngine () {
+	/**
+	* Driving kinematics should be implemented in here
+	*
+	*
+	* This method should not block You will get that called every 0.1 to 0.01 seconds
+	* by the jog widget with a small displacement transform. If the last command
+	* finishes before a new one comes in, reset the driving device.
+	* if a new command comes in then keep moving. Assume that the most important
+	* thing here is time synchronicity.you may get it called with a large transform,
+	* larger than you can take in one step,a nd you may get a transform with a step size so
+	* small it would never move. You will need to warp and stretch the transform coming in
+	* to make sure there are an integer number of steps, with at least some minimum step length.
+	*
+	* Be sure to have any threads you create timeout and die, don't wait for disconnect, as you
+	* are developing that will be a pain in the ass
+	*
+	* Essentially, this command defines a velocity (transform/second)and you need to maintain
+	* that velocity, descretized into steps, and stop as soon as the last velocity term times out
+	* also, do not assume it will ever be pure rotation nor pure translation, assume all
+	* commands are a combo of both.
+	*
+	* @param source the source
+	* @param newPose the new pose that should be achived.
+	* @param seconds how many seconds it should take
+	*/
+
+	boolean firstRun=true
+	double zoffsetOfFeetHome = -12.5
+	double xOffsetOfFeetHome = 5
+	double ySplayOut = 10
+	double stepOverHeight = 7
+	public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
+		try {
+		
+			def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
+				BodyController bc= new BodyController()
+				bc.connect();
+				source.setHomeProvider({limb->
+					return limb.calcHome()
+								.translateZ(zoffsetOfFeetHome)// move the starting point down
+								.translateX(xOffsetOfFeetHome) // move the starting point forward
+								.translateY(limb.getRobotToFiducialTransform().getY()>0?
+									ySplayOut:-ySplayOut) // move the starting point forward
+								
+				})
+				return bc;
+			})
+			con.stepOverHeight=stepOverHeight
+			con.source=source
+			con.incomingPose=newPose
+			con.incomingSeconds=seconds
+			con.timeOfMostRecentCommand=System.currentTimeMillis()
+			
+		}catch(Throwable t) {
+			t.printStackTrace()
+		}
+	}
+}
+
+return engine
+
 enum CycleState {
 	waiting,
 	cycleStart,
@@ -17,7 +80,7 @@ enum CycleState {
 }
 class BodyController{
 	int numberOfInterpolationPoints=0
-	double stepOverHeight = 7
+	double stepOverHeight =1
 
 	double numPointsInLoop =12.0
 	double unitScale =1.0/(numPointsInLoop/2.0)
@@ -496,63 +559,7 @@ class BodyController{
 
 
 
-IDriveEngine engine = new IDriveEngine () {
-			/**
-	 * Driving kinematics should be implemented in here
-	 *
-	 *
-	 * This method should not block You will get that called every 0.1 to 0.01 seconds
-	 * by the jog widget with a small displacement transform. If the last command
-	 * finishes before a new one comes in, reset the driving device.
-	 * if a new command comes in then keep moving. Assume that the most important
-	 * thing here is time synchronicity.you may get it called with a large transform,
-	 * larger than you can take in one step,a nd you may get a transform with a step size so
-	 * small it would never move. You will need to warp and stretch the transform coming in
-	 * to make sure there are an integer number of steps, with at least some minimum step length.
-	 *
-	 * Be sure to have any threads you create timeout and die, don't wait for disconnect, as you
-	 * are developing that will be a pain in the ass
-	 *
-	 * Essentially, this command defines a velocity (transform/second)and you need to maintain
-	 * that velocity, descretized into steps, and stop as soon as the last velocity term times out
-	 * also, do not assume it will ever be pure rotation nor pure translation, assume all
-	 * commands are a combo of both.
-	 *
-	 * @param source the source
-	 * @param newPose the new pose that should be achived.
-	 * @param seconds how many seconds it should take
-	 */
-	
-	boolean firstRun=true
-	double zoffsetOfFeetHome = -12.5
-	double xOffsetOfFeetHome = 5
-	double ySplayOut = 10
-	public void DriveArc(MobileBase source,TransformNR newPose,double seconds) {
-		try {
 
-			def con = DeviceManager.getSpecificDevice("BodyController-"+source.getScriptingName(),{
-				BodyController bc= new BodyController()
-				bc.connect();
-				source.setHomeProvider({limb->
-					return limb.calcHome()
-								.translateZ(zoffsetOfFeetHome)// move the starting point down
-								.translateX(xOffsetOfFeetHome) // move the starting point forward
-								.translateY(limb.getRobotToFiducialTransform().getY()>0?ySplayOut:-ySplayOut) // move the starting point forward
-								
-				})
-				return bc;
-			})
-			con.source=source
-			con.incomingPose=newPose
-			con.incomingSeconds=seconds
-			con.timeOfMostRecentCommand=System.currentTimeMillis()
-		}catch(Throwable t) {
-			t.printStackTrace()
-		}
-	}
-}
-
-return engine
 
 
 
