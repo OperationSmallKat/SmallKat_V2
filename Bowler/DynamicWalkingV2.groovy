@@ -210,10 +210,10 @@ class BodyController{
 			if(tiltAngle<-90)
 				tiltAngle+=180
 			def abs = -Math.abs(tiltAngle)
-			def min =5
-			if(Math.abs(tiltAngle)<min) {
+			def min =-5
+			if(abs>min) {
 				coriolisIndex=0;
-				abs=-min
+				abs=min
 			}
 			def coriolisIndexCoriolisDivisionsScale = coriolisIndex*coriolisDivisionsScale
 			
