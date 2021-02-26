@@ -209,11 +209,20 @@ class BodyController{
 				tiltAngle+=-180
 			if(tiltAngle<-90)
 				tiltAngle+=180
-			//println "Measured tilt = "+tiltAngle
-			double sinCop = Math.sin(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
-			double cosCop = Math.cos(Math.toRadians(coriolisIndex*coriolisDivisionsScale))
-			double computedTilt = (tiltAngle*sinCop*coriolisGain)
-			double computedPan = (tiltAngle*cosCop*coriolisGain)
+			def abs = -Math.abs(tiltAngle)
+			def min =5
+			if(Math.abs(tiltAngle)<min) {
+				coriolisIndex=0;
+				abs=-min
+			}
+			def coriolisIndexCoriolisDivisionsScale = coriolisIndex*coriolisDivisionsScale
+			
+			def coriolisIndexCoriolisDivisionsScaleTiltAngle = coriolisIndexCoriolisDivisionsScale+tiltAngle
+			//println "Measured tilt = "+tiltAngle+" target = "+coriolisIndexCoriolisDivisionsScaleTiltAngle
+			double sinCop = Math.sin(Math.toRadians(coriolisIndexCoriolisDivisionsScaleTiltAngle))
+			double cosCop = Math.cos(Math.toRadians(coriolisIndexCoriolisDivisionsScaleTiltAngle))
+			double computedTilt = (abs*cosCop*coriolisGain)
+			double computedPan = (abs*sinCop*coriolisGain)
 			if(tiltAngle>0){
 				coriolisIndex++;
 				coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
@@ -223,13 +232,9 @@ class BodyController{
 			}
 	
 			double[] vect =tail.getCurrentJointSpaceVector()
-			vect[0]=0
-			vect[1]=0
-			if(Math.abs(tiltAngle)>5) {
-				//println "Pan "+computedPan+" tilt "+computedTilt
-				vect[0]+=computedTilt
-				vect[1]+=computedPan	
-			}
+			vect[0]=computedTilt
+			vect[1]=computedPan
+			
 			tail.setDesiredJointSpaceVector(vect, 0)
 		}
 	}
