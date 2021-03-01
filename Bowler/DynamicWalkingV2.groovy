@@ -209,9 +209,9 @@ class BodyController{
 				tiltAngle+=-180
 			if(tiltAngle<-90)
 				tiltAngle+=180
-			def abs = -Math.abs(tiltAngle)
-			def min =-5
-			if(abs>min) {
+			def abs = Math.abs(tiltAngle)
+			def min =5
+			if(abs<min) {
 				coriolisIndex=0;
 				abs=min
 			}
@@ -221,8 +221,8 @@ class BodyController{
 			//println "Measured tilt = "+tiltAngle+" target = "+coriolisIndexCoriolisDivisionsScaleTiltAngle
 			double sinCop = Math.sin(Math.toRadians(coriolisIndexCoriolisDivisionsScaleTiltAngle))
 			double cosCop = Math.cos(Math.toRadians(coriolisIndexCoriolisDivisionsScaleTiltAngle))
-			double computedTilt = (abs*cosCop*coriolisGain)
-			double computedPan = (abs*sinCop*coriolisGain)
+			double computedTilt = -(abs*cosCop*coriolisGain)
+			double computedPan = -(abs*sinCop*coriolisGain)
 			if(tiltAngle>0){
 				coriolisIndex++;
 				coriolisIndex=(coriolisIndex>=coriolisDivisions?0:coriolisIndex)
