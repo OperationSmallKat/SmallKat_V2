@@ -1,7 +1,6 @@
 package Bowler;
 
 import com.neuronrobotics.bowlerstudio.creature.ICadGenerator;
-import com.neuronrobotics.bowlerstudio.creature.CreatureLab;
 import org.apache.commons.io.IOUtils;
 import com.neuronrobotics.bowlerstudio.vitamins.*;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractLink
