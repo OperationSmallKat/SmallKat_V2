@@ -1,5 +1,5 @@
 @GrabResolver(name='nr', root='https://oss.sonatype.org/content/repositories/staging/')
-@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='0.12.0')
+@Grab(group='com.neuronrobotics', module='SimplePacketComsJava', version='1.0.0')
 
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.phy.*;
@@ -59,6 +59,7 @@ MobileBase cat =DeviceManager.getSpecificDevice( obotDevicename,{
 					imuDataValues[3],//Double rotxAcceleration,
 					imuDataValues[4],//Double rotyAcceleration,
 					imuDataValues[5],//Double rotzAcceleration 
+					System.currentTimeMillis()
 			))
 		 
 		 
